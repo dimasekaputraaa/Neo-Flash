@@ -24,16 +24,58 @@
         outline-offset: 4px;
       }
     </style>
+    <!-- Dynamic Print Styles injected based on selected paper size (58mm / 80mm) -->
+    <style id="dynamic-print-style">
+      @media print {
+        @page {
+          size: 58mm auto;
+          margin: 0;
+        }
+        html,
+        body {
+          width: 58mm !important;
+          max-width: 58mm !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          background: #ffffff !important;
+          overflow: visible !important;
+        }
+        body > *:not(#thermal-print-container) {
+          display: none !important;
+        }
+        #thermal-print-container {
+          display: block !important;
+          width: 58mm !important;
+          max-width: 58mm !important;
+          margin: 0 auto !important;
+          padding: 0 !important;
+        }
+        #thermal-print-img {
+          width: 58mm !important;
+          max-width: 58mm !important;
+          height: auto !important;
+          display: block !important;
+          margin: 0 auto !important;
+          page-break-inside: avoid;
+        }
+      }
+    </style>
   </head>
   <body
     class="bg-[#FFFBEB] bg-[radial-gradient(#000000_1.5px,transparent_1.5px)] [background-size:20px_20px] text-black font-sans min-h-screen flex flex-col p-2.5 sm:p-4 md:p-6 select-none selection:bg-yellow-300 selection:text-black"
   >
+    <!-- TOAST NOTIFICATION -->
     <div
       id="toast-notification"
       class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-black text-yellow-300 border-2 border-black font-mono font-bold text-xs px-4 py-2.5 rounded-2xl shadow-[3px_3px_0px_0px_#facc15] transition-all duration-300 flex items-center space-x-2 max-w-[90vw] text-center"
     >
       <i data-lucide="info" class="w-4 h-4 shrink-0 text-yellow-300"></i>
       <span id="toast-message">Pemberitahuan</span>
+    </div>
+
+    <!-- AREA CETAK TERMAL (Hidden by default, shown during print) -->
+    <div id="thermal-print-container" class="hidden">
+      <img id="thermal-print-img" alt="Thermal Print Preview" />
     </div>
 
     <!-- HEADER COMPACT ON MOBILE -->
@@ -381,14 +423,14 @@
             </div>
           </div>
 
-          <!-- Dynamic Export Buttons -->
+          <!-- Dynamic Export & Thermal Print Buttons -->
           <div
             class="flex flex-wrap gap-2.5 mt-4 sm:mt-6 w-full justify-center"
           >
             <button
               id="btn-export-photo"
               onclick="handleExportPNG()"
-              class="px-5 py-3.5 bg-yellow-300 hover:bg-yellow-200 text-black font-mono font-black text-xs rounded-2xl border-3 border-black shadow-[3px_3px_0px_0px_#000] sm:shadow-[4px_4px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center space-x-2 uppercase"
+              class="px-4 sm:px-5 py-3 sm:py-3.5 bg-yellow-300 hover:bg-yellow-200 text-black font-mono font-black text-xs rounded-2xl border-3 border-black shadow-[3px_3px_0px_0px_#000] sm:shadow-[4px_4px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center space-x-2 uppercase"
             >
               <i data-lucide="download" class="w-4 h-4"></i>
               <span>Unduh Foto</span>
@@ -397,10 +439,19 @@
             <button
               id="btn-export-video"
               onclick="handleExportMotionVideo()"
-              class="hidden px-5 py-3.5 bg-lime-300 hover:bg-lime-200 text-black font-mono font-black text-xs rounded-2xl border-3 border-black shadow-[3px_3px_0px_0px_#000] sm:shadow-[4px_4px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition items-center space-x-2 uppercase"
+              class="hidden px-4 sm:px-5 py-3 sm:py-3.5 bg-lime-300 hover:bg-lime-200 text-black font-mono font-black text-xs rounded-2xl border-3 border-black shadow-[3px_3px_0px_0px_#000] sm:shadow-[4px_4px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition items-center space-x-2 uppercase"
             >
               <i data-lucide="video" class="w-4 h-4"></i>
               <span>Unduh Video</span>
+            </button>
+
+            <button
+              id="btn-print-thermal"
+              onclick="openPrintModal()"
+              class="px-4 sm:px-5 py-3 sm:py-3.5 bg-orange-300 hover:bg-orange-200 text-black font-mono font-black text-xs rounded-2xl border-3 border-black shadow-[3px_3px_0px_0px_#000] sm:shadow-[4px_4px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center space-x-2 uppercase"
+            >
+              <i data-lucide="printer" class="w-4 h-4"></i>
+              <span>Cetak Termal</span>
             </button>
           </div>
         </div>
@@ -1070,6 +1121,86 @@
       </div>
     </div>
 
+    <!-- MODAL: CHOOSE THERMAL PAPER SIZE (58mm vs 80mm) -->
+    <div
+      id="modal-print-thermal"
+      class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 font-mono"
+    >
+      <div
+        class="bg-white border-4 border-black rounded-3xl max-w-md w-full p-4 sm:p-6 shadow-[8px_8px_0px_0px_#000] sm:shadow-[10px_10px_0px_0px_#000] space-y-3 sm:space-y-4"
+      >
+        <div
+          class="flex items-center justify-between border-b-3 border-black pb-2.5 sm:pb-3"
+        >
+          <div
+            class="flex items-center space-x-2 text-black font-black text-sm sm:text-base"
+          >
+            <i data-lucide="printer" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+            <span>PILIH UKURAN KERTAS TERMAL</span>
+          </div>
+          <button
+            onclick="closePrintModal()"
+            class="text-black hover:bg-yellow-300 border-2 border-black rounded-lg p-1 font-black"
+          >
+            <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+          </button>
+        </div>
+
+        <p class="text-xs text-black font-bold">
+          Pilih lebar kertas rol printer termal Bluetooth/USB Anda:
+        </p>
+
+        <div class="space-y-2.5 pt-1">
+          <button
+            onclick="executeThermalPrint(58)"
+            class="w-full p-3.5 bg-orange-300 hover:bg-orange-200 border-3 border-black rounded-2xl text-xs font-black text-black shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center justify-between"
+          >
+            <div class="flex items-center space-x-2.5">
+              <i data-lucide="printer" class="w-5 h-5"></i>
+              <div class="text-left">
+                <span class="block text-xs font-black">KERTAS 58 MM</span>
+                <span class="block text-[10px] text-zinc-800 font-bold"
+                  >Struk Kasir Standar / Mini Bluetooth</span
+                >
+              </div>
+            </div>
+            <span
+              class="bg-black text-orange-300 px-2 py-1 rounded-lg text-[10px] font-black"
+              >58MM</span
+            >
+          </button>
+
+          <button
+            onclick="executeThermalPrint(80)"
+            class="w-full p-3.5 bg-yellow-300 hover:bg-yellow-200 border-3 border-black rounded-2xl text-xs font-black text-black shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center justify-between"
+          >
+            <div class="flex items-center space-x-2.5">
+              <i data-lucide="printer" class="w-5 h-5"></i>
+              <div class="text-left">
+                <span class="block text-xs font-black">KERTAS 80 MM</span>
+                <span class="block text-[10px] text-zinc-800 font-bold"
+                  >Struk Kasir Lebar / Desktop POS</span
+                >
+              </div>
+            </div>
+            <span
+              class="bg-black text-yellow-300 px-2 py-1 rounded-lg text-[10px] font-black"
+              >80MM</span
+            >
+          </button>
+        </div>
+
+        <div class="pt-1 flex justify-end">
+          <button
+            onclick="closePrintModal()"
+            class="w-full py-2 bg-white border-2 border-black text-black font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#000]"
+          >
+            BATAL
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- MODAL: TEMPLATE FRAME GUIDELINES -->
     <div
       id="modal-template"
@@ -1367,23 +1498,13 @@
         </div>
 
         <div class="flex flex-col gap-2 pt-1">
-          <div class="flex gap-2">
-            <a
-              id="export-download-anchor"
-              download="neo-strip.png"
-              class="flex-1 py-3 bg-yellow-300 hover:bg-yellow-200 border-3 border-black text-black font-black text-center text-xs rounded-xl shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition block"
-            >
-              UNDUH FILE
-            </a>
-            <button
-              id="btn-share-preview"
-              onclick="triggerModalShare()"
-              class="px-4 py-3 bg-pink-300 hover:bg-pink-200 border-3 border-black text-black font-black text-xs rounded-xl shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center space-x-1.5"
-            >
-              <i data-lucide="share-2" class="w-4 h-4"></i>
-              <span>BAGIKAN</span>
-            </button>
-          </div>
+          <a
+            id="export-download-anchor"
+            download="neo-strip.png"
+            class="w-full py-3 bg-yellow-300 hover:bg-yellow-200 border-3 border-black text-black font-black text-center text-xs rounded-xl shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition block"
+          >
+            UNDUH FILE
+          </a>
 
           <button
             onclick="closeExportPreviewModal()"
@@ -1576,7 +1697,7 @@
       let motionFrameTick = 0;
       let pendingSingleUploadData = null;
 
-      // Current export blob tracking for modal share
+      // Current export blob tracking
       let currentExportBlob = null;
       let currentExportFileName = "";
       let currentExportUrl = "";
@@ -3194,44 +3315,150 @@
         return exportCanvas;
       }
 
-      async function triggerModalShare() {
-        if (!currentExportBlob || !currentExportFileName) {
-          showToast("Berkas belum siap untuk dibagikan.");
-          return;
-        }
+      // CHOOSE PRINT PAPER SIZE MODAL HANDLERS
+      function openPrintModal() {
+        playFlapAudio();
+        document
+          .getElementById("modal-print-thermal")
+          .classList.remove("hidden");
+      }
 
-        const cleanMime =
-          currentExportBlob.type.split(";")[0].trim() || "image/png";
-        const isVideo = cleanMime.startsWith("video/");
+      function closePrintModal() {
+        document.getElementById("modal-print-thermal").classList.add("hidden");
+      }
 
-        if (navigator.canShare && navigator.share) {
-          try {
-            const fileToShare = new File(
-              [currentExportBlob],
-              currentExportFileName,
-              { type: cleanMime },
-            );
+      // FUNGSI CETAK TERMAL DENGAN ALGORITMA FLOYD-STEINBERG DITHERING (LENGKAP DETAIL FOTO)
+      async function executeThermalPrint(paperMm = 58) {
+        closePrintModal();
+        playFlapAudio();
+        showToast(`Memproses algoritma dither termal ${paperMm}mm...`);
 
-            if (navigator.canShare({ files: [fileToShare] })) {
-              await navigator.share({
-                files: [fileToShare],
-                title: isVideo ? "Neo Live Motion Video" : "Neo Photo Strip",
-                text: isVideo
-                  ? "Lihat video photobooth animasi saya dari Neo Flash Studio! 🎬✨"
-                  : "Lihat foto strip buatan saya dari Neo Flash Studio! 📸⚡",
-              });
-              showToast("Berhasil membagikan!");
-              return;
-            }
-          } catch (e) {
-            if (e.name === "AbortError") return;
-            console.warn("Share failed:", e);
+        try {
+          const originalCanvas = await generateStripCanvas(0);
+
+          // Target lebar piksel standar thermal printer (203 DPI)
+          // 58mm = 384px | 80mm = 576px
+          const targetW = paperMm === 80 ? 576 : 384;
+          const thermalCanvas = document.createElement("canvas");
+          const aspect = originalCanvas.height / originalCanvas.width;
+          thermalCanvas.width = targetW;
+          thermalCanvas.height = Math.round(targetW * aspect);
+
+          const tCtx = thermalCanvas.getContext("2d");
+
+          tCtx.fillStyle = "#ffffff";
+          tCtx.fillRect(0, 0, thermalCanvas.width, thermalCanvas.height);
+          tCtx.drawImage(
+            originalCanvas,
+            0,
+            0,
+            thermalCanvas.width,
+            thermalCanvas.height,
+          );
+
+          const w = thermalCanvas.width;
+          const h = thermalCanvas.height;
+          const imgData = tCtx.getImageData(0, 0, w, h);
+          const data = imgData.data;
+
+          // Step 1: Ekstrak Grayscale Buffer & tingkatkan kontras
+          const grayBuf = new Float32Array(w * h);
+          for (let i = 0; i < w * h; i++) {
+            const p = i * 4;
+            let gray =
+              0.299 * data[p] + 0.587 * data[p + 1] + 0.114 * data[p + 2];
+            // Tingkatkan kontras foto sebesar +15% agar lebih tegas
+            gray = (gray - 128) * 1.15 + 128;
+            grayBuf[i] = Math.min(255, Math.max(0, gray));
           }
-        }
 
-        showToast(
-          "Browser tidak mendukung berbagi berkas ini secara langsung. Silakan gunakan tombol UNDUH.",
-        );
+          // Step 2: Floyd-Steinberg Error Diffusion Dithering (Menghasilkan bayangan/gradasi bintik halus)
+          for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+              const idx = y * w + x;
+              const oldPixel = grayBuf[idx];
+              const newPixel = oldPixel < 128 ? 0 : 255;
+              grayBuf[idx] = newPixel;
+              const quantError = oldPixel - newPixel;
+
+              if (x + 1 < w) grayBuf[idx + 1] += quantError * (7 / 16);
+              if (y + 1 < h) {
+                if (x > 0)
+                  grayBuf[(y + 1) * w + (x - 1)] += quantError * (3 / 16);
+                grayBuf[(y + 1) * w + x] += quantError * (5 / 16);
+                if (x + 1 < w)
+                  grayBuf[(y + 1) * w + (x + 1)] += quantError * (1 / 16);
+              }
+            }
+          }
+
+          // Step 3: Tuliskan piksel hasil Dithering ke Image Data Canvas
+          for (let i = 0; i < w * h; i++) {
+            const val = grayBuf[i] < 128 ? 0 : 255;
+            const p = i * 4;
+            data[p] = val;
+            data[p + 1] = val;
+            data[p + 2] = val;
+            data[p + 3] = 255;
+          }
+          tCtx.putImageData(imgData, 0, 0);
+
+          const thermalImg = document.getElementById("thermal-print-img");
+          thermalImg.src = thermalCanvas.toDataURL("image/png");
+
+          // Inject CSS print sesuai ukuran kertas yang dipilih
+          injectPrintCss(paperMm);
+
+          setTimeout(() => {
+            window.print();
+          }, 350);
+        } catch (err) {
+          console.error("Gagal memproses cetakan termal:", err);
+          showToast("Gagal menyiapkan dokumen cetak termal.");
+        }
+      }
+
+      function injectPrintCss(mm) {
+        let styleEl = document.getElementById("dynamic-print-style");
+        if (!styleEl) {
+          styleEl = document.createElement("style");
+          styleEl.id = "dynamic-print-style";
+          document.head.appendChild(styleEl);
+        }
+        styleEl.innerHTML = `
+          @media print {
+            @page {
+              size: ${mm}mm auto;
+              margin: 0;
+            }
+            html, body {
+              width: ${mm}mm !important;
+              max-width: ${mm}mm !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              background: #ffffff !important;
+              overflow: visible !important;
+            }
+            body > *:not(#thermal-print-container) {
+              display: none !important;
+            }
+            #thermal-print-container {
+              display: block !important;
+              width: ${mm}mm !important;
+              max-width: ${mm}mm !important;
+              margin: 0 auto !important;
+              padding: 0 !important;
+            }
+            #thermal-print-img {
+              width: ${mm}mm !important;
+              max-width: ${mm}mm !important;
+              height: auto !important;
+              display: block !important;
+              margin: 0 auto !important;
+              page-break-inside: avoid;
+            }
+          }
+        `;
       }
 
       async function handleExportPNG() {
@@ -3328,11 +3555,11 @@
 
             titleEl.innerText = "HASIL VIDEO ANIMASI";
             descEl.innerText =
-              "Video animasi Live Motion & Split-Flap ASCII kamu siap diunduh atau dibagikan!";
+              "Klik tombol di bawah ini untuk mengunduh video animasi Anda:";
 
             anchor.href = url;
             anchor.download = fileName;
-            anchor.innerText = `UNDUH FILE VIDEO (${cleanMime === "video/mp4" ? "MP4" : "WEBM"})`;
+            anchor.innerText = `UNDUH FILE VIDEO (${fileExt.toUpperCase()})`;
 
             document
               .getElementById("modal-export-preview")
@@ -3355,7 +3582,6 @@
           }, 100);
         } catch (e) {
           modal.classList.add("hidden");
-          showToast("Gagal memproses video pada perangkat ini.");
         }
       }
 
@@ -3366,12 +3592,12 @@
         document.getElementById("modal-help").classList.add("hidden");
       }
       function closeExportPreviewModal() {
-        document.getElementById("modal-export-preview").classList.add("hidden");
         const videoEl = document.getElementById("export-preview-video");
         if (videoEl) {
           videoEl.pause();
           videoEl.src = "";
         }
+        document.getElementById("modal-export-preview").classList.add("hidden");
       }
 
       function toggleSound() {
