@@ -19,36 +19,52 @@
         background: #000;
         border-radius: 4px;
       }
+      .sticker-selected {
+        outline: 2px dashed #000;
+        outline-offset: 4px;
+      }
     </style>
   </head>
   <body
-    class="bg-[#FFFBEB] bg-[radial-gradient(#000000_1.5px,transparent_1.5px)] [background-size:20px_20px] text-black font-sans min-h-screen flex flex-col p-3 md:p-6 select-none selection:bg-yellow-300 selection:text-black"
+    class="bg-[#FFFBEB] bg-[radial-gradient(#000000_1.5px,transparent_1.5px)] [background-size:20px_20px] text-black font-sans min-h-screen flex flex-col p-2.5 sm:p-4 md:p-6 select-none selection:bg-yellow-300 selection:text-black"
   >
-    <header
-      class="max-w-7xl w-full mx-auto bg-yellow-300 border-3 border-black rounded-2xl p-4 shadow-[5px_5px_0px_0px_#000] mb-6 flex flex-col sm:flex-row items-center justify-between gap-4"
+    <div
+      id="toast-notification"
+      class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-black text-yellow-300 border-2 border-black font-mono font-bold text-xs px-4 py-2.5 rounded-2xl shadow-[3px_3px_0px_0px_#facc15] transition-all duration-300 flex items-center space-x-2 max-w-[90vw] text-center"
     >
-      <div class="flex items-center space-x-3">
+      <i data-lucide="info" class="w-4 h-4 shrink-0 text-yellow-300"></i>
+      <span id="toast-message">Pemberitahuan</span>
+    </div>
+
+    <!-- HEADER COMPACT ON MOBILE -->
+    <header
+      class="max-w-7xl w-full mx-auto bg-yellow-300 border-3 border-black rounded-2xl p-2.5 sm:p-4 shadow-[3px_3px_0px_0px_#000] sm:shadow-[5px_5px_0px_0px_#000] mb-3 sm:mb-6 flex flex-row items-center justify-between gap-2"
+    >
+      <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
         <div
-          class="bg-black text-yellow-300 p-2.5 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_#000]"
+          class="bg-black text-yellow-300 p-2 sm:p-2.5 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_#000] shrink-0"
         >
-          <i data-lucide="zap" class="w-6 h-6 fill-current"></i>
+          <i data-lucide="zap" class="w-5 h-5 sm:w-6 sm:h-6 fill-current"></i>
         </div>
-        <div>
+        <div class="min-w-0">
           <h1
-            class="text-xl sm:text-2xl font-black tracking-wider text-black font-mono flex items-center gap-2 uppercase"
+            class="text-base sm:text-2xl font-black tracking-wider text-black font-mono uppercase leading-none truncate"
           >
             Neo Flash
           </h1>
-          <p class="text-xs text-black font-mono font-bold tracking-tight">
+          <p
+            class="text-[9px] sm:text-xs text-black font-mono font-bold tracking-tight truncate mt-0.5"
+          >
             SPLIT-FLAP ASCII & LIVE MOTION PHOTOBOOTH
           </p>
         </div>
       </div>
 
-      <div class="flex items-center flex-wrap gap-2">
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
         <button
           onclick="openHelpModal()"
-          class="px-3 py-2 rounded-xl border-2 border-black bg-white hover:bg-amber-100 text-black font-mono font-bold text-xs shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center space-x-1"
+          class="p-2 sm:px-3 sm:py-2 rounded-xl border-2 border-black bg-white hover:bg-amber-100 text-black font-mono font-bold text-xs shadow-[2px_2px_0px_0px_#000] sm:shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center space-x-1"
+          title="Bantuan"
         >
           <i data-lucide="help-circle" class="w-4 h-4"></i>
           <span class="hidden sm:inline">BANTUAN</span>
@@ -57,46 +73,58 @@
         <button
           onclick="toggleSound()"
           id="sound-btn"
-          class="p-2 rounded-xl border-2 border-black font-bold shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition bg-pink-300 text-black"
+          class="p-2 rounded-xl border-2 border-black font-bold shadow-[2px_2px_0px_0px_#000] sm:shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition bg-pink-300 text-black"
+          title="Suara"
         >
-          <i data-lucide="volume-2" id="sound-icon" class="w-5 h-5"></i>
+          <i
+            data-lucide="volume-2"
+            id="sound-icon"
+            class="w-4 h-4 sm:w-5 sm:h-5"
+          ></i>
         </button>
 
         <button
           id="btn-reset-booth"
           onclick="resetToBoothView()"
-          class="hidden items-center space-x-1 px-3 py-2 bg-lime-300 hover:bg-lime-200 text-black font-extrabold rounded-xl text-xs font-mono border-2 border-black shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition"
+          class="hidden items-center space-x-1 px-2.5 py-2 sm:px-3 sm:py-2 bg-lime-300 hover:bg-lime-200 text-black font-extrabold rounded-xl text-xs font-mono border-2 border-black shadow-[2px_2px_0px_0px_#000] sm:shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition"
         >
           <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-          <span>ULANG SHOT</span>
+          <span class="hidden sm:inline">ULANG SHOT</span>
         </button>
       </div>
     </header>
 
     <main class="flex-1 max-w-7xl w-full mx-auto flex flex-col justify-center">
+      <!-- VIEW 1: PHOTOBOOTH WEBCAM -->
       <div
         id="view-booth"
-        class="max-w-3xl mx-auto w-full bg-white border-3 border-black rounded-3xl p-5 md:p-8 shadow-[8px_8px_0px_0px_#000] flex flex-col items-center"
+        class="max-w-3xl mx-auto w-full bg-white border-3 border-black rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 md:p-8 shadow-[4px_4px_0px_0px_#000] sm:shadow-[8px_8px_0px_0px_#000] flex flex-col items-center"
       >
+        <!-- Top Controls Row -->
         <div
-          class="w-full flex flex-wrap items-center justify-between gap-3 mb-5"
+          class="w-full flex flex-row items-center justify-between gap-2 mb-3 sm:mb-5"
         >
           <div
-            class="flex items-center space-x-2 bg-yellow-300 border-2 border-black px-3 py-1.5 rounded-xl shadow-[2px_2px_0px_0px_#000]"
+            class="flex items-center space-x-1.5 sm:space-x-2 bg-yellow-300 border-2 border-black px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl shadow-[2px_2px_0px_0px_#000]"
           >
             <span
               id="camera-status-dot"
-              class="w-3 h-3 rounded-full border border-black bg-rose-500"
+              class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full border border-black bg-rose-500"
             ></span>
             <span
               id="camera-status-text"
-              class="font-mono text-xs font-black text-black tracking-wider uppercase"
+              class="font-mono text-[10px] sm:text-xs font-black text-black tracking-wider uppercase"
               >STATUS KAMERA</span
             >
           </div>
 
-          <div class="flex items-center space-x-2 font-mono text-xs font-bold">
-            <label class="text-black uppercase">JUMLAH SHOTS:</label>
+          <div
+            class="flex items-center space-x-1.5 sm:space-x-2 font-mono text-[10px] sm:text-xs font-bold"
+          >
+            <label class="text-black uppercase hidden sm:inline"
+              >JUMLAH SHOTS:</label
+            >
+            <label class="text-black uppercase sm:hidden">SHOTS:</label>
             <div
               id="shot-buttons-container"
               class="flex border-2 border-black rounded-xl overflow-hidden bg-white shadow-[2px_2px_0px_0px_#000]"
@@ -104,21 +132,21 @@
               <button
                 onclick="setTotalShots(2)"
                 id="btn-shot-2"
-                class="btn-shot-count px-3 py-1 font-extrabold transition"
+                class="btn-shot-count px-2.5 sm:px-3 py-0.5 sm:py-1 font-extrabold transition text-xs"
               >
                 2
               </button>
               <button
                 onclick="setTotalShots(3)"
                 id="btn-shot-3"
-                class="btn-shot-count px-3 py-1 font-extrabold transition bg-black text-yellow-300"
+                class="btn-shot-count px-2.5 sm:px-3 py-0.5 sm:py-1 font-extrabold transition bg-black text-yellow-300 text-xs"
               >
                 3
               </button>
               <button
                 onclick="setTotalShots(4)"
                 id="btn-shot-4"
-                class="btn-shot-count px-3 py-1 font-extrabold transition"
+                class="btn-shot-count px-2.5 sm:px-3 py-0.5 sm:py-1 font-extrabold transition text-xs"
               >
                 4
               </button>
@@ -128,7 +156,7 @@
 
         <!-- Live Webcam Frame -->
         <div
-          class="relative w-full aspect-[4/3] bg-black rounded-2xl border-3 border-black overflow-hidden shadow-[5px_5px_0px_0px_#000] flex items-center justify-center"
+          class="relative w-full aspect-[4/3] bg-black rounded-2xl border-3 border-black overflow-hidden shadow-[4px_4px_0px_0px_#000] sm:shadow-[5px_5px_0px_0px_#000] flex items-center justify-center"
         >
           <video
             id="webcam-video"
@@ -145,51 +173,56 @@
 
           <div
             id="camera-loading"
-            class="text-center font-mono text-yellow-300 p-6 flex flex-col items-center space-y-3"
+            class="text-center font-mono text-yellow-300 p-4 sm:p-6 flex flex-col items-center space-y-2 sm:space-y-3"
           >
-            <i data-lucide="refresh-cw" class="w-10 h-10 animate-spin"></i>
-            <p class="text-xs font-bold uppercase tracking-wider">
+            <i
+              data-lucide="refresh-cw"
+              class="w-8 h-8 sm:w-10 sm:h-10 animate-spin"
+            ></i>
+            <p
+              class="text-[11px] sm:text-xs font-bold uppercase tracking-wider"
+            >
               MENGHUBUNGKAN KAMERA...
             </p>
           </div>
 
           <div
             id="camera-error"
-            class="hidden p-6 text-center max-w-md flex-col items-center space-y-4 font-mono bg-amber-50 border-3 border-black rounded-2xl m-4 text-black shadow-[4px_4px_0px_0px_#000] z-30"
+            class="hidden p-4 sm:p-6 text-center max-w-md flex-col items-center space-y-3 font-mono bg-amber-50 border-3 border-black rounded-2xl m-3 sm:m-4 text-black shadow-[4px_4px_0px_0px_#000] z-30"
           >
             <div
-              class="w-12 h-12 rounded-xl bg-rose-400 border-2 border-black text-black flex items-center justify-center shadow-[2px_2px_0px_0px_#000]"
+              class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-rose-400 border-2 border-black text-black flex items-center justify-center shadow-[2px_2px_0px_0px_#000]"
             >
-              <i data-lucide="shield-alert" class="w-7 h-7"></i>
+              <i data-lucide="shield-alert" class="w-6 h-6 sm:w-7 sm:h-7"></i>
             </div>
             <div>
               <h3
                 id="camera-error-title"
-                class="text-sm font-black text-black uppercase tracking-wide"
+                class="text-xs sm:text-sm font-black text-black uppercase tracking-wide"
               >
                 KAMERA TIDAK AKTIF
               </h3>
               <p
                 id="camera-error-msg"
-                class="text-xs text-zinc-800 mt-1 font-bold leading-relaxed"
+                class="text-[11px] sm:text-xs text-zinc-800 mt-1 font-bold leading-relaxed"
               >
                 Browser memblokir akses kamera. Silakan berikan izin akses
                 kamera.
               </p>
             </div>
-            <div class="flex flex-wrap justify-center gap-2 pt-2">
+            <div class="flex flex-wrap justify-center gap-2 pt-1">
               <button
                 onclick="initCamera()"
-                class="px-4 py-2 bg-yellow-300 border-2 border-black text-black font-black rounded-xl text-xs flex items-center space-x-1.5 shadow-[3px_3px_0px_0px_#000]"
+                class="px-3.5 py-1.5 sm:px-4 sm:py-2 bg-yellow-300 border-2 border-black text-black font-black rounded-xl text-[11px] sm:text-xs flex items-center space-x-1 shadow-[2px_2px_0px_0px_#000]"
               >
-                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                 <span>COBA LAGI</span>
               </button>
               <button
                 onclick="openHelpModal()"
-                class="px-4 py-2 bg-cyan-300 border-2 border-black text-black font-black rounded-xl text-xs flex items-center space-x-1.5 shadow-[3px_3px_0px_0px_#000]"
+                class="px-3.5 py-1.5 sm:px-4 sm:py-2 bg-cyan-300 border-2 border-black text-black font-black rounded-xl text-[11px] sm:text-xs flex items-center space-x-1 shadow-[2px_2px_0px_0px_#000]"
               >
-                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
                 <span>PANDUAN IZIN</span>
               </button>
             </div>
@@ -201,13 +234,13 @@
           >
             <div
               id="countdown-number"
-              class="text-9xl font-black font-mono text-black animate-bounce drop-shadow-[4px_4px_0px_#fff]"
+              class="text-8xl sm:text-9xl font-black font-mono text-black animate-bounce drop-shadow-[4px_4px_0px_#fff]"
             >
               3
             </div>
             <p
               id="capture-status-text"
-              class="font-mono text-base font-black text-black mt-4 tracking-widest uppercase bg-white border-2 border-black px-4 py-1 rounded-xl shadow-[3px_3px_0px_0px_#000]"
+              class="font-mono text-xs sm:text-base font-black text-black mt-3 sm:mt-4 tracking-widest uppercase bg-white border-2 border-black px-3 py-1 rounded-xl shadow-[3px_3px_0px_0px_#000]"
             >
               FOTO KE 1 DARI 3
             </p>
@@ -216,34 +249,40 @@
           <button
             id="btn-mirror"
             onclick="toggleMirror()"
-            class="absolute bottom-4 right-4 p-3 rounded-xl border-2 border-black font-extrabold transition shadow-[3px_3px_0px_0px_#000] bg-yellow-300 text-black"
+            class="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 p-2.5 sm:p-3 rounded-xl border-2 border-black font-extrabold transition shadow-[2px_2px_0px_0px_#000] sm:shadow-[3px_3px_0px_0px_#000] bg-yellow-300 text-black active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+            title="Mirror Kamera"
           >
-            <i data-lucide="flip-horizontal" class="w-5 h-5"></i>
+            <i data-lucide="flip-horizontal" class="w-4 h-4 sm:w-5 sm:h-5"></i>
           </button>
         </div>
 
+        <!-- Camera Selector Dropdown -->
         <div
           id="camera-select-container"
-          class="hidden w-full mt-4 items-center justify-between bg-amber-50 p-3 rounded-xl border-2 border-black text-xs font-mono font-bold shadow-[2px_2px_0px_0px_#000]"
+          class="hidden w-full mt-3 sm:mt-4 items-center justify-between bg-amber-50 p-2 sm:p-3 rounded-xl border-2 border-black text-[11px] sm:text-xs font-mono font-bold shadow-[2px_2px_0px_0px_#000] gap-2"
         >
-          <span class="text-black flex items-center space-x-1.5">
-            <i data-lucide="video" class="w-4 h-4"></i>
-            <span>PILIH KAMERA:</span>
+          <span class="text-black flex items-center space-x-1.5 shrink-0">
+            <i data-lucide="video" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+            <span class="hidden sm:inline">PILIH KAMERA:</span>
+            <span class="sm:hidden">KAMERA:</span>
           </span>
           <select
             id="camera-select"
             onchange="initCamera(this.value)"
-            class="bg-white text-black font-extrabold border-2 border-black rounded-lg px-3 py-1 focus:outline-none"
+            class="bg-white text-black font-extrabold border-2 border-black rounded-lg px-2 py-1 text-[11px] sm:text-xs focus:outline-none max-w-[65%] sm:max-w-none truncate"
           ></select>
         </div>
 
-        <div class="mt-6 w-full flex flex-col sm:flex-row items-center gap-4">
+        <!-- Action Buttons -->
+        <div
+          class="mt-4 sm:mt-6 w-full flex flex-col sm:flex-row items-center gap-2.5 sm:gap-4"
+        >
           <button
             id="btn-start-booth"
             onclick="startPhotoboothSequence()"
-            class="w-full flex-1 py-4 bg-yellow-300 hover:bg-yellow-200 border-3 border-black text-black font-mono font-black text-sm rounded-2xl shadow-[5px_5px_0px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition flex items-center justify-center space-x-2 uppercase"
+            class="w-full flex-1 py-3.5 sm:py-4 bg-yellow-300 hover:bg-yellow-200 border-3 border-black text-black font-mono font-black text-xs sm:text-sm rounded-xl sm:rounded-2xl shadow-[3px_3px_0px_0px_#000] sm:shadow-[5px_5px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center justify-center space-x-2 uppercase"
           >
-            <i data-lucide="camera" class="w-6 h-6"></i>
+            <i data-lucide="camera" class="w-5 h-5 sm:w-6 sm:h-6"></i>
             <span id="btn-start-text">MULAI PHOTOBOOTH (3 SHOTS)</span>
           </button>
 
@@ -258,33 +297,39 @@
           <button
             id="btn-upload-photos"
             onclick="document.getElementById('file-input-upload').click()"
-            class="w-full sm:w-auto px-6 py-4 bg-cyan-300 hover:bg-cyan-200 text-black font-mono font-black text-xs rounded-2xl border-3 border-black shadow-[5px_5px_0px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition flex items-center justify-center space-x-2 whitespace-nowrap"
+            class="w-full sm:w-auto px-5 py-3.5 sm:py-4 bg-cyan-300 hover:bg-cyan-200 text-black font-mono font-black text-xs rounded-xl sm:rounded-2xl border-3 border-black shadow-[3px_3px_0px_0px_#000] sm:shadow-[5px_5px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center justify-center space-x-2 whitespace-nowrap"
           >
-            <i data-lucide="upload" class="w-5 h-5"></i>
+            <i data-lucide="upload" class="w-4 h-4 sm:w-5 sm:h-5"></i>
             <span>UPLOAD FOTO</span>
           </button>
         </div>
       </div>
 
+      <!-- VIEW 2: CUSTOMIZE PHOTO STRIP -->
       <div
         id="view-customize"
-        class="hidden grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+        class="hidden grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 items-start"
       >
-        <!-- Photo Strip Preview Panel -->
         <div class="lg:col-span-6 flex flex-col items-center justify-center">
           <div
-            class="w-full max-w-sm mb-4 flex items-center justify-between bg-white border-3 border-black rounded-2xl p-3 shadow-[4px_4px_0px_0px_#000] font-mono text-xs"
+            class="w-full max-w-sm mb-3 sm:mb-4 flex items-center justify-between bg-white border-3 border-black rounded-2xl p-2.5 sm:p-3 shadow-[3px_3px_0px_0px_#000] sm:shadow-[4px_4px_0px_0px_#000] font-mono text-[11px] sm:text-xs"
           >
             <span class="font-black text-black flex items-center space-x-1.5">
-              <i data-lucide="film" class="w-4 h-4 text-pink-500"></i>
-              <span>MODE TAMPILAN:</span>
+              <i
+                data-lucide="film"
+                class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-pink-500"
+              ></i>
+              <span>MODE:</span>
             </span>
             <button
               id="btn-toggle-livemotion"
               onclick="toggleLiveMotionPlayback()"
-              class="px-3.5 py-1.5 rounded-xl border-2 border-black bg-white text-black font-black shadow-[2px_2px_0px_0px_#000] flex items-center space-x-1.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition"
+              class="px-2.5 sm:px-3.5 py-1.5 rounded-xl border-2 border-black bg-white text-black font-black shadow-[2px_2px_0px_0px_#000] flex items-center space-x-1.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition text-[10px] sm:text-xs"
             >
-              <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+              <i
+                data-lucide="play"
+                class="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current"
+              ></i>
               <span id="livemotion-toggle-text"
                 >LIVE MOTION: MATI (STATIS)</span
               >
@@ -294,144 +339,139 @@
           <div
             id="strip-container"
             onclick="handleStripContainerClick(event)"
-            class="rounded-3xl border-4 border-black bg-yellow-300 text-black shadow-[8px_8px_0px_0px_#000] transition-all duration-300 w-full max-w-sm relative overflow-hidden"
+            class="rounded-3xl border-4 border-black bg-yellow-300 text-black shadow-[6px_6px_0px_0px_#000] sm:shadow-[8px_8px_0px_0px_#000] transition-all duration-300 w-full max-w-sm relative overflow-hidden"
           >
-            <!-- Header Bar -->
             <div
               id="strip-header-bar"
-              class="font-mono font-black tracking-wider text-xs sm:text-sm uppercase border-b-3 border-black w-full flex items-center justify-between px-1 z-10"
+              class="font-mono font-black tracking-wider text-[11px] sm:text-sm uppercase border-b-3 border-black w-full flex items-center justify-between px-1 z-10"
             >
-              <span id="strip-title-text" class="truncate max-w-[200px]"
+              <span
+                id="strip-title-text"
+                class="truncate max-w-[180px] sm:max-w-[200px]"
                 >NEO FLASH STUDIO</span
               >
               <span
-                class="text-[10px] bg-black text-yellow-300 px-2 py-0.5 rounded-full border border-black font-bold"
+                class="text-[9px] sm:text-[10px] bg-black text-yellow-300 px-2 py-0.5 rounded-full border border-black font-bold"
                 >SOLARI LIVE</span
               >
             </div>
 
-            <!-- Slots Container -->
             <div id="strip-slots-grid"></div>
 
-            <!-- Overlay Image Layer -->
             <img
               id="strip-custom-overlay"
               class="hidden absolute inset-0 w-full h-full object-fill pointer-events-none z-20"
               alt="Frame Overlay"
             />
 
-            <!-- Applied Draggable Stickers Container (Full Inset for 1:1 ratio) -->
             <div
               id="strip-stickers-container"
-              class="hidden absolute inset-0 z-30 pointer-events-none overflow-hidden"
+              class="absolute inset-0 z-30 pointer-events-none overflow-hidden"
             ></div>
 
-            <!-- Footer Bar -->
             <div
               id="strip-footer-bar"
-              class="w-full flex items-center justify-between border-t-3 border-black font-mono text-xs font-black z-10"
+              class="w-full flex items-center justify-between border-t-3 border-black font-mono text-[10px] sm:text-xs font-black z-10"
             >
               <span id="strip-date-text"></span>
               <span
-                class="bg-black text-white px-2 py-0.5 rounded border border-black text-[10px]"
+                class="bg-black text-white px-2 py-0.5 rounded border border-black text-[9px] sm:text-[10px]"
                 >NEO-FLASH.STUDIO</span
               >
             </div>
           </div>
 
-          <!-- Export Buttons -->
-          <div class="flex flex-wrap gap-2.5 mt-6 w-full justify-center">
+          <!-- Dynamic Export Buttons -->
+          <div
+            class="flex flex-wrap gap-2.5 mt-4 sm:mt-6 w-full justify-center"
+          >
             <button
+              id="btn-export-photo"
               onclick="handleExportPNG()"
-              class="px-5 py-3.5 bg-yellow-300 hover:bg-yellow-200 text-black font-mono font-black text-xs rounded-2xl border-3 border-black shadow-[4px_4px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center space-x-2 uppercase"
+              class="px-5 py-3.5 bg-yellow-300 hover:bg-yellow-200 text-black font-mono font-black text-xs rounded-2xl border-3 border-black shadow-[3px_3px_0px_0px_#000] sm:shadow-[4px_4px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center space-x-2 uppercase"
             >
               <i data-lucide="download" class="w-4 h-4"></i>
               <span>Unduh Foto</span>
             </button>
 
             <button
+              id="btn-export-video"
               onclick="handleExportMotionVideo()"
-              class="px-5 py-3.5 bg-lime-300 hover:bg-lime-200 text-black font-mono font-black text-xs rounded-2xl border-3 border-black shadow-[4px_4px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center space-x-2 uppercase"
+              class="hidden px-5 py-3.5 bg-lime-300 hover:bg-lime-200 text-black font-mono font-black text-xs rounded-2xl border-3 border-black shadow-[3px_3px_0px_0px_#000] sm:shadow-[4px_4px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition items-center space-x-2 uppercase"
             >
               <i data-lucide="video" class="w-4 h-4"></i>
               <span>Unduh Video</span>
             </button>
-
-            <button
-              onclick="handleExportStory1080()"
-              class="px-5 py-3.5 bg-pink-300 hover:bg-pink-200 text-black font-mono font-black text-xs rounded-2xl border-3 border-black shadow-[4px_4px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center space-x-2 uppercase"
-            >
-              <i data-lucide="smartphone" class="w-4 h-4"></i>
-              <span>Share Foto Kamu</span>
-            </button>
           </div>
         </div>
 
-        <!-- Customization Settings Control Tabs -->
         <div
-          class="lg:col-span-6 bg-white border-3 border-black rounded-3xl p-5 md:p-6 shadow-[8px_8px_0px_0px_#000] space-y-6"
+          class="lg:col-span-6 bg-white border-3 border-black rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-[4px_4px_0px_0px_#000] sm:shadow-[8px_8px_0px_0px_#000] space-y-5 sm:space-y-6"
         >
-          <div class="flex border-b-3 border-black pb-4 gap-2 overflow-x-auto">
+          <!-- Horizontal Scrollable Tab Bar -->
+          <div
+            class="flex border-b-3 border-black pb-3 gap-1.5 overflow-x-auto no-scrollbar"
+          >
             <button
               onclick="switchTab('fit')"
               id="tab-btn-fit"
-              class="tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-yellow-300 text-black shadow-[2px_2px_0px_0px_#000]"
+              class="tab-btn flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-black font-mono border-2 border-black bg-yellow-300 text-black shadow-[2px_2px_0px_0px_#000] shrink-0"
             >
-              <i data-lucide="maximize-2" class="w-4 h-4"></i>
+              <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
               <span>Fit & Skala</span>
             </button>
 
             <button
               onclick="switchTab('filter')"
               id="tab-btn-filter"
-              class="tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000]"
+              class="tab-btn flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000] shrink-0"
             >
-              <i data-lucide="wand-2" class="w-4 h-4"></i>
+              <i data-lucide="wand-2" class="w-3.5 h-3.5"></i>
               <span>Filter Foto</span>
             </button>
 
             <button
               onclick="switchTab('frame')"
               id="tab-btn-frame"
-              class="tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000]"
+              class="tab-btn flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000] shrink-0"
             >
-              <i data-lucide="image" class="w-4 h-4"></i>
-              <span>Upload Frame</span>
+              <i data-lucide="image" class="w-3.5 h-3.5"></i>
+              <span>Frame</span>
             </button>
 
             <button
               onclick="switchTab('ascii')"
               id="tab-btn-ascii"
-              class="tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000]"
+              class="tab-btn flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000] shrink-0"
             >
-              <i data-lucide="sliders" class="w-4 h-4"></i>
+              <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
               <span>ASCII Set</span>
             </button>
 
             <button
               onclick="switchTab('layout')"
               id="tab-btn-layout"
-              class="tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000]"
+              class="tab-btn flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000] shrink-0"
             >
-              <i data-lucide="palette" class="w-4 h-4"></i>
-              <span>Warna Frame</span>
+              <i data-lucide="palette" class="w-3.5 h-3.5"></i>
+              <span>Warna</span>
             </button>
 
             <button
               onclick="switchTab('words')"
               id="tab-btn-words"
-              class="tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000]"
+              class="tab-btn flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000] shrink-0"
             >
-              <i data-lucide="type" class="w-4 h-4"></i>
-              <span>Kata Kota</span>
+              <i data-lucide="type" class="w-3.5 h-3.5"></i>
+              <span>Kata</span>
             </button>
 
             <button
               onclick="switchTab('stickers')"
               id="tab-btn-stickers"
-              class="tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000]"
+              class="tab-btn flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000] shrink-0"
             >
-              <i data-lucide="smile" class="w-4 h-4"></i>
+              <i data-lucide="smile" class="w-3.5 h-3.5"></i>
               <span>Stiker</span>
             </button>
           </div>
@@ -439,31 +479,31 @@
           <!-- TAB CONTENT: FIT & SKALA -->
           <div
             id="tab-content-fit"
-            class="tab-content space-y-5 font-mono text-xs"
+            class="tab-content space-y-4 font-mono text-xs"
           >
             <div>
-              <label class="text-black font-black block mb-2 uppercase"
+              <label class="text-black font-black block mb-1.5 uppercase"
                 >MODE FIT / BINGKAI FOTO</label
               >
               <div class="grid grid-cols-3 gap-2">
                 <button
                   onclick="setFitMode('cover')"
                   id="btn-fit-cover"
-                  class="btn-fit-mode p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-yellow-300 text-black"
+                  class="btn-fit-mode py-2.5 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-yellow-300 text-black"
                 >
                   COVER
                 </button>
                 <button
                   onclick="setFitMode('contain')"
                   id="btn-fit-contain"
-                  class="btn-fit-mode p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-white text-black"
+                  class="btn-fit-mode py-2.5 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-white text-black"
                 >
                   CONTAIN
                 </button>
                 <button
                   onclick="setFitMode('fill')"
                   id="btn-fit-fill"
-                  class="btn-fit-mode p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-white text-black"
+                  class="btn-fit-mode py-2.5 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-white text-black"
                 >
                   STRETCH
                 </button>
@@ -475,7 +515,7 @@
                 <span>ZOOM / SKALA FOTO</span>
                 <span
                   id="zoom-val-label"
-                  class="bg-yellow-300 px-2 py-0.5 rounded border border-black"
+                  class="bg-yellow-300 px-1.5 py-0.5 rounded border border-black"
                   >1.00x</span
                 >
               </div>
@@ -495,7 +535,7 @@
                 <span>GESER HORIZONTAL (OFFSET X)</span>
                 <span
                   id="offsetx-val-label"
-                  class="bg-yellow-300 px-2 py-0.5 rounded border border-black"
+                  class="bg-yellow-300 px-1.5 py-0.5 rounded border border-black"
                   >0px</span
                 >
               </div>
@@ -514,7 +554,7 @@
                 <span>GESER VERTIKAL (OFFSET Y)</span>
                 <span
                   id="offsety-val-label"
-                  class="bg-yellow-300 px-2 py-0.5 rounded border border-black"
+                  class="bg-yellow-300 px-1.5 py-0.5 rounded border border-black"
                   >0px</span
                 >
               </div>
@@ -530,7 +570,7 @@
 
             <button
               onclick="resetFitSettings()"
-              class="w-full py-3 bg-amber-100 border-2 border-black text-black rounded-xl font-black shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition"
+              class="w-full py-2.5 bg-amber-100 border-2 border-black text-black rounded-xl font-black shadow-[2px_2px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition text-xs"
             >
               RESET POSISI FOTO
             </button>
@@ -547,7 +587,7 @@
               >
               <div
                 id="filter-target-buttons"
-                class="flex flex-wrap gap-2 mb-4"
+                class="flex flex-wrap gap-1.5 mb-3"
               ></div>
             </div>
 
@@ -562,25 +602,25 @@
 
             <div
               id="photo-filters-grid"
-              class="grid grid-cols-2 sm:grid-cols-3 gap-3"
+              class="grid grid-cols-2 sm:grid-cols-3 gap-2.5"
             ></div>
           </div>
 
           <!-- TAB CONTENT: UPLOAD FRAME -->
           <div
             id="tab-content-frame"
-            class="tab-content hidden space-y-4 font-mono text-xs"
+            class="tab-content hidden space-y-3 font-mono text-xs"
           >
             <div
-              class="p-4 bg-amber-50 border-3 border-black rounded-2xl space-y-3 shadow-[3px_3px_0px_0px_#000]"
+              class="p-3.5 bg-amber-50 border-3 border-black rounded-2xl space-y-2.5 shadow-[3px_3px_0px_0px_#000]"
             >
-              <span class="text-black font-black flex items-center space-x-2">
-                <i data-lucide="image" class="w-5 h-5 text-black"></i>
-                <span>UPLOAD DESAIN FRAME OVERLAY (PNG)</span>
+              <span class="text-black font-black flex items-center space-x-1.5">
+                <i data-lucide="image" class="w-4 h-4 text-black"></i>
+                <span>UPLOAD OVERLAY BINGKAI (PNG)</span>
               </span>
-              <p class="text-xs text-zinc-800 font-bold leading-relaxed">
-                Upload desain frame kustom buatan Anda. Pastikan area tempat
-                foto dibuat <strong class="underline">transparan</strong>.
+              <p class="text-[11px] text-zinc-800 font-bold leading-relaxed">
+                Upload desain bingkai kustom buatan Anda. Pastikan area foto
+                <strong class="underline">transparan</strong>.
               </p>
 
               <input
@@ -596,16 +636,16 @@
                   onclick="
                     document.getElementById('frame-overlay-file-input').click()
                   "
-                  class="flex-1 py-3 bg-yellow-300 hover:bg-yellow-200 text-black font-black rounded-xl border-2 border-black flex items-center justify-center space-x-2 shadow-[3px_3px_0px_0px_#000]"
+                  class="flex-1 py-2.5 bg-yellow-300 hover:bg-yellow-200 text-black font-black rounded-xl border-2 border-black flex items-center justify-center space-x-1.5 shadow-[2px_2px_0px_0px_#000]"
                 >
                   <i data-lucide="upload" class="w-4 h-4"></i>
-                  <span>UPLOAD FRAME PNG</span>
+                  <span>UPLOAD PNG</span>
                 </button>
 
                 <button
                   id="btn-remove-overlay"
                   onclick="removeFrameOverlay()"
-                  class="hidden px-4 py-3 bg-rose-400 border-2 border-black text-black font-black rounded-xl shadow-[3px_3px_0px_0px_#000]"
+                  class="hidden px-3.5 py-2.5 bg-rose-400 border-2 border-black text-black font-black rounded-xl shadow-[2px_2px_0px_0px_#000]"
                 >
                   HAPUS
                 </button>
@@ -613,21 +653,21 @@
             </div>
 
             <div
-              class="p-4 bg-cyan-300 border-3 border-black rounded-2xl flex items-center justify-between shadow-[3px_3px_0px_0px_#000]"
+              class="p-3.5 bg-cyan-300 border-3 border-black rounded-2xl flex items-center justify-between shadow-[3px_3px_0px_0px_#000]"
             >
               <div>
-                <span class="font-black text-black block text-sm"
-                  >BUTUH PATOKAN BINGKAI?</span
+                <span class="font-black text-black block text-xs"
+                  >BUTUH TEMPLATE BINGKAI?</span
                 >
-                <p class="text-[11px] text-black font-bold">
-                  Unduh file template ukuran persis untuk Canva/Photoshop
+                <p class="text-[10px] text-black font-bold">
+                  Unduh patokan ukuran Canva/Photoshop
                 </p>
               </div>
               <button
                 onclick="openTemplateModal()"
-                class="px-4 py-2.5 bg-white text-black border-2 border-black font-black rounded-xl text-xs flex items-center space-x-1.5 shadow-[2px_2px_0px_0px_#000]"
+                class="px-3 py-2 bg-white text-black border-2 border-black font-black rounded-xl text-[11px] flex items-center space-x-1 shadow-[2px_2px_0px_0px_#000]"
               >
-                <i data-lucide="file-down" class="w-4 h-4"></i>
+                <i data-lucide="file-down" class="w-3.5 h-3.5"></i>
                 <span>UNDUH</span>
               </button>
             </div>
@@ -639,60 +679,53 @@
             class="tab-content hidden space-y-4 font-mono text-xs"
           >
             <div>
-              <label class="text-black font-black block mb-2 uppercase"
+              <label class="text-black font-black block mb-1.5 uppercase"
                 >MODE KARAKTER ASCII</label
               >
               <div class="grid grid-cols-2 gap-2">
                 <button
                   onclick="setAsciiMode('words')"
                   id="btn-ascii-mode-words"
-                  class="p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-yellow-300 text-black"
+                  class="p-2.5 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-yellow-300 text-black"
                 >
                   🏙️ NAMA KOTA
                 </button>
                 <button
                   onclick="setAsciiMode('random')"
                   id="btn-ascii-mode-random"
-                  class="p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-white text-black"
+                  class="p-2.5 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-white text-black"
                 >
                   🔣 KARAKTER ACAK
                 </button>
               </div>
-              <p
-                id="ascii-mode-desc"
-                class="text-[11px] text-zinc-700 font-bold mt-1.5"
-              >
-                Menggunakan teks urutan kata/kota yang dapat Anda sesuaikan di
-                tab "Kata Kota".
-              </p>
             </div>
 
             <div
-              class="p-3 bg-amber-50 rounded-2xl border-2 border-black flex items-center justify-between shadow-[2px_2px_0px_0px_#000]"
+              class="p-2.5 bg-amber-50 rounded-xl border-2 border-black flex items-center justify-between shadow-[2px_2px_0px_0px_#000]"
             >
-              <span class="text-black font-black">UBAH SEMUA FOTO:</span>
-              <div class="flex space-x-2">
+              <span class="text-black font-black text-[11px]">UBAH SEMUA:</span>
+              <div class="flex space-x-1.5">
                 <button
                   onclick="toggleAllAscii(true)"
-                  class="px-3 py-1.5 bg-yellow-300 border-2 border-black text-black font-black rounded-xl shadow-[2px_2px_0px_0px_#000]"
+                  class="px-2.5 py-1 bg-yellow-300 border-2 border-black text-black font-black rounded-lg text-[10px] shadow-[1px_1px_0px_0px_#000]"
                 >
-                  SEMUA SPLIT-FLAP
+                  SPLIT-FLAP
                 </button>
                 <button
                   onclick="toggleAllAscii(false)"
-                  class="px-3 py-1.5 bg-white border-2 border-black text-black font-black rounded-xl shadow-[2px_2px_0px_0px_#000]"
+                  class="px-2.5 py-1 bg-white border-2 border-black text-black font-black rounded-lg text-[10px] shadow-[1px_1px_0px_0px_#000]"
                 >
-                  SEMUA NORMAL
+                  NORMAL
                 </button>
               </div>
             </div>
 
             <div>
               <div class="flex justify-between text-black font-black mb-1">
-                <span>BATAS AMBANG ASCII (THRESHOLD)</span>
+                <span>THRESHOLD ASCII</span>
                 <span
                   id="ascii-thresh-label"
-                  class="bg-yellow-300 px-2 py-0.5 rounded border border-black"
+                  class="bg-yellow-300 px-1.5 py-0.5 rounded border border-black"
                   >100</span
                 >
               </div>
@@ -708,10 +741,10 @@
 
             <div>
               <div class="flex justify-between text-black font-black mb-1">
-                <span>KERAPATAN MATRIX (KOLOM)</span>
+                <span>KERAPATAN MATRIX</span>
                 <span
                   id="ascii-cols-label"
-                  class="bg-yellow-300 px-2 py-0.5 rounded border border-black"
+                  class="bg-yellow-300 px-1.5 py-0.5 rounded border border-black"
                   >42 COLS</span
                 >
               </div>
@@ -731,7 +764,7 @@
                 <span>KECERAHAN (BRIGHTNESS)</span>
                 <span
                   id="ascii-bright-label"
-                  class="bg-yellow-300 px-2 py-0.5 rounded border border-black"
+                  class="bg-yellow-300 px-1.5 py-0.5 rounded border border-black"
                   >1.1</span
                 >
               </div>
@@ -753,7 +786,7 @@
             class="tab-content hidden space-y-4 font-mono text-xs"
           >
             <div>
-              <label class="text-black font-black block mb-2 uppercase"
+              <label class="text-black font-black block mb-1.5 uppercase"
                 >JUDUL BINGKAI FOTO</label
               >
               <input
@@ -761,7 +794,7 @@
                 id="frame-title-input"
                 value="NEO FLASH STUDIO"
                 oninput="updateFrameTitle(this.value)"
-                class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-black font-black uppercase focus:outline-none shadow-[3px_3px_0px_0px_#000]"
+                class="w-full bg-white border-3 border-black rounded-xl px-3 py-2 text-black font-black uppercase focus:outline-none shadow-[2px_2px_0px_0px_#000]"
               />
             </div>
 
@@ -769,17 +802,20 @@
               <label class="text-black font-black block mb-2 uppercase"
                 >TEMA WARNA BINGKAI NEO</label
               >
-              <div id="frame-themes-grid" class="grid grid-cols-2 gap-3"></div>
+              <div
+                id="frame-themes-grid"
+                class="grid grid-cols-2 gap-2.5"
+              ></div>
             </div>
           </div>
 
           <!-- TAB CONTENT: KATA KOTA -->
           <div
             id="tab-content-words"
-            class="tab-content hidden space-y-4 font-mono text-xs"
+            class="tab-content hidden space-y-3.5 font-mono text-xs"
           >
             <div>
-              <label class="text-black font-black block mb-2 uppercase"
+              <label class="text-black font-black block mb-1.5 uppercase"
                 >TAMBAH KOTA / KATA SENDIRI</label
               >
               <div class="flex gap-2">
@@ -788,11 +824,11 @@
                   id="new-word-input"
                   placeholder="CONTOH: SURABAYA"
                   onkeydown="if (event.key === 'Enter') addNewWord();"
-                  class="flex-1 bg-white border-3 border-black rounded-xl px-3 py-2 text-black font-black uppercase focus:outline-none shadow-[2px_2px_0px_0px_#000]"
+                  class="flex-1 bg-white border-2 border-black rounded-xl px-3 py-1.5 text-black font-black uppercase focus:outline-none shadow-[2px_2px_0px_0px_#000]"
                 />
                 <button
                   onclick="addNewWord()"
-                  class="px-4 py-2 bg-yellow-300 border-3 border-black text-black font-black rounded-xl shadow-[2px_2px_0px_0px_#000]"
+                  class="px-3.5 py-1.5 bg-yellow-300 border-2 border-black text-black font-black rounded-xl shadow-[2px_2px_0px_0px_#000]"
                 >
                   TAMBAH
                 </button>
@@ -800,20 +836,20 @@
             </div>
 
             <div>
-              <div class="flex justify-between items-center mb-2 font-black">
+              <div class="flex justify-between items-center mb-1.5 font-black">
                 <span id="words-count-label" class="text-black"
                   >KATA AKTIF (37)</span
                 >
                 <button
                   onclick="resetWordsToDefault()"
-                  class="text-xs text-black underline font-black"
+                  class="text-[11px] text-black underline font-black"
                 >
                   RESET KATA
                 </button>
               </div>
               <div
                 id="words-tags-container"
-                class="max-h-48 overflow-y-auto bg-amber-50 p-3 rounded-2xl border-3 border-black flex flex-wrap gap-2 shadow-[3px_3px_0px_0px_#000]"
+                class="max-h-40 overflow-y-auto bg-amber-50 p-2.5 rounded-2xl border-2 border-black flex flex-wrap gap-1.5 shadow-[2px_2px_0px_0px_#000]"
               ></div>
             </div>
           </div>
@@ -821,34 +857,102 @@
           <!-- TAB CONTENT: STIKER -->
           <div
             id="tab-content-stickers"
-            class="tab-content hidden space-y-4 font-mono text-xs"
+            class="tab-content hidden space-y-3.5 font-mono text-xs"
           >
-            <!-- Active Selected Sticker Controls Panel -->
             <div
-              id="selected-sticker-controls"
-              class="p-4 bg-yellow-300 border-3 border-black rounded-2xl space-y-3 shadow-[4px_4px_0px_0px_#000]"
+              class="p-2.5 bg-amber-50 border-2 border-black rounded-2xl space-y-2 shadow-[2px_2px_0px_0px_#000]"
             >
-              <div class="flex items-center justify-between font-black">
-                <span
-                  class="text-black uppercase flex items-center space-x-1.5"
+              <label class="text-black font-black block uppercase text-[11px]"
+                >BUAT STIKER / EMOJI CUSTOM</label
+              >
+              <div class="flex gap-1.5">
+                <input
+                  type="text"
+                  id="custom-sticker-input"
+                  placeholder="Ketik emoji..."
+                  onkeydown="
+                    if (event.key === 'Enter') addCustomStickerFromInput();
+                  "
+                  class="flex-1 bg-white border-2 border-black rounded-xl px-2.5 py-1.5 text-black font-black uppercase focus:outline-none shadow-[1px_1px_0px_0px_#000]"
+                />
+                <button
+                  onclick="addCustomStickerFromInput()"
+                  class="px-3 py-1.5 bg-yellow-300 border-2 border-black text-black font-black rounded-xl shadow-[1px_1px_0px_0px_#000]"
                 >
-                  <i data-lucide="sliders" class="w-4 h-4"></i>
-                  <span>PENGATURAN STIKER TERPILIH</span>
-                </span>
-                <span
-                  id="selected-sticker-preview"
-                  class="text-xl bg-white px-2.5 py-0.5 rounded-lg border-2 border-black"
-                  >📸</span
-                >
+                  TAMBAH
+                </button>
               </div>
 
-              <!-- Sticker Scale Slider -->
-              <div>
-                <div class="flex justify-between font-black mb-1">
-                  <span>UKURAN / SKALA STIKER</span>
+              <div class="flex items-center justify-between pt-0.5">
+                <span class="font-black text-black text-[11px]"
+                  >BACKGROUND:</span
+                >
+                <button
+                  id="btn-toggle-sticker-bg"
+                  onclick="toggleStickerDefaultBg()"
+                  class="px-2.5 py-1 bg-yellow-300 border-2 border-black text-black font-black rounded-lg text-[10px] shadow-[1px_1px_0px_0px_#000]"
+                >
+                  DENGAN BACKGROUND
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <span
+                class="text-black font-black block mb-1.5 uppercase text-[11px]"
+                >KLIK UNTUK MENAMBAH STIKER</span
+              >
+              <div
+                id="stickers-palette-grid"
+                class="grid grid-cols-5 gap-2"
+              ></div>
+            </div>
+
+            <!-- Controls for selected sticker -->
+            <div
+              id="selected-sticker-controls"
+              class="hidden p-2.5 bg-cyan-100 border-2 border-black rounded-2xl space-y-2.5 shadow-[2px_2px_0px_0px_#000]"
+            >
+              <div
+                class="flex items-center justify-between font-black text-[11px]"
+              >
+                <span>PENGATURAN STIKER</span>
+                <button
+                  onclick="deleteSelectedSticker()"
+                  class="text-rose-600 font-bold underline"
+                >
+                  HAPUS STIKER
+                </button>
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex justify-between font-bold text-[10px]">
+                  <span>ROTASI</span>
                   <span
-                    id="sticker-scale-val"
-                    class="bg-white px-2 py-0.5 rounded border border-black"
+                    id="sticker-rot-label"
+                    class="bg-white px-1.5 py-0.5 rounded border border-black"
+                    >0°</span
+                  >
+                </div>
+                <input
+                  type="range"
+                  min="-180"
+                  max="180"
+                  value="0"
+                  id="sticker-rot-slider"
+                  oninput="
+                    updateSelectedStickerParam('rotation', parseInt(this.value))
+                  "
+                  class="w-full accent-black bg-cyan-200 border-2 border-black rounded-lg h-2.5"
+                />
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex justify-between font-bold text-[10px]">
+                  <span>UKURAN (SKALA)</span>
+                  <span
+                    id="sticker-scale-label"
+                    class="bg-white px-1.5 py-0.5 rounded border border-black"
                     >1.0x</span
                   >
                 </div>
@@ -859,126 +963,18 @@
                   step="0.1"
                   value="1.0"
                   id="sticker-scale-slider"
-                  oninput="updateSelectedStickerScale(parseFloat(this.value))"
-                  class="w-full accent-black bg-white border-2 border-black rounded-lg h-3"
+                  oninput="
+                    updateSelectedStickerParam('scale', parseFloat(this.value))
+                  "
+                  class="w-full accent-black bg-cyan-200 border-2 border-black rounded-lg h-2.5"
                 />
-              </div>
-
-              <!-- Sticker Rotation Slider & Quick Buttons -->
-              <div>
-                <div class="flex justify-between font-black mb-1">
-                  <span>ROTASI / KEMIRINGAN</span>
-                  <span
-                    id="sticker-rotation-val"
-                    class="bg-white px-2 py-0.5 rounded border border-black"
-                    >0°</span
-                  >
-                </div>
-                <input
-                  type="range"
-                  min="-180"
-                  max="180"
-                  step="5"
-                  value="0"
-                  id="sticker-rotation-slider"
-                  oninput="updateSelectedStickerRotation(parseInt(this.value))"
-                  class="w-full accent-black bg-white border-2 border-black rounded-lg h-3"
-                />
-
-                <div class="grid grid-cols-4 gap-1.5 mt-2">
-                  <button
-                    onclick="rotateSelectedStickerDelta(-15)"
-                    class="py-1 bg-white hover:bg-amber-100 border-2 border-black rounded-lg font-black text-[11px]"
-                  >
-                    -15°
-                  </button>
-                  <button
-                    onclick="updateSelectedStickerRotation(0)"
-                    class="py-1 bg-white hover:bg-amber-100 border-2 border-black rounded-lg font-black text-[11px]"
-                  >
-                    0° RESET
-                  </button>
-                  <button
-                    onclick="rotateSelectedStickerDelta(15)"
-                    class="py-1 bg-white hover:bg-amber-100 border-2 border-black rounded-lg font-black text-[11px]"
-                  >
-                    +15°
-                  </button>
-                  <button
-                    onclick="rotateSelectedStickerDelta(90)"
-                    class="py-1 bg-white hover:bg-amber-100 border-2 border-black rounded-lg font-black text-[11px]"
-                  >
-                    +90°
-                  </button>
-                </div>
-              </div>
-
-              <!-- Background Toggle & Remove Selected Button -->
-              <div class="flex gap-2 pt-1">
-                <button
-                  id="btn-selected-sticker-bg"
-                  onclick="toggleSelectedStickerBg()"
-                  class="flex-1 py-2 bg-white hover:bg-amber-100 border-2 border-black rounded-xl font-black text-xs shadow-[2px_2px_0px_0px_#000]"
-                >
-                  TOGGLE BACKGROUND
-                </button>
-                <button
-                  onclick="removeSelectedSticker()"
-                  class="px-4 py-2 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded-xl font-black text-xs shadow-[2px_2px_0px_0px_#000]"
-                >
-                  HAPUS STIKER
-                </button>
               </div>
             </div>
-
-            <!-- Custom Sticker Input -->
-            <div
-              class="space-y-3 p-3.5 bg-amber-50 rounded-2xl border-3 border-black shadow-[3px_3px_0px_0px_#000]"
-            >
-              <label class="text-black font-black block uppercase"
-                >BUAT STIKER / EMOJI CUSTOM</label
-              >
-              <div class="flex gap-2">
-                <input
-                  type="text"
-                  id="custom-sticker-input"
-                  placeholder="Ketik emoji atau teks..."
-                  onkeydown="if (event.key === 'Enter') addCustomSticker();"
-                  class="flex-1 bg-white border-2 border-black rounded-xl px-3 py-2 text-black font-black focus:outline-none shadow-[2px_2px_0px_0px_#000]"
-                />
-                <button
-                  onclick="addCustomSticker()"
-                  class="px-4 py-2 bg-yellow-300 hover:bg-yellow-200 border-2 border-black text-black font-black rounded-xl shadow-[2px_2px_0px_0px_#000] transition"
-                >
-                  TAMBAH
-                </button>
-              </div>
-
-              <!-- Default Background Mode Toggle -->
-              <div class="flex items-center justify-between pt-1">
-                <span class="font-black text-black">BACKGROUND AWAL:</span>
-                <button
-                  id="btn-sticker-bg-toggle"
-                  onclick="toggleStickerDefaultBg()"
-                  class="px-3 py-1.5 rounded-xl border-2 border-black font-black text-xs shadow-[2px_2px_0px_0px_#000] bg-yellow-300 text-black flex items-center space-x-1"
-                >
-                  <span id="sticker-bg-toggle-text">DENGAN BACKGROUND</span>
-                </button>
-              </div>
-            </div>
-
-            <span class="text-black font-black block uppercase"
-              >PILIH PALET STIKER (BISA DIGESER!)</span
-            >
-            <div
-              id="stickers-palette-grid"
-              class="grid grid-cols-5 gap-3"
-            ></div>
 
             <button
               id="btn-clear-stickers"
               onclick="clearAllStickers()"
-              class="hidden w-full py-3 bg-rose-400 border-3 border-black text-black rounded-xl font-black shadow-[3px_3px_0px_0px_#000] transition flex items-center justify-center space-x-2"
+              class="hidden w-full py-2.5 bg-rose-400 border-2 border-black text-black rounded-xl font-black shadow-[2px_2px_0px_0px_#000] transition flex items-center justify-center space-x-1.5 text-xs"
             >
               <i data-lucide="trash-2" class="w-4 h-4"></i>
               <span>HAPUS SEMUA STIKER</span>
@@ -991,25 +987,25 @@
     <!-- MODAL: RETAKE SHOT -->
     <div
       id="modal-retake"
-      class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-mono"
+      class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 font-mono"
     >
       <div
-        class="bg-white border-4 border-black rounded-3xl max-w-lg w-full p-6 shadow-[10px_10px_0px_0px_#000] space-y-4"
+        class="bg-white border-4 border-black rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-[8px_8px_0px_0px_#000] sm:shadow-[10px_10px_0px_0px_#000] space-y-3 sm:space-y-4"
       >
         <div
-          class="flex items-center justify-between border-b-3 border-black pb-3"
+          class="flex items-center justify-between border-b-3 border-black pb-2.5 sm:pb-3"
         >
           <div
-            class="flex items-center space-x-2 text-black font-black text-lg"
+            class="flex items-center space-x-2 text-black font-black text-base sm:text-lg"
           >
-            <i data-lucide="camera" class="w-6 h-6"></i>
+            <i data-lucide="camera" class="w-5 h-5 sm:w-6 sm:h-6"></i>
             <span id="modal-retake-title">RETAKE FOTO KE-1</span>
           </div>
           <button
             onclick="closeRetakeModal()"
             class="text-black hover:bg-yellow-300 border-2 border-black rounded-lg p-1 font-black"
           >
-            <i data-lucide="x" class="w-5 h-5"></i>
+            <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5"></i>
           </button>
         </div>
 
@@ -1035,24 +1031,24 @@
           >
             <div
               id="retake-countdown-number"
-              class="text-9xl font-black font-mono text-black animate-bounce drop-shadow-[4px_4px_0px_#fff]"
+              class="text-8xl sm:text-9xl font-black font-mono text-black animate-bounce drop-shadow-[4px_4px_0px_#fff]"
             >
               3
             </div>
             <p
-              class="font-mono text-sm font-black text-black mt-2 tracking-widest uppercase bg-white border-2 border-black px-4 py-1 rounded-xl shadow-[3px_3px_0px_0px_#000]"
+              class="font-mono text-xs sm:text-sm font-black text-black mt-2 tracking-widest uppercase bg-white border-2 border-black px-3 py-1 rounded-xl shadow-[2px_2px_0px_0px_#000]"
             >
-              BERSIAP UNTUK RETAKE FOTO
+              BERSIAP UNTUK RETAKE
             </p>
           </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-3 pt-2">
+        <div class="flex flex-col sm:flex-row gap-2.5 pt-1">
           <button
             onclick="startRetakeCapture()"
-            class="flex-1 py-3.5 bg-yellow-300 hover:bg-yellow-200 border-3 border-black text-black font-black text-xs rounded-xl shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center justify-center space-x-2"
+            class="flex-1 py-3 bg-yellow-300 hover:bg-yellow-200 border-3 border-black text-black font-black text-xs rounded-xl shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center justify-center space-x-2"
           >
-            <i data-lucide="camera" class="w-5 h-5"></i>
+            <i data-lucide="camera" class="w-4 h-4"></i>
             <span>AMBIL FOTO RETAKE</span>
           </button>
 
@@ -1065,7 +1061,7 @@
           />
           <button
             onclick="document.getElementById('retake-file-input').click()"
-            class="py-3.5 px-4 bg-cyan-300 hover:bg-cyan-200 border-3 border-black text-black font-black text-xs rounded-xl shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center justify-center space-x-1.5"
+            class="py-3 px-4 bg-cyan-300 hover:bg-cyan-200 border-3 border-black text-black font-black text-xs rounded-xl shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center justify-center space-x-1.5"
           >
             <i data-lucide="upload" class="w-4 h-4"></i>
             <span>GANTI FILE</span>
@@ -1077,29 +1073,29 @@
     <!-- MODAL: TEMPLATE FRAME GUIDELINES -->
     <div
       id="modal-template"
-      class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-mono"
+      class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 font-mono"
     >
       <div
-        class="bg-white border-4 border-black rounded-3xl max-w-xl w-full p-6 shadow-[10px_10px_0px_0px_#000] space-y-4"
+        class="bg-white border-4 border-black rounded-3xl max-w-xl w-full p-4 sm:p-6 shadow-[8px_8px_0px_0px_#000] sm:shadow-[10px_10px_0px_0px_#000] space-y-3 sm:space-y-4"
       >
         <div
-          class="flex items-center justify-between border-b-3 border-black pb-3"
+          class="flex items-center justify-between border-b-3 border-black pb-2.5 sm:pb-3"
         >
           <div
-            class="flex items-center space-x-2 text-black font-black text-lg"
+            class="flex items-center space-x-2 text-black font-black text-base sm:text-lg"
           >
-            <i data-lucide="file-down" class="w-6 h-6"></i>
-            <span>PATOKAN TEMPLATE FRAME NEO</span>
+            <i data-lucide="file-down" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+            <span>PATOKAN TEMPLATE FRAME</span>
           </div>
           <button
             onclick="closeTemplateModal()"
             class="text-black hover:bg-yellow-300 border-2 border-black rounded-lg p-1 font-black"
           >
-            <i data-lucide="x" class="w-5 h-5"></i>
+            <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5"></i>
           </button>
         </div>
 
-        <div class="space-y-3 text-xs text-black font-bold">
+        <div class="space-y-2.5 text-xs text-black font-bold">
           <p class="leading-relaxed">
             Unduh gambar patokan di bawah ini. Buka di
             <strong class="underline">Canva / Photoshop / Figma</strong> untuk
@@ -1108,75 +1104,77 @@
           </p>
 
           <div
-            class="flex items-center justify-between bg-amber-50 p-2.5 rounded-xl border-2 border-black"
+            class="flex items-center justify-between bg-amber-50 p-2 sm:p-2.5 rounded-xl border-2 border-black"
           >
-            <span class="text-black font-black">UKURAN TEMPLATE:</span>
+            <span class="text-black font-black text-[11px]">UKURAN:</span>
             <div
-              class="flex border-2 border-black rounded-lg overflow-hidden bg-white"
+              class="flex border-2 border-black rounded-lg overflow-hidden bg-white text-[11px]"
             >
               <button
                 onclick="setTemplateShotsCount(2)"
                 id="btn-tpl-shot-2"
-                class="px-3 py-1 font-black"
+                class="px-2.5 py-1 font-black"
               >
                 2 FOTO
               </button>
               <button
                 onclick="setTemplateShotsCount(3)"
                 id="btn-tpl-shot-3"
-                class="px-3 py-1 font-black bg-black text-yellow-300"
+                class="px-2.5 py-1 font-black bg-black text-yellow-300"
               >
                 3 FOTO
               </button>
               <button
                 onclick="setTemplateShotsCount(4)"
                 id="btn-tpl-shot-4"
-                class="px-3 py-1 font-black"
+                class="px-2.5 py-1 font-black"
               >
                 4 FOTO
               </button>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 pt-1">
             <button
               onclick="generateTemplatePNG('WHITE')"
-              class="p-3 bg-white border-3 border-black rounded-2xl flex flex-col items-center justify-center space-y-2 text-center shadow-[3px_3px_0px_0px_#000] hover:bg-zinc-100 transition"
+              class="p-2.5 bg-white border-3 border-black rounded-2xl flex flex-col items-center justify-center space-y-1 text-center shadow-[2px_2px_0px_0px_#000] hover:bg-zinc-100 transition"
             >
-              <i data-lucide="file-down" class="w-6 h-6 text-black"></i>
-              <span class="font-black text-black">NEO WHITE</span>
+              <i data-lucide="file-down" class="w-5 h-5 text-black"></i>
+              <span class="font-black text-black text-[11px]">NEO WHITE</span>
             </button>
 
             <button
               onclick="generateTemplatePNG('YELLOW')"
-              class="p-3 bg-yellow-300 border-3 border-black rounded-2xl flex flex-col items-center justify-center space-y-2 text-center shadow-[3px_3px_0px_0px_#000] hover:bg-yellow-200 transition"
+              class="p-2.5 bg-yellow-300 border-3 border-black rounded-2xl flex flex-col items-center justify-center space-y-1 text-center shadow-[2px_2px_0px_0px_#000] hover:bg-yellow-200 transition"
             >
-              <i data-lucide="file-down" class="w-6 h-6 text-black"></i>
-              <span class="font-black text-black">NEO YELLOW</span>
+              <i data-lucide="file-down" class="w-5 h-5 text-black"></i>
+              <span class="font-black text-black text-[11px]">NEO YELLOW</span>
             </button>
 
             <button
               onclick="generateTemplatePNG('PINK')"
-              class="p-3 bg-pink-300 border-3 border-black rounded-2xl flex flex-col items-center justify-center space-y-2 text-center shadow-[3px_3px_0px_0px_#000] hover:bg-pink-200 transition"
+              class="p-2.5 bg-pink-300 border-3 border-black rounded-2xl flex flex-col items-center justify-center space-y-1 text-center shadow-[2px_2px_0px_0px_#000] hover:bg-pink-200 transition"
             >
-              <i data-lucide="file-down" class="w-6 h-6 text-black"></i>
-              <span class="font-black text-black">CYBER PINK</span>
+              <i data-lucide="file-down" class="w-5 h-5 text-black"></i>
+              <span class="font-black text-black text-[11px]">CYBER PINK</span>
             </button>
 
             <button
               onclick="generateTemplatePNG('DARK')"
-              class="p-3 bg-black border-3 border-black rounded-2xl flex flex-col items-center justify-center space-y-2 text-center shadow-[3px_3px_0px_0px_#FACC15] transition"
+              class="p-2.5 bg-black border-3 border-black rounded-2xl flex flex-col items-center justify-center space-y-1 text-center shadow-[2px_2px_0px_0px_#FACC15] transition"
             >
-              <i data-lucide="file-down" class="w-6 h-6 text-yellow-300"></i>
-              <span class="font-black text-yellow-300">SOLARI NOIR</span>
+              <i data-lucide="file-down" class="w-5 h-5 text-yellow-300"></i>
+              <span class="font-black text-yellow-300 text-[11px]"
+                >SOLARI NOIR</span
+              >
             </button>
           </div>
         </div>
 
-        <div class="pt-2 flex justify-end">
+        <div class="pt-1 flex justify-end">
           <button
             onclick="closeTemplateModal()"
-            class="px-6 py-2.5 bg-yellow-300 border-3 border-black text-black font-black rounded-xl text-xs shadow-[3px_3px_0px_0px_#000]"
+            class="px-5 py-2 bg-yellow-300 border-3 border-black text-black font-black rounded-xl text-xs shadow-[2px_2px_0px_0px_#000]"
           >
             TUTUP
           </button>
@@ -1187,37 +1185,39 @@
     <!-- MODAL: HELP & PERMISSIONS -->
     <div
       id="modal-help"
-      class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-mono"
+      class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 font-mono"
     >
       <div
-        class="bg-white border-4 border-black rounded-3xl max-w-lg w-full p-6 shadow-[10px_10px_0px_0px_#000] space-y-4"
+        class="bg-white border-4 border-black rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-[8px_8px_0px_0px_#000] sm:shadow-[10px_10px_0px_0px_#000] space-y-3 sm:space-y-4"
       >
         <div
-          class="flex items-center justify-between border-b-3 border-black pb-3"
+          class="flex items-center justify-between border-b-3 border-black pb-2.5 sm:pb-3"
         >
           <div
-            class="flex items-center space-x-2 text-black font-black text-lg"
+            class="flex items-center space-x-2 text-black font-black text-base sm:text-lg"
           >
-            <i data-lucide="help-circle" class="w-6 h-6"></i>
+            <i data-lucide="help-circle" class="w-5 h-5 sm:w-6 sm:h-6"></i>
             <span>PANDUAN IZIN KAMERA</span>
           </div>
           <button
             onclick="closeHelpModal()"
             class="text-black hover:bg-yellow-300 border-2 border-black rounded-lg p-1 font-black"
           >
-            <i data-lucide="x" class="w-5 h-5"></i>
+            <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5"></i>
           </button>
         </div>
 
-        <div class="space-y-3 text-xs text-black font-bold">
+        <div class="space-y-2.5 text-xs text-black font-bold">
           <p class="leading-relaxed">
             Jika kamera tidak terbuka, ikuti langkah-langkah di bawah ini:
           </p>
           <div
-            class="bg-amber-50 p-3 rounded-xl border-2 border-black space-y-1.5"
+            class="bg-amber-50 p-2.5 sm:p-3 rounded-xl border-2 border-black space-y-1"
           >
             <p class="font-black text-black">1. Chrome & Edge:</p>
-            <ul class="list-disc pl-4 space-y-1 text-black font-medium">
+            <ul
+              class="list-disc pl-4 space-y-0.5 text-black font-medium text-[11px] sm:text-xs"
+            >
               <li>
                 Klik ikon <strong class="font-black">Gembok</strong> di URL
                 browser.
@@ -1233,13 +1233,13 @@
           </div>
         </div>
 
-        <div class="pt-2 flex justify-end">
+        <div class="pt-1 flex justify-end">
           <button
             onclick="
               closeHelpModal();
               initCamera();
             "
-            class="px-6 py-2.5 bg-yellow-300 border-3 border-black text-black font-black rounded-xl text-xs shadow-[3px_3px_0px_0px_#000]"
+            class="px-5 py-2 bg-yellow-300 border-3 border-black text-black font-black rounded-xl text-xs shadow-[2px_2px_0px_0px_#000]"
           >
             COBA LAGI
           </button>
@@ -1250,25 +1250,25 @@
     <!-- MODAL: SINGLE UPLOAD RESOLUTION CHOICE -->
     <div
       id="modal-single-upload"
-      class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-mono"
+      class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 font-mono"
     >
       <div
-        class="bg-white border-4 border-black rounded-3xl max-w-md w-full p-6 shadow-[10px_10px_0px_0px_#000] space-y-4"
+        class="bg-white border-4 border-black rounded-3xl max-w-md w-full p-4 sm:p-6 shadow-[8px_8px_0px_0px_#000] sm:shadow-[10px_10px_0px_0px_#000] space-y-3 sm:space-y-4"
       >
         <div
-          class="flex items-center justify-between border-b-3 border-black pb-3"
+          class="flex items-center justify-between border-b-3 border-black pb-2.5 sm:pb-3"
         >
           <div
-            class="flex items-center space-x-2 text-black font-black text-base"
+            class="flex items-center space-x-2 text-black font-black text-sm sm:text-base"
           >
-            <i data-lucide="upload" class="w-5 h-5"></i>
+            <i data-lucide="upload" class="w-4 h-4 sm:w-5 sm:h-5"></i>
             <span>PILIH JUMLAH SLOT FOTO</span>
           </div>
           <button
             onclick="closeSingleUploadModal()"
             class="text-black hover:bg-yellow-300 border-2 border-black rounded-lg p-1 font-black"
           >
-            <i data-lucide="x" class="w-5 h-5"></i>
+            <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5"></i>
           </button>
         </div>
 
@@ -1280,7 +1280,7 @@
         <div class="space-y-2 pt-1">
           <button
             onclick="applySinglePhotoToAll(2)"
-            class="w-full p-3.5 bg-yellow-300 hover:bg-yellow-200 border-3 border-black rounded-xl text-xs font-black text-black shadow-[3px_3px_0px_0px_#000] transition flex items-center justify-between"
+            class="w-full p-3 bg-yellow-300 hover:bg-yellow-200 border-3 border-black rounded-xl text-xs font-black text-black shadow-[2px_2px_0px_0px_#000] transition flex items-center justify-between"
           >
             <span>DUPLIKASI KE 2 SLOT FOTO</span>
             <span
@@ -1291,7 +1291,7 @@
 
           <button
             onclick="applySinglePhotoToAll(3)"
-            class="w-full p-3.5 bg-cyan-300 hover:bg-cyan-200 border-3 border-black rounded-xl text-xs font-black text-black shadow-[3px_3px_0px_0px_#000] transition flex items-center justify-between"
+            class="w-full p-3 bg-cyan-300 hover:bg-cyan-200 border-3 border-black rounded-xl text-xs font-black text-black shadow-[2px_2px_0px_0px_#000] transition flex items-center justify-between"
           >
             <span>DUPLIKASI KE 3 SLOT FOTO</span>
             <span class="bg-black text-cyan-300 px-2 py-0.5 rounded text-[10px]"
@@ -1301,7 +1301,7 @@
 
           <button
             onclick="applySinglePhotoToAll(4)"
-            class="w-full p-3.5 bg-pink-300 hover:bg-pink-200 border-3 border-black rounded-xl text-xs font-black text-black shadow-[3px_3px_0px_0px_#000] transition flex items-center justify-between"
+            class="w-full p-3 bg-pink-300 hover:bg-pink-200 border-3 border-black rounded-xl text-xs font-black text-black shadow-[2px_2px_0px_0px_#000] transition flex items-center justify-between"
           >
             <span>DUPLIKASI KE 4 SLOT FOTO</span>
             <span class="bg-black text-pink-300 px-2 py-0.5 rounded text-[10px]"
@@ -1315,113 +1315,79 @@
     <!-- MODAL: EXPORT PHOTO STRIP PREVIEW -->
     <div
       id="modal-export-preview"
-      class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-mono"
+      class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 font-mono"
     >
       <div
-        class="bg-white border-4 border-black rounded-3xl max-w-md w-full p-6 shadow-[10px_10px_0px_0px_#000] space-y-4 max-h-[90vh] overflow-y-auto"
+        class="bg-white border-4 border-black rounded-3xl max-w-md w-full p-4 sm:p-6 shadow-[8px_8px_0px_0px_#000] sm:shadow-[10px_10px_0px_0px_#000] space-y-3 sm:space-y-4 max-h-[90vh] overflow-y-auto"
       >
         <div
-          class="flex items-center justify-between border-b-3 border-black pb-3"
+          class="flex items-center justify-between border-b-3 border-black pb-2.5 sm:pb-3"
         >
           <div
-            class="flex items-center space-x-2 text-black font-black text-lg"
+            class="flex items-center space-x-2 text-black font-black text-base sm:text-lg"
           >
             <i
               data-lucide="check-circle-2"
-              class="w-6 h-6 text-emerald-600"
+              class="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600"
             ></i>
-            <span>HASIL PHOTO STRIP</span>
+            <span id="export-modal-title">HASIL PHOTO STRIP</span>
           </div>
           <button
             onclick="closeExportPreviewModal()"
             class="text-black hover:bg-yellow-300 border-2 border-black rounded-lg p-1 font-black"
           >
-            <i data-lucide="x" class="w-5 h-5"></i>
+            <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5"></i>
           </button>
         </div>
 
         <div class="text-xs text-black font-bold">
-          <p class="mb-3">
-            Klik tombol di bawah ini atau tekan lama pada gambar untuk
-            menyimpan:
+          <p id="export-modal-desc" class="mb-2.5 text-[11px] sm:text-xs">
+            Klik tombol di bawah ini atau tekan lama pada media untuk menyimpan
+            / membagikan:
           </p>
+
           <div
-            class="border-3 border-black rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_#000] bg-stone-900 flex justify-center"
+            id="preview-media-container"
+            class="border-3 border-black rounded-2xl overflow-hidden shadow-[3px_3px_0px_0px_#000] bg-stone-900 flex justify-center p-2"
           >
             <img
               id="export-preview-img"
-              class="max-h-[350px] object-contain"
+              class="max-h-[300px] sm:max-h-[350px] object-contain hidden"
               alt="Exported Photo Strip"
             />
+            <video
+              id="export-preview-video"
+              autoplay
+              loop
+              muted
+              playsinline
+              class="max-h-[300px] sm:max-h-[350px] object-contain hidden"
+            ></video>
           </div>
         </div>
 
-        <div class="flex gap-2 pt-2">
-          <a
-            id="export-download-anchor"
-            download="neo-strip.png"
-            class="flex-1 py-3 bg-yellow-300 hover:bg-yellow-200 border-3 border-black text-black font-black text-center text-xs rounded-xl shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition block"
-          >
-            UNDUH FILE
-          </a>
+        <div class="flex flex-col gap-2 pt-1">
+          <div class="flex gap-2">
+            <a
+              id="export-download-anchor"
+              download="neo-strip.png"
+              class="flex-1 py-3 bg-yellow-300 hover:bg-yellow-200 border-3 border-black text-black font-black text-center text-xs rounded-xl shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition block"
+            >
+              UNDUH FILE
+            </a>
+            <button
+              id="btn-share-preview"
+              onclick="triggerModalShare()"
+              class="px-4 py-3 bg-pink-300 hover:bg-pink-200 border-3 border-black text-black font-black text-xs rounded-xl shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center space-x-1.5"
+            >
+              <i data-lucide="share-2" class="w-4 h-4"></i>
+              <span>BAGIKAN</span>
+            </button>
+          </div>
+
           <button
             onclick="closeExportPreviewModal()"
-            class="px-4 py-3 bg-white border-3 border-black text-black font-black text-xs rounded-xl shadow-[3px_3px_0px_0px_#000]"
-          >
-            TUTUP
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- MODAL: 1080x1920 STORY SHARE PREVIEW -->
-    <div
-      id="modal-story-preview"
-      class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-mono"
-    >
-      <div
-        class="bg-white border-4 border-black rounded-3xl max-w-md w-full p-6 shadow-[10px_10px_0px_0px_#000] space-y-4 max-h-[90vh] overflow-y-auto"
-      >
-        <div
-          class="flex items-center justify-between border-b-3 border-black pb-3"
-        >
-          <div
-            class="flex items-center space-x-2 text-black font-black text-lg"
-          >
-            <i data-lucide="share-2" class="w-6 h-6 text-pink-500"></i>
-            <span>STORY FORMAT (1080x1920)</span>
-          </div>
-          <button
-            onclick="closeStoryPreviewModal()"
-            class="text-black hover:bg-yellow-300 border-2 border-black rounded-lg p-1 font-black"
-          >
-            <i data-lucide="x" class="w-5 h-5"></i>
-          </button>
-        </div>
-
-        <div class="text-xs text-black font-bold space-y-2">
-          <div
-            class="border-3 border-black rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_#000] bg-stone-900 flex justify-center p-2"
-          >
-            <img
-              id="story-preview-img"
-              class="max-h-[380px] object-contain rounded-lg"
-              alt="Story Preview 1080x1920"
-            />
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-2 pt-2">
-          <a
-            id="story-download-anchor"
-            download="neo-story-1080x1920.png"
-            class="w-full py-3.5 bg-pink-300 hover:bg-pink-200 border-3 border-black text-black font-black text-center text-xs rounded-xl shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition block"
-          >
-            UNDUH GAMBAR STORY (1080x1920)
-          </a>
-          <button
-            onclick="closeStoryPreviewModal()"
-            class="w-full py-2.5 bg-white border-2 border-black text-black font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#000]"
+            class="w-full py-2 bg-white border-2 border-black text-black font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#000]"
           >
             TUTUP
           </button>
@@ -1435,16 +1401,16 @@
       class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-mono"
     >
       <div
-        class="bg-yellow-300 border-4 border-black rounded-3xl max-w-sm w-full p-8 shadow-[10px_10px_0px_0px_#000] text-center space-y-4"
+        class="bg-yellow-300 border-4 border-black rounded-3xl max-w-sm w-full p-6 sm:p-8 shadow-[8px_8px_0px_0px_#000] sm:shadow-[10px_10px_0px_0px_#000] text-center space-y-3 sm:space-y-4"
       >
         <i
           data-lucide="film"
-          class="w-12 h-12 text-black animate-bounce mx-auto"
+          class="w-10 h-10 sm:w-12 sm:h-12 text-black animate-bounce mx-auto"
         ></i>
-        <h3 class="text-base font-black text-black uppercase">
+        <h3 class="text-sm sm:text-base font-black text-black uppercase">
           MEMPROSES VIDEO MP4/WEBM...
         </h3>
-        <p class="text-xs text-black font-bold">
+        <p class="text-[11px] sm:text-xs text-black font-bold">
           Merekam animasi gerak Live Photo & Split-Flap ASCII...
         </p>
       </div>
@@ -1565,7 +1531,7 @@
         "📍",
         "🎟️",
         "💥",
-        "DEPARTURE",
+        "2026",
       ];
 
       // Global State Variables
@@ -1597,9 +1563,9 @@
         currentTheme: FRAME_COLOR_THEMES[0],
         title: "NEO FLASH STUDIO",
       };
-      let addedStickers = []; // Objects: { id, text, x, y, scale, rotation, hasBg }
+      let addedStickers = [];
+      let stickerDefaultBg = true;
       let selectedStickerId = null;
-      let stickerDefaultHasBg = true;
       let soundEnabled = true;
       let selectedFilterTarget = 0;
       let customFrameOverlayData = null;
@@ -1610,6 +1576,11 @@
       let motionFrameTick = 0;
       let pendingSingleUploadData = null;
 
+      // Current export blob tracking for modal share
+      let currentExportBlob = null;
+      let currentExportFileName = "";
+      let currentExportUrl = "";
+
       window.addEventListener("DOMContentLoaded", () => {
         if (typeof lucide !== "undefined" && lucide.createIcons) {
           lucide.createIcons();
@@ -1619,7 +1590,6 @@
         renderFrameThemesUI();
         renderStickersPaletteUI();
         renderPhotoFiltersUI();
-        updateSelectedStickerControlsUI();
         document.getElementById("strip-date-text").innerText =
           new Date().toLocaleDateString("en-US", {
             year: "numeric",
@@ -1627,13 +1597,44 @@
             day: "numeric",
           });
 
-        // Add auto resize sync listener for sticker proportions
-        window.addEventListener("resize", () => {
-          if (addedStickers.length > 0) {
+        const stripContainer = document.getElementById("strip-container");
+        if (window.ResizeObserver && stripContainer) {
+          new ResizeObserver(() => {
             renderAppliedStickers();
-          }
-        });
+          }).observe(stripContainer);
+        }
       });
+
+      function showToast(message) {
+        const toast = document.getElementById("toast-notification");
+        const msgEl = document.getElementById("toast-message");
+        if (!toast || !msgEl) return;
+
+        msgEl.innerText = message;
+        toast.classList.remove("hidden");
+
+        setTimeout(() => {
+          toast.classList.add("hidden");
+        }, 3500);
+      }
+
+      function updateExportButtonsVisibility() {
+        const photoBtn = document.getElementById("btn-export-photo");
+        const videoBtn = document.getElementById("btn-export-video");
+        if (!photoBtn || !videoBtn) return;
+
+        if (isLiveMotionActive) {
+          photoBtn.classList.add("hidden");
+          photoBtn.classList.remove("flex");
+          videoBtn.classList.remove("hidden");
+          videoBtn.classList.add("flex");
+        } else {
+          photoBtn.classList.remove("hidden");
+          photoBtn.classList.add("flex");
+          videoBtn.classList.add("hidden");
+          videoBtn.classList.remove("flex");
+        }
+      }
 
       function toggleLiveMotionPlayback() {
         isLiveMotionActive = !isLiveMotionActive;
@@ -1642,14 +1643,15 @@
         if (btn && text) {
           if (isLiveMotionActive) {
             btn.className =
-              "px-3.5 py-1.5 rounded-xl border-2 border-black bg-pink-300 text-black font-black shadow-[2px_2px_0px_0px_#000] flex items-center space-x-1.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition";
+              "px-2.5 sm:px-3.5 py-1.5 rounded-xl border-2 border-black bg-pink-300 text-black font-black shadow-[2px_2px_0px_0px_#000] flex items-center space-x-1.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition text-[10px] sm:text-xs";
             text.innerText = "LIVE MOTION: AKTIF";
           } else {
             btn.className =
-              "px-3.5 py-1.5 rounded-xl border-2 border-black bg-white text-black font-black shadow-[2px_2px_0px_0px_#000] flex items-center space-x-1.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition";
+              "px-2.5 sm:px-3.5 py-1.5 rounded-xl border-2 border-black bg-white text-black font-black shadow-[2px_2px_0px_0px_#000] flex items-center space-x-1.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition text-[10px] sm:text-xs";
             text.innerText = "LIVE MOTION: MATI (STATIS)";
           }
         }
+        updateExportButtonsVisibility();
         playFlapAudio();
       }
 
@@ -1711,7 +1713,7 @@
           videoEl.srcObject = stream;
           loadingEl.classList.add("hidden");
           statusDot.className =
-            "w-3 h-3 rounded-full border border-black bg-emerald-400 animate-ping";
+            "w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full border border-black bg-emerald-400 animate-ping";
           statusText.innerText = "KAMERA AKTIF";
           enumerateVideoDevices();
         } else {
@@ -1764,7 +1766,7 @@
         [2, 3, 4].forEach((num) => {
           const btn = document.getElementById(`btn-shot-${num}`);
           if (btn) {
-            btn.className = `btn-shot-count px-3 py-1 font-extrabold transition ${count === num ? "bg-black text-yellow-300" : "bg-white text-black hover:bg-yellow-100"}`;
+            btn.className = `btn-shot-count px-2.5 sm:px-3 py-0.5 sm:py-1 font-extrabold transition text-xs ${count === num ? "bg-black text-yellow-300" : "bg-white text-black hover:bg-yellow-100"}`;
           }
         });
         document.getElementById("btn-start-text").innerText =
@@ -1949,8 +1951,10 @@
         document.getElementById("btn-reset-booth").classList.remove("hidden");
         document.getElementById("btn-reset-booth").classList.add("flex");
 
+        updateExportButtonsVisibility();
         renderFilterTargetButtons();
         renderCustomizeStripGrid();
+        renderAppliedStickers();
         startMotionLoop();
         playFlapAudio();
       }
@@ -2027,8 +2031,8 @@
 
           const retakeBtn = document.createElement("button");
           retakeBtn.className =
-            "absolute top-2 left-2 px-2.5 py-1 bg-cyan-300 hover:bg-cyan-200 border-2 border-black rounded-lg text-[10px] font-mono font-black text-black shadow-[2px_2px_0px_0px_#000] transition flex items-center space-x-1 z-20";
-          retakeBtn.innerHTML = `<i data-lucide="camera" class="w-3.5 h-3.5"></i><span>RETAKE</span>`;
+            "absolute top-1.5 left-1.5 sm:top-2 sm:left-2 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-cyan-300 hover:bg-cyan-200 border-2 border-black rounded-lg text-[9px] sm:text-[10px] font-mono font-black text-black shadow-[2px_2px_0px_0px_#000] transition flex items-center space-x-1 z-20";
+          retakeBtn.innerHTML = `<i data-lucide="camera" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i><span>RETAKE</span>`;
           retakeBtn.onclick = (e) => {
             e.stopPropagation();
             openRetakeModal(idx);
@@ -2038,8 +2042,8 @@
           const asciiToggleBtn = document.createElement("button");
           const isAscii = asciiToggles[idx] ?? true;
           asciiToggleBtn.className =
-            "absolute top-2 right-2 px-2.5 py-1 bg-yellow-300 border-2 border-black rounded-lg text-[10px] font-mono font-black text-black shadow-[2px_2px_0px_0px_#000] hover:bg-yellow-200 transition flex items-center space-x-1 z-20";
-          asciiToggleBtn.innerHTML = `<i data-lucide="zap" class="w-3.5 h-3.5"></i><span>${isAscii ? "SPLIT-FLAP" : "NORMAL"}</span>`;
+            "absolute top-1.5 right-1.5 sm:top-2 sm:right-2 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-yellow-300 border-2 border-black rounded-lg text-[9px] sm:text-[10px] font-mono font-black text-black shadow-[2px_2px_0px_0px_#000] hover:bg-yellow-200 transition flex items-center space-x-1 z-20";
+          asciiToggleBtn.innerHTML = `<i data-lucide="zap" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i><span>${isAscii ? "SPLIT-FLAP" : "NORMAL"}</span>`;
           asciiToggleBtn.onclick = (e) => {
             e.stopPropagation();
             asciiToggles[idx] = !asciiToggles[idx];
@@ -2051,8 +2055,6 @@
           grid.appendChild(slotBox);
         });
 
-        renderAppliedStickers();
-
         if (typeof lucide !== "undefined" && lucide.createIcons) {
           lucide.createIcons();
         }
@@ -2061,7 +2063,7 @@
       function updateStripThemeStyle() {
         const container = document.getElementById("strip-container");
         const t = themeSettings.currentTheme;
-        container.className = `rounded-3xl border-4 border-black ${t.bg} ${t.text} shadow-[8px_8px_0px_0px_#000] transition-all duration-300 w-full max-w-sm relative overflow-hidden`;
+        container.className = `rounded-3xl border-4 border-black ${t.bg} ${t.text} shadow-[6px_6px_0px_0px_#000] sm:shadow-[8px_8px_0px_0px_#000] transition-all duration-300 w-full max-w-sm relative overflow-hidden`;
       }
 
       function openTemplateModal() {
@@ -2078,7 +2080,7 @@
         [2, 3, 4].forEach((n) => {
           const btn = document.getElementById(`btn-tpl-shot-${n}`);
           if (btn)
-            btn.className = `px-3 py-1 font-black ${n === count ? "bg-black text-yellow-300" : "bg-white text-black"}`;
+            btn.className = `px-2.5 py-1 font-black ${n === count ? "bg-black text-yellow-300" : "bg-white text-black"}`;
         });
       }
 
@@ -2401,10 +2403,6 @@
                 const pUp = ((y - 1) * w + x) * 4;
                 const pDown = ((y + 1) * w + x) * 4;
 
-                const lumCenter =
-                  0.299 * origData[idx] +
-                  0.587 * origData[idx + 1] +
-                  0.114 * origData[idx + 2];
                 const lumL =
                   0.299 * origData[pLeft] +
                   0.587 * origData[pLeft + 1] +
@@ -2485,14 +2483,14 @@
           .forEach((c) => c.classList.add("hidden"));
         document.querySelectorAll(".tab-btn").forEach((b) => {
           b.className =
-            "tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000]";
+            "tab-btn flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000] shrink-0";
         });
 
         document
           .getElementById(`tab-content-${tabId}`)
           .classList.remove("hidden");
         document.getElementById(`tab-btn-${tabId}`).className =
-          "tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-yellow-300 text-black shadow-[2px_2px_0px_0px_#000]";
+          "tab-btn flex items-center space-x-1 px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-black font-mono border-2 border-black bg-yellow-300 text-black shadow-[2px_2px_0px_0px_#000] shrink-0";
         playFlapAudio();
       }
 
@@ -2514,10 +2512,10 @@
           .forEach(
             (b) =>
               (b.className =
-                "btn-fit-mode p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-white text-black"),
+                "btn-fit-mode py-2.5 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-white text-black"),
           );
         document.getElementById(`btn-fit-${mode}`).className =
-          "btn-fit-mode p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-yellow-300 text-black";
+          "btn-fit-mode py-2.5 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-yellow-300 text-black";
         playFlapAudio();
       }
 
@@ -2548,9 +2546,9 @@
       function setAsciiMode(mode) {
         asciiMode = mode;
         document.getElementById("btn-ascii-mode-words").className =
-          `p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] ${mode === "words" ? "bg-yellow-300 text-black" : "bg-white text-black"}`;
+          `p-2.5 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] ${mode === "words" ? "bg-yellow-300 text-black" : "bg-white text-black"}`;
         document.getElementById("btn-ascii-mode-random").className =
-          `p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] ${mode === "random" ? "bg-yellow-300 text-black" : "bg-white text-black"}`;
+          `p-2.5 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] ${mode === "random" ? "bg-yellow-300 text-black" : "bg-white text-black"}`;
         playFlapAudio();
       }
 
@@ -2568,8 +2566,8 @@
           const btn = document.createElement("button");
           const isActive = selectedFilterTarget === idx;
           const currentF = photoFilters[idx] || "none";
-          btn.className = `px-3 py-2 rounded-xl border-2 border-black font-black shadow-[2px_2px_0px_0px_#000] flex items-center space-x-1.5 ${isActive ? "bg-yellow-300 text-black" : "bg-white text-black"}`;
-          btn.innerHTML = `<span>FOTO #${idx + 1}</span><span class="text-[10px] bg-black text-white px-1.5 py-0.5 rounded uppercase">${currentF}</span>`;
+          btn.className = `px-2.5 py-1.5 rounded-xl border-2 border-black font-black text-xs shadow-[2px_2px_0px_0px_#000] flex items-center space-x-1 ${isActive ? "bg-yellow-300 text-black" : "bg-white text-black"}`;
+          btn.innerHTML = `<span>FOTO #${idx + 1}</span><span class="text-[9px] bg-black text-white px-1.5 py-0.5 rounded uppercase">${currentF}</span>`;
           btn.onclick = () => {
             selectedFilterTarget = idx;
             document.getElementById("filter-target-label").innerText =
@@ -2583,8 +2581,8 @@
 
         const allBtn = document.createElement("button");
         const isAllActive = selectedFilterTarget === "all";
-        allBtn.className = `px-3 py-2 rounded-xl border-2 border-black font-black shadow-[2px_2px_0px_0px_#000] ${isAllActive ? "bg-pink-300 text-black" : "bg-amber-50 text-black"}`;
-        allBtn.innerText = "⚡ SEMUA FOTO";
+        allBtn.className = `px-2.5 py-1.5 rounded-xl border-2 border-black font-black text-xs shadow-[2px_2px_0px_0px_#000] ${isAllActive ? "bg-pink-300 text-black" : "bg-amber-50 text-black"}`;
+        allBtn.innerText = "⚡ SEMUA";
         allBtn.onclick = () => {
           selectedFilterTarget = "all";
           document.getElementById("filter-target-label").innerText =
@@ -2609,8 +2607,8 @@
               : (photoFilters[selectedFilterTarget] || "none") === f.id;
 
           const btn = document.createElement("button");
-          btn.className = `p-3.5 rounded-2xl border-3 border-black font-black flex flex-col items-center justify-center space-y-1 shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition ${isCurrentActive ? "bg-yellow-300 text-black font-extrabold" : "bg-amber-50 hover:bg-yellow-100 text-black"}`;
-          btn.innerHTML = `<span class="text-xs tracking-wider text-center">${f.name}</span>`;
+          btn.className = `p-2.5 rounded-2xl border-3 border-black font-black flex flex-col items-center justify-center space-y-1 shadow-[2px_2px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition ${isCurrentActive ? "bg-yellow-300 text-black font-extrabold" : "bg-amber-50 hover:bg-yellow-100 text-black"}`;
+          btn.innerHTML = `<span class="text-[11px] tracking-wider text-center">${f.name}</span>`;
           btn.onclick = () => applyFilter(f.id);
           grid.appendChild(btn);
         });
@@ -2658,8 +2656,8 @@
         FRAME_COLOR_THEMES.forEach((t) => {
           const btn = document.createElement("button");
           const isActive = themeSettings.currentTheme.id === t.id;
-          btn.className = `p-3 rounded-xl border-3 border-black text-left flex items-center justify-between font-black shadow-[3px_3px_0px_0px_#000] transition ${isActive ? "bg-yellow-300" : "bg-white"}`;
-          btn.innerHTML = `<span>${t.name}</span><span class="w-5 h-5 rounded-full border-2 border-black ${t.bg}"></span>`;
+          btn.className = `p-2.5 rounded-xl border-3 border-black text-left flex items-center justify-between font-black text-[11px] shadow-[2px_2px_0px_0px_#000] transition ${isActive ? "bg-yellow-300" : "bg-white"}`;
+          btn.innerHTML = `<span>${t.name}</span><span class="w-4 h-4 rounded-full border-2 border-black ${t.bg}"></span>`;
           btn.onclick = () => {
             themeSettings.currentTheme = t;
             renderFrameThemesUI();
@@ -2685,7 +2683,7 @@
         activeWords.forEach((word, idx) => {
           const tag = document.createElement("span");
           tag.className =
-            "bg-white border-2 border-black text-black font-black px-2.5 py-1 rounded-lg text-[11px] flex items-center space-x-1 shadow-[2px_2px_0px_0px_#000]";
+            "bg-white border-2 border-black text-black font-black px-2 py-0.5 rounded-lg text-[10px] flex items-center space-x-1 shadow-[1px_1px_0px_0px_#000]";
           tag.innerHTML = `<span>${word}</span><button onclick="removeWord(${idx})" class="text-black hover:text-rose-600 font-black ml-1">×</button>`;
           container.appendChild(tag);
         });
@@ -2713,6 +2711,18 @@
         playFlapAudio();
       }
 
+      function toggleStickerDefaultBg() {
+        stickerDefaultBg = !stickerDefaultBg;
+        const btn = document.getElementById("btn-toggle-sticker-bg");
+        btn.innerText = stickerDefaultBg
+          ? "DENGAN BACKGROUND"
+          : "TANPA BACKGROUND";
+        btn.className = stickerDefaultBg
+          ? "px-2.5 py-1 bg-yellow-300 border-2 border-black text-black font-black rounded-lg text-[10px] shadow-[1px_1px_0px_0px_#000]"
+          : "px-2.5 py-1 bg-stone-200 border-2 border-black text-black font-black rounded-lg text-[10px] shadow-[1px_1px_0px_0px_#000]";
+        playFlapAudio();
+      }
+
       function renderStickersPaletteUI() {
         const grid = document.getElementById("stickers-palette-grid");
         grid.innerHTML = "";
@@ -2720,168 +2730,62 @@
         STICKERS.forEach((s) => {
           const btn = document.createElement("button");
           btn.className =
-            "p-3 bg-white hover:bg-yellow-200 border-3 border-black rounded-xl text-xl flex items-center justify-center shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition";
+            "p-2.5 bg-white hover:bg-yellow-200 border-2 sm:border-3 border-black rounded-xl text-lg sm:text-xl flex items-center justify-center shadow-[2px_2px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition";
           btn.innerText = s;
           btn.onclick = () => {
-            addSticker(s);
+            addStickerObject(s, stickerDefaultBg);
+            playFlapAudio();
           };
           grid.appendChild(btn);
         });
       }
 
-      function toggleStickerDefaultBg() {
-        stickerDefaultHasBg = !stickerDefaultHasBg;
-        const btn = document.getElementById("btn-sticker-bg-toggle");
-        const txt = document.getElementById("sticker-bg-toggle-text");
-        if (stickerDefaultHasBg) {
-          btn.className =
-            "px-3 py-1.5 rounded-xl border-2 border-black font-black text-xs shadow-[2px_2px_0px_0px_#000] bg-yellow-300 text-black flex items-center space-x-1";
-          txt.innerText = "DENGAN BACKGROUND";
-        } else {
-          btn.className =
-            "px-3 py-1.5 rounded-xl border-2 border-black font-black text-xs shadow-[2px_2px_0px_0px_#000] bg-zinc-200 text-zinc-700 flex items-center space-x-1";
-          txt.innerText = "TANPA BACKGROUND";
-        }
-        playFlapAudio();
-      }
-
-      function addCustomSticker() {
+      function addCustomStickerFromInput() {
         const input = document.getElementById("custom-sticker-input");
         const val = input.value.trim();
         if (!val) return;
-        addSticker(val, stickerDefaultHasBg);
+        addStickerObject(val, stickerDefaultBg);
         input.value = "";
+        playFlapAudio();
       }
 
-      function addSticker(symbol, hasBg = stickerDefaultHasBg) {
+      function addStickerObject(symbol, hasBg) {
         const newSticker = {
           id: "stk_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
-          text: symbol,
-          x: 35 + Math.random() * 30,
-          y: 60 + Math.random() * 15,
-          scale: 1.0,
+          symbol: symbol,
+          x: 40 + Math.random() * 20,
+          y: 45 + Math.random() * 20,
           rotation: 0,
+          scale: 1.0,
           hasBg: hasBg,
         };
         addedStickers.push(newSticker);
         selectedStickerId = newSticker.id;
         renderAppliedStickers();
         updateSelectedStickerControlsUI();
-        playFlapAudio();
       }
 
       function selectSticker(id) {
-        if (selectedStickerId === id) {
-          updateSelectedStickerControlsUI();
-          return;
-        }
+        if (selectedStickerId === id) return;
         selectedStickerId = id;
         renderAppliedStickers();
         updateSelectedStickerControlsUI();
-        playFlapAudio();
       }
 
-      function deselectAllStickers() {
-        if (selectedStickerId !== null) {
+      function handleStripContainerClick(e) {
+        if (
+          !e.target.closest(".interactive-sticker-element") &&
+          !e.target.closest("#selected-sticker-controls")
+        ) {
           selectedStickerId = null;
           renderAppliedStickers();
           updateSelectedStickerControlsUI();
         }
       }
 
-      function handleStripContainerClick(e) {
-        if (e.target.closest(".sticker-item") || e.target.closest("button")) {
-          return;
-        }
-        deselectAllStickers();
-      }
-
-      function updateSelectedStickerControlsUI() {
-        const controlsPanel = document.getElementById(
-          "selected-sticker-controls",
-        );
-        const stk = addedStickers.find((s) => s.id === selectedStickerId);
-
-        if (!stk || !controlsPanel) {
-          if (controlsPanel) controlsPanel.classList.add("hidden");
-          return;
-        }
-
-        controlsPanel.classList.remove("hidden");
-        document.getElementById("selected-sticker-preview").innerText =
-          stk.text;
-
-        const scaleSlider = document.getElementById("sticker-scale-slider");
-        const scaleVal = document.getElementById("sticker-scale-val");
-        if (scaleSlider && scaleVal) {
-          scaleSlider.value = stk.scale || 1.0;
-          scaleVal.innerText = `${(stk.scale || 1.0).toFixed(1)}x`;
-        }
-
-        const rotSlider = document.getElementById("sticker-rotation-slider");
-        const rotVal = document.getElementById("sticker-rotation-val");
-        if (rotSlider && rotVal) {
-          rotSlider.value = stk.rotation || 0;
-          rotVal.innerText = `${stk.rotation || 0}°`;
-        }
-      }
-
-      function updateSelectedStickerScale(val) {
-        const stk = addedStickers.find((s) => s.id === selectedStickerId);
-        if (stk) {
-          stk.scale = Math.max(0.5, Math.min(3.0, val));
-          document.getElementById("sticker-scale-val").innerText =
-            `${stk.scale.toFixed(1)}x`;
-          const activeEl = document.querySelector(
-            `[data-sticker-id="${stk.id}"]`,
-          );
-          if (activeEl) {
-            activeEl.style.transform = `translate(-50%, -50%) rotate(${stk.rotation || 0}deg) scale(${stk.scale})`;
-          } else {
-            renderAppliedStickers();
-          }
-        }
-      }
-
-      function updateSelectedStickerRotation(deg) {
-        const stk = addedStickers.find((s) => s.id === selectedStickerId);
-        if (stk) {
-          stk.rotation = parseInt(deg) || 0;
-          document.getElementById("sticker-rotation-val").innerText =
-            `${stk.rotation}°`;
-          const activeEl = document.querySelector(
-            `[data-sticker-id="${stk.id}"]`,
-          );
-          if (activeEl) {
-            activeEl.style.transform = `translate(-50%, -50%) rotate(${stk.rotation}deg) scale(${stk.scale || 1.0})`;
-          } else {
-            renderAppliedStickers();
-          }
-        }
-      }
-
-      function rotateSelectedStickerDelta(delta) {
-        const stk = addedStickers.find((s) => s.id === selectedStickerId);
-        if (stk) {
-          let newRot = (stk.rotation || 0) + delta;
-          if (newRot > 180) newRot -= 360;
-          if (newRot < -180) newRot += 360;
-          stk.rotation = newRot;
-          updateSelectedStickerControlsUI();
-          const activeEl = document.querySelector(
-            `[data-sticker-id="${stk.id}"]`,
-          );
-          if (activeEl) {
-            activeEl.style.transform = `translate(-50%, -50%) rotate(${stk.rotation}deg) scale(${stk.scale || 1.0})`;
-          } else {
-            renderAppliedStickers();
-          }
-          playFlapAudio();
-        }
-      }
-
-      function toggleSelectedStickerBg() {
-        const stk = addedStickers.find((s) => s.id === selectedStickerId);
+      function toggleSingleStickerBg(id, event) {
+        if (event) event.stopPropagation();
+        const stk = addedStickers.find((s) => s.id === id);
         if (stk) {
           stk.hasBg = !stk.hasBg;
           renderAppliedStickers();
@@ -2889,19 +2793,8 @@
         }
       }
 
-      function removeSelectedSticker() {
-        if (selectedStickerId) {
-          addedStickers = addedStickers.filter(
-            (s) => s.id !== selectedStickerId,
-          );
-          selectedStickerId = null;
-          renderAppliedStickers();
-          updateSelectedStickerControlsUI();
-          playFlapAudio();
-        }
-      }
-
-      function removeStickerById(id) {
+      function deleteStickerById(id, event) {
+        if (event) event.stopPropagation();
         addedStickers = addedStickers.filter((s) => s.id !== id);
         if (selectedStickerId === id) selectedStickerId = null;
         renderAppliedStickers();
@@ -2909,207 +2802,142 @@
         playFlapAudio();
       }
 
-      /* Synchronized Sticker Rendering with Base Canvas Dimensions (800px base) */
+      function deleteSelectedSticker() {
+        if (selectedStickerId) {
+          deleteStickerById(selectedStickerId);
+        }
+      }
+
+      function updateSelectedStickerParam(key, value) {
+        if (!selectedStickerId) return;
+        const stk = addedStickers.find((s) => s.id === selectedStickerId);
+        if (stk) {
+          stk[key] = value;
+          renderAppliedStickers();
+          updateSelectedStickerControlsUI();
+        }
+      }
+
+      function updateSelectedStickerControlsUI() {
+        const controls = document.getElementById("selected-sticker-controls");
+        if (!selectedStickerId) {
+          controls.classList.add("hidden");
+          return;
+        }
+
+        const stk = addedStickers.find((s) => s.id === selectedStickerId);
+        if (!stk) {
+          controls.classList.add("hidden");
+          return;
+        }
+
+        controls.classList.remove("hidden");
+        document.getElementById("sticker-rot-slider").value = stk.rotation;
+        document.getElementById("sticker-rot-label").innerText =
+          `${stk.rotation}°`;
+        document.getElementById("sticker-scale-slider").value = stk.scale;
+        document.getElementById("sticker-scale-label").innerText =
+          `${stk.scale.toFixed(1)}x`;
+      }
+
       function renderAppliedStickers() {
         const container = document.getElementById("strip-stickers-container");
         const clearBtn = document.getElementById("btn-clear-stickers");
         container.innerHTML = "";
 
         if (addedStickers.length > 0) {
-          container.classList.remove("hidden");
-          if (clearBtn) clearBtn.classList.remove("hidden");
+          clearBtn.classList.remove("hidden");
 
-          const stripEl = document.getElementById("strip-container");
-          const stripRect = stripEl
-            ? stripEl.getBoundingClientRect()
-            : { width: 360 };
-          const scaleRatio = (stripRect.width || 360) / 800; // Ratio based on 800px base canvas
+          const containerW = container.clientWidth || 320;
+          const containerH = container.clientHeight || 800;
 
           addedStickers.forEach((stk) => {
-            const isSelected = stk.id === selectedStickerId;
-            const el = document.createElement("div");
-            el.setAttribute("data-sticker-id", stk.id);
-            const hasBg = stk.hasBg !== false;
-            const scale = stk.scale || 1.0;
-            const rotation = stk.rotation || 0;
+            const wrapper = document.createElement("div");
+            const isSelected = selectedStickerId === stk.id;
 
-            el.className =
-              "sticker-item absolute cursor-grab active:cursor-grabbing select-none z-30 pointer-events-auto touch-none";
+            wrapper.setAttribute("data-sticker-id", stk.id);
+            wrapper.className = `absolute pointer-events-auto touch-none select-none interactive-sticker-element flex items-center justify-center p-1.5 rounded-xl transition-shadow ${
+              isSelected ? "z-50" : "z-30"
+            }`;
 
-            el.style.left = stk.x + "%";
-            el.style.top = stk.y + "%";
-            el.style.transform = `translate(-50%, -50%) rotate(${rotation}deg) scale(${scale})`;
+            wrapper.style.left = `${stk.x}%`;
+            wrapper.style.top = `${stk.y}%`;
+            wrapper.style.transform = `translate(-50%, -50%) rotate(${stk.rotation}deg) scale(${stk.scale})`;
 
-            if (hasBg) {
-              const box = document.createElement("div");
-              box.className =
-                "font-mono font-black bg-white border-black text-black flex items-center justify-center whitespace-nowrap shadow-none";
-
-              const fontSize = Math.max(10, 32 * scaleRatio);
-              const padX = Math.max(6, 24 * scaleRatio);
-              const padY = Math.max(3, 12 * scaleRatio);
-              const borderWidth = Math.max(1.5, 4 * scaleRatio);
-              const shadowDist = Math.max(2, 5 * scaleRatio);
-              const borderRadius = Math.max(4, 12 * scaleRatio);
-
-              box.style.fontSize = `${fontSize}px`;
-              box.style.padding = `${padY}px ${padX}px`;
-              box.style.borderWidth = `${borderWidth}px`;
-              box.style.borderRadius = `${borderRadius}px`;
-              box.style.boxShadow = `${shadowDist}px ${shadowDist}px 0px 0px #000`;
-
-              if (isSelected) {
-                box.style.outline = `${Math.max(2, 3 * scaleRatio)}px solid #ec4899`;
-                box.style.outlineOffset = `${Math.max(2, 3 * scaleRatio)}px`;
-              }
-
-              box.innerText = stk.text;
-              el.appendChild(box);
+            let contentHTML = "";
+            if (stk.hasBg) {
+              contentHTML = `<div class="bg-white border-2 border-black px-2.5 py-0.5 rounded-xl shadow-[2px_2px_0px_0px_#000] font-black text-xs sm:text-sm flex items-center justify-center">${stk.symbol}</div>`;
             } else {
-              const em = document.createElement("div");
-              em.className =
-                "font-extrabold flex items-center justify-center select-none";
-
-              const fontSize = Math.max(18, 72 * scaleRatio);
-              em.style.fontSize = `${fontSize}px`;
-              em.style.lineHeight = "1";
-              em.style.filter = "drop-shadow(0px 3px 6px rgba(0,0,0,0.5))";
-
-              if (isSelected) {
-                em.style.outline = `${Math.max(2, 3 * scaleRatio)}px dashed #facc15`;
-                em.style.outlineOffset = `${Math.max(2, 3 * scaleRatio)}px`;
-                em.style.borderRadius = `${Math.max(4, 8 * scaleRatio)}px`;
-              }
-
-              em.innerText = stk.text;
-              el.appendChild(em);
+              contentHTML = `<div class="font-black text-xl sm:text-2xl drop-shadow-[2px_2px_0px_#000] leading-none flex items-center justify-center text-black">${stk.symbol}</div>`;
             }
 
             if (isSelected) {
-              const btnScale = Math.max(0.65, scaleRatio * 1.8);
-
-              const delBtn = document.createElement("button");
-              delBtn.className =
-                "absolute -top-3 -left-3 w-6 h-6 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black rounded-full font-black text-xs flex items-center justify-center shadow-[1px_1px_0px_0px_#000] z-40 focus:outline-none";
-              delBtn.style.transform = `scale(${btnScale})`;
-              delBtn.innerHTML = "×";
-              delBtn.title = "Hapus Stiker";
-              delBtn.onclick = (e) => {
-                e.stopPropagation();
-                removeStickerById(stk.id);
-              };
-              el.appendChild(delBtn);
-
-              const rotBtn = document.createElement("button");
-              rotBtn.className =
-                "absolute -top-3 -right-3 w-6 h-6 bg-yellow-300 hover:bg-yellow-200 text-black border-2 border-black rounded-full font-black text-[10px] flex items-center justify-center shadow-[1px_1px_0px_0px_#000] z-40 focus:outline-none";
-              rotBtn.style.transform = `scale(${btnScale})`;
-              rotBtn.innerHTML = "↻";
-              rotBtn.title = "Putar Stiker +45°";
-              rotBtn.onclick = (e) => {
-                e.stopPropagation();
-                rotateSelectedStickerDelta(45);
-              };
-              el.appendChild(rotBtn);
-
-              const bgBtn = document.createElement("button");
-              bgBtn.className =
-                "absolute -bottom-3 -left-3 px-1.5 py-0.5 bg-amber-100 hover:bg-yellow-300 text-black border-2 border-black rounded-md font-mono font-black text-[9px] flex items-center justify-center shadow-[1px_1px_0px_0px_#000] z-40 focus:outline-none";
-              bgBtn.style.transform = `scale(${btnScale})`;
-              bgBtn.innerText = hasBg ? "BG" : "NO-BG";
-              bgBtn.title = "Ubah Background";
-              bgBtn.onclick = (e) => {
-                e.stopPropagation();
-                toggleSelectedStickerBg();
-              };
-              el.appendChild(bgBtn);
+              contentHTML += `
+                <div class="absolute -top-2.5 -left-2.5 w-5 h-5 bg-rose-500 border-2 border-black text-white rounded-full flex items-center justify-center text-[10px] font-bold shadow-[1px_1px_0px_0px_#000] cursor-pointer hover:scale-110 transition z-10" onclick="deleteStickerById('${stk.id}', event)">×</div>
+                <div class="absolute -top-2.5 -right-2.5 w-5 h-5 bg-yellow-300 border-2 border-black text-black rounded-full flex items-center justify-center text-[9px] font-bold shadow-[1px_1px_0px_0px_#000] cursor-pointer hover:scale-110 transition z-10" onclick="updateSelectedStickerParam('rotation', (${stk.rotation} + 45) % 360)">↻</div>
+                <div class="absolute -bottom-2.5 -right-2.5 w-5 h-5 bg-cyan-300 border-2 border-black text-black rounded-full flex items-center justify-center text-[9px] font-bold shadow-[1px_1px_0px_0px_#000] cursor-pointer hover:scale-110 transition z-10" onclick="updateSelectedStickerParam('scale', Math.min(3.0, ${stk.scale} + 0.2))">⤢</div>
+                <div class="absolute -bottom-2.5 -left-2.5 px-1 py-0.2 bg-lime-300 border border-black text-black rounded text-[7px] font-mono font-bold shadow-[1px_1px_0px_0px_#000] cursor-pointer hover:scale-105 transition z-10" onclick="toggleSingleStickerBg('${stk.id}', event)">${stk.hasBg ? "NO-BG" : "BG"}</div>
+                <div class="absolute inset-0 border-2 border-dashed border-black rounded-xl pointer-events-none"></div>
+              `;
             }
 
-            el.onclick = (e) => {
-              e.stopPropagation();
-              selectSticker(stk.id);
-            };
+            wrapper.innerHTML = contentHTML;
 
-            makeStickerDraggable(el, stk);
-            container.appendChild(el);
+            wrapper.addEventListener("pointerdown", (e) => {
+              if (
+                e.target.closest("button") ||
+                e.target.getAttribute("onclick")
+              )
+                return;
+              e.stopPropagation();
+
+              if (selectedStickerId !== stk.id) {
+                selectSticker(stk.id);
+              }
+
+              const targetEl =
+                document.querySelector(`[data-sticker-id="${stk.id}"]`) ||
+                wrapper;
+              try {
+                targetEl.setPointerCapture(e.pointerId);
+              } catch (err) {}
+
+              let startX = e.clientX;
+              let startY = e.clientY;
+              let startStkX = stk.x;
+              let startStkY = stk.y;
+
+              const onPointerMove = (moveEv) => {
+                const deltaX = moveEv.clientX - startX;
+                const deltaY = moveEv.clientY - startY;
+
+                const percentX = (deltaX / containerW) * 100;
+                const percentY = (deltaY / containerH) * 100;
+
+                stk.x = Math.max(5, Math.min(95, startStkX + percentX));
+                stk.y = Math.max(2, Math.min(98, startStkY + percentY));
+
+                wrapper.style.left = `${stk.x}%`;
+                wrapper.style.top = `${stk.y}%`;
+              };
+
+              const onPointerUp = (upEv) => {
+                try {
+                  targetEl.releasePointerCapture(upEv.pointerId);
+                } catch (err) {}
+                window.removeEventListener("pointermove", onPointerMove);
+                window.removeEventListener("pointerup", onPointerUp);
+              };
+
+              window.addEventListener("pointermove", onPointerMove);
+              window.addEventListener("pointerup", onPointerUp);
+            });
+
+            container.appendChild(wrapper);
           });
         } else {
-          container.classList.add("hidden");
-          if (clearBtn) clearBtn.classList.add("hidden");
+          clearBtn.classList.add("hidden");
         }
-      }
-
-      function makeStickerDraggable(el, stk) {
-        let isDragging = false;
-        let startX = 0,
-          startY = 0;
-        let startStkX = 0,
-          startStkY = 0;
-
-        const container = document.getElementById("strip-container");
-
-        const onPointerMove = (e) => {
-          if (!isDragging) return;
-          const rect = container.getBoundingClientRect();
-          if (rect.width === 0 || rect.height === 0) return;
-
-          const deltaX = ((e.clientX - startX) / rect.width) * 100;
-          const deltaY = ((e.clientY - startY) / rect.height) * 100;
-
-          stk.x = Math.max(0, Math.min(100, startStkX + deltaX));
-          stk.y = Math.max(0, Math.min(100, startStkY + deltaY));
-
-          const currentEl =
-            document.querySelector(`[data-sticker-id="${stk.id}"]`) || el;
-          if (currentEl) {
-            currentEl.style.left = stk.x + "%";
-            currentEl.style.top = stk.y + "%";
-          }
-        };
-
-        const onPointerUp = (e) => {
-          if (isDragging) {
-            isDragging = false;
-            try {
-              if (
-                e.pointerId !== undefined &&
-                el.hasPointerCapture &&
-                el.hasPointerCapture(e.pointerId)
-              ) {
-                el.releasePointerCapture(e.pointerId);
-              }
-            } catch (err) {}
-            window.removeEventListener("pointermove", onPointerMove);
-            window.removeEventListener("pointerup", onPointerUp);
-            window.removeEventListener("pointercancel", onPointerUp);
-          }
-        };
-
-        const onPointerDown = (e) => {
-          if (e.target.tagName === "BUTTON") return;
-          isDragging = true;
-          selectSticker(stk.id);
-
-          const currentEl =
-            document.querySelector(`[data-sticker-id="${stk.id}"]`) || el;
-
-          try {
-            if (currentEl && currentEl.isConnected) {
-              currentEl.setPointerCapture(e.pointerId);
-            }
-          } catch (err) {}
-
-          startX = e.clientX;
-          startY = e.clientY;
-          startStkX = stk.x;
-          startStkY = stk.y;
-
-          window.addEventListener("pointermove", onPointerMove);
-          window.addEventListener("pointerup", onPointerUp);
-          window.addEventListener("pointercancel", onPointerUp);
-        };
-
-        el.addEventListener("pointerdown", onPointerDown);
       }
 
       function clearAllStickers() {
@@ -3189,7 +3017,6 @@
         reader.readAsDataURL(file);
       }
 
-      /* 1:1 Synchronized Canvas Generation function */
       async function generateStripCanvas(frameTick = 0) {
         const exportCanvas = document.createElement("canvas");
         const canvasW = 800;
@@ -3287,60 +3114,56 @@
           });
         }
 
-        // Render Draggable, Scaled & Rotated Stickers onto Export Canvas
-        if (addedStickers && addedStickers.length > 0) {
-          addedStickers.forEach((stk) => {
-            const posX = (stk.x / 100) * canvasW;
-            const posY = (stk.y / 100) * canvasH;
-            const hasBg = stk.hasBg !== false;
-            const scale = stk.scale || 1.0;
-            const rotationRad = ((stk.rotation || 0) * Math.PI) / 180;
+        // Render stickers on exported canvas
+        addedStickers.forEach((stk) => {
+          ctx.save();
+          const posX = (stk.x / 100) * canvasW;
+          const posY = (stk.y / 100) * canvasH;
 
-            ctx.save();
-            ctx.translate(posX, posY);
-            ctx.rotate(rotationRad);
-            ctx.scale(scale, scale);
+          ctx.translate(posX, posY);
+          ctx.rotate((stk.rotation * Math.PI) / 180);
+          ctx.scale(stk.scale, stk.scale);
 
-            if (hasBg) {
-              ctx.font = "bold 32px monospace";
-              ctx.textAlign = "center";
-              ctx.textBaseline = "middle";
+          if (stk.hasBg) {
+            ctx.font = "bold 26px sans-serif";
+            const textMetrics = ctx.measureText(stk.symbol);
+            const textW = textMetrics.width;
+            const bgW = textW + 28;
+            const bgH = 44;
 
-              const metrics = ctx.measureText(stk.text);
-              const boxW = metrics.width + 48; // 24px padding on each side
-              const boxH = 56;
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(-bgW / 2, -bgH / 2, bgW, bgH);
 
-              ctx.fillStyle = "#000000";
-              ctx.fillRect(-boxW / 2 + 5, -boxH / 2 + 5, boxW, boxH);
+            ctx.strokeStyle = "#000000";
+            ctx.lineWidth = 3;
+            ctx.strokeRect(-bgW / 2, -bgH / 2, bgW, bgH);
 
-              ctx.fillStyle = "#ffffff";
-              ctx.fillRect(-boxW / 2, -boxH / 2, boxW, boxH);
+            ctx.fillStyle = "#000000";
+            ctx.fillRect(-bgW / 2 + 3, -bgH / 2 + 3, bgW, bgH);
 
-              ctx.strokeStyle = "#000000";
-              ctx.lineWidth = 4;
-              ctx.strokeRect(-boxW / 2, -boxH / 2, boxW, boxH);
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(-bgW / 2, -bgH / 2, bgW, bgH);
+            ctx.strokeRect(-bgW / 2, -bgH / 2, bgW, bgH);
 
-              ctx.fillStyle = "#000000";
-              ctx.fillText(stk.text, 0, 0);
-            } else {
-              // Pure Emoticon Export Rendering
-              ctx.font =
-                "bold 72px sans-serif, 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', monospace";
-              ctx.textAlign = "center";
-              ctx.textBaseline = "middle";
+            ctx.fillStyle = "#000000";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(stk.symbol, 0, 2);
+          } else {
+            ctx.font = "bold 36px sans-serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
 
-              ctx.shadowColor = "rgba(0,0,0,0.5)";
-              ctx.shadowBlur = 8;
-              ctx.shadowOffsetX = 0;
-              ctx.shadowOffsetY = 4;
+            ctx.strokeStyle = "#000000";
+            ctx.lineWidth = 4;
+            ctx.strokeText(stk.symbol, 0, 0);
 
-              ctx.fillStyle = "#ffffff";
-              ctx.fillText(stk.text, 0, 0);
-            }
+            ctx.fillStyle = "#000000";
+            ctx.fillText(stk.symbol, 0, 0);
+          }
 
-            ctx.restore();
-          });
-        }
+          ctx.restore();
+        });
 
         const footerY = canvasH - padding - 30;
         ctx.fillStyle = theme.hexText;
@@ -3371,118 +3194,146 @@
         return exportCanvas;
       }
 
-      async function triggerNativeWebShareOrDownload(
-        blob,
-        fileName,
-        fallbackDataUrl,
-        modalPreviewId,
-        previewImgId,
-        downloadAnchorId,
-      ) {
-        if (navigator.canShare && navigator.share && blob) {
-          const file = new File([blob], fileName, { type: blob.type });
-          if (navigator.canShare({ files: [file] })) {
-            try {
+      async function triggerModalShare() {
+        if (!currentExportBlob || !currentExportFileName) {
+          showToast("Berkas belum siap untuk dibagikan.");
+          return;
+        }
+
+        const cleanMime =
+          currentExportBlob.type.split(";")[0].trim() || "image/png";
+        const isVideo = cleanMime.startsWith("video/");
+
+        if (navigator.canShare && navigator.share) {
+          try {
+            const fileToShare = new File(
+              [currentExportBlob],
+              currentExportFileName,
+              { type: cleanMime },
+            );
+
+            if (navigator.canShare({ files: [fileToShare] })) {
               await navigator.share({
-                files: [file],
-                title: "Neo Photo Strip",
-                text: "Dibuat dengan Neo Flash Studio!",
+                files: [fileToShare],
+                title: isVideo ? "Neo Live Motion Video" : "Neo Photo Strip",
+                text: isVideo
+                  ? "Lihat video photobooth animasi saya dari Neo Flash Studio! 🎬✨"
+                  : "Lihat foto strip buatan saya dari Neo Flash Studio! 📸⚡",
               });
-              return true;
-            } catch (e) {
-              if (e.name === "AbortError") return true;
+              showToast("Berhasil membagikan!");
+              return;
             }
+          } catch (e) {
+            if (e.name === "AbortError") return;
+            console.warn("Share failed:", e);
           }
         }
 
-        document.getElementById(previewImgId).src = fallbackDataUrl;
-        const anchor = document.getElementById(downloadAnchorId);
-        anchor.href = fallbackDataUrl;
-        anchor.download = fileName;
-        anchor.innerText = "UNDUH FILE PNG";
-        document.getElementById(modalPreviewId).classList.remove("hidden");
-
-        return false;
+        showToast(
+          "Browser tidak mendukung berbagi berkas ini secara langsung. Silakan gunakan tombol UNDUH.",
+        );
       }
 
       async function handleExportPNG() {
         playFlapAudio();
-        deselectAllStickers();
         try {
           const canvas = await generateStripCanvas(0);
           const dataUrl = canvas.toDataURL("image/png");
 
-          canvas.toBlob(async (blob) => {
+          canvas.toBlob((blob) => {
             const fileName = `Neo-strip-${Date.now()}.png`;
-            await triggerNativeWebShareOrDownload(
-              blob,
-              fileName,
-              dataUrl,
-              "modal-export-preview",
-              "export-preview-img",
-              "export-download-anchor",
-            );
+
+            currentExportBlob = blob;
+            currentExportFileName = fileName;
+            currentExportUrl = dataUrl;
+
+            const imgEl = document.getElementById("export-preview-img");
+            const videoEl = document.getElementById("export-preview-video");
+            const titleEl = document.getElementById("export-modal-title");
+            const descEl = document.getElementById("export-modal-desc");
+            const anchor = document.getElementById("export-download-anchor");
+
+            videoEl.classList.add("hidden");
+            videoEl.pause();
+
+            imgEl.classList.remove("hidden");
+            imgEl.src = dataUrl;
+
+            titleEl.innerText = "HASIL FOTO STRIP";
+            descEl.innerText =
+              "Klik tombol di bawah ini atau tekan lama pada foto untuk menyimpan:";
+
+            anchor.href = dataUrl;
+            anchor.download = fileName;
+            anchor.innerText = "UNDUH FILE PNG";
+
+            document
+              .getElementById("modal-export-preview")
+              .classList.remove("hidden");
           }, "image/png");
         } catch (err) {}
       }
 
       async function handleExportMotionVideo() {
         playFlapAudio();
-        deselectAllStickers();
         const modal = document.getElementById("modal-video-recording");
         modal.classList.remove("hidden");
 
         try {
           const recordingCanvas = await generateStripCanvas(0);
-          const stream = recordingCanvas.captureStream(12);
+          const recordingStream = recordingCanvas.captureStream(12);
 
-          let mimeType = "video/webm";
+          let rawMime = "video/webm";
           if (MediaRecorder.isTypeSupported("video/mp4;codecs=avc1")) {
-            mimeType = "video/mp4;codecs=avc1";
+            rawMime = "video/mp4;codecs=avc1";
           } else if (MediaRecorder.isTypeSupported("video/mp4")) {
-            mimeType = "video/mp4";
+            rawMime = "video/mp4";
           } else if (MediaRecorder.isTypeSupported("video/webm;codecs=vp9")) {
-            mimeType = "video/webm;codecs=vp9";
+            rawMime = "video/webm;codecs=vp9";
           }
 
-          const recorder = new MediaRecorder(stream, { mimeType });
+          const cleanMime = rawMime.includes("mp4")
+            ? "video/mp4"
+            : "video/webm";
+          const fileExt = cleanMime === "video/mp4" ? "mp4" : "webm";
+
+          const recorder = new MediaRecorder(recordingStream, {
+            mimeType: rawMime,
+          });
           const chunks = [];
 
           recorder.ondataavailable = (e) => chunks.push(e.data);
-          recorder.onstop = async () => {
-            const blob = new Blob(chunks, { type: mimeType });
+          recorder.onstop = () => {
+            const blob = new Blob(chunks, { type: cleanMime });
             const url = URL.createObjectURL(blob);
-            const fileName = `Neo-motion-${Date.now()}.${mimeType.includes("mp4") ? "mp4" : "webm"}`;
+            const fileName = `Neo-motion-${Date.now()}.${fileExt}`;
 
             modal.classList.add("hidden");
 
-            if (navigator.canShare && navigator.share) {
-              const file = new File([blob], fileName, { type: mimeType });
-              if (navigator.canShare({ files: [file] })) {
-                try {
-                  await navigator.share({
-                    files: [file],
-                    title: "Neo Live Motion Video",
-                    text: "Dibuat dengan Neo Live Motion Photobooth!",
-                  });
-                  return;
-                } catch (e) {
-                  if (e.name === "AbortError") {
-                    return;
-                  }
-                }
-              }
-            }
+            currentExportBlob = blob;
+            currentExportFileName = fileName;
+            currentExportUrl = url;
 
-            document.getElementById("export-preview-img").src =
-              recordingCanvas.toDataURL("image/png");
+            const imgEl = document.getElementById("export-preview-img");
+            const videoEl = document.getElementById("export-preview-video");
+            const titleEl = document.getElementById("export-modal-title");
+            const descEl = document.getElementById("export-modal-desc");
             const anchor = document.getElementById("export-download-anchor");
+
+            imgEl.classList.add("hidden");
+
+            videoEl.classList.remove("hidden");
+            videoEl.src = url;
+            videoEl.play();
+
+            titleEl.innerText = "HASIL VIDEO ANIMASI";
+            descEl.innerText =
+              "Video animasi Live Motion & Split-Flap ASCII kamu siap diunduh atau dibagikan!";
+
             anchor.href = url;
             anchor.download = fileName;
-            anchor.innerText =
-              "UNDUH FILE VIDEO (" +
-              (mimeType.includes("mp4") ? "MP4" : "WEBM") +
-              ")";
+            anchor.innerText = `UNDUH FILE VIDEO (${cleanMime === "video/mp4" ? "MP4" : "WEBM"})`;
+
             document
               .getElementById("modal-export-preview")
               .classList.remove("hidden");
@@ -3504,131 +3355,8 @@
           }, 100);
         } catch (e) {
           modal.classList.add("hidden");
+          showToast("Gagal memproses video pada perangkat ini.");
         }
-      }
-
-      async function handleExportStory1080() {
-        playFlapAudio();
-        deselectAllStickers();
-        try {
-          const storyW = 1080;
-          const storyH = 1920;
-          const storyCanvas = document.createElement("canvas");
-          storyCanvas.width = storyW;
-          storyCanvas.height = storyH;
-          const ctx = storyCanvas.getContext("2d");
-
-          ctx.fillStyle = "#facc15";
-          ctx.fillRect(0, 0, storyW, storyH);
-
-          ctx.fillStyle = "#000000";
-          for (let x = 20; x < storyW; x += 40) {
-            for (let y = 20; y < storyH; y += 40) {
-              ctx.beginPath();
-              ctx.arc(x, y, 3, 0, Math.PI * 2);
-              ctx.fill();
-            }
-          }
-
-          const headerX = 80;
-          const headerY = 70;
-          const headerW = storyW - headerX * 2;
-          const headerH = 180;
-
-          ctx.fillStyle = "#000000";
-          ctx.fillRect(headerX + 16, headerY + 16, headerW, headerH);
-
-          ctx.fillStyle = "#ffffff";
-          ctx.fillRect(headerX, headerY, headerW, headerH);
-          ctx.strokeStyle = "#000000";
-          ctx.lineWidth = 10;
-          ctx.strokeRect(headerX, headerY, headerW, headerH);
-
-          ctx.fillStyle = "#000000";
-          ctx.font = "black 46px monospace";
-          ctx.textAlign = "left";
-          ctx.fillText("✈ NEO STORY PASS", headerX + 40, headerY + 70);
-
-          ctx.font = "bold 24px monospace";
-          ctx.fillText(
-            "FLIGHT: FB-2026  |  GATE: ASCII-09  |  MODE: SOLARI",
-            headerX + 40,
-            headerY + 130,
-          );
-
-          const stripCanvas = await generateStripCanvas(0);
-          const stripTargetW = 600;
-          const stripTargetH =
-            (stripCanvas.height / stripCanvas.width) * stripTargetW;
-
-          const maxStripH = 1200;
-          let finalW = stripTargetW;
-          let finalH = stripTargetH;
-
-          if (finalH > maxStripH) {
-            finalH = maxStripH;
-            finalW = (stripCanvas.width / stripCanvas.height) * finalH;
-          }
-
-          const stripX = (storyW - finalW) / 2;
-          const stripY = headerY + headerH + 50;
-
-          ctx.fillStyle = "#000000";
-          ctx.fillRect(stripX + 20, stripY + 20, finalW, finalH);
-
-          ctx.drawImage(stripCanvas, stripX, stripY, finalW, finalH);
-
-          ctx.strokeStyle = "#000000";
-          ctx.lineWidth = 10;
-          ctx.strokeRect(stripX, stripY, finalW, finalH);
-
-          const footerW = 920;
-          const footerH = 160;
-          const footerX = (storyW - footerW) / 2;
-          const footerY = storyH - 70 - footerH;
-
-          ctx.fillStyle = "#000000";
-          ctx.fillRect(footerX + 16, footerY + 16, footerW, footerH);
-
-          ctx.fillStyle = "#ffffff";
-          ctx.fillRect(footerX, footerY, footerW, footerH);
-          ctx.strokeStyle = "#000000";
-          ctx.lineWidth = 10;
-          ctx.strokeRect(footerX, footerY, footerW, footerH);
-
-          ctx.fillStyle = "#000000";
-          const startBarX = footerX + 40;
-          for (let bx = 0; bx < 280; bx += 8) {
-            const w = bx % 16 === 0 ? 5 : 2;
-            ctx.fillRect(startBarX + bx, footerY + 30, w, 80);
-          }
-
-          ctx.font = "bold 22px monospace";
-          ctx.textAlign = "left";
-          ctx.fillText("NEO-STORY-PASS", startBarX, footerY + 135);
-
-          ctx.textAlign = "right";
-          ctx.font = "bold 24px monospace";
-          ctx.fillText(
-            "WWW.NEO-FLASH.STUDIO",
-            footerX + footerW - 40,
-            footerY + 70,
-          );
-
-          const dataUrl = storyCanvas.toDataURL("image/png");
-
-          storyCanvas.toBlob(async (blob) => {
-            const fileName = `Neo-story-1080x1920-${Date.now()}.png`;
-            await triggerNativeWebShareOrDownload(
-              blob,
-              fileName,
-              dataUrl,
-              "modal-story-preview",
-              "story-preview-img",
-              "story-download-anchor",
-            );
-          }, "image/png");
-        } catch (err) {}
       }
 
       function openHelpModal() {
@@ -3639,9 +3367,11 @@
       }
       function closeExportPreviewModal() {
         document.getElementById("modal-export-preview").classList.add("hidden");
-      }
-      function closeStoryPreviewModal() {
-        document.getElementById("modal-story-preview").classList.add("hidden");
+        const videoEl = document.getElementById("export-preview-video");
+        if (videoEl) {
+          videoEl.pause();
+          videoEl.src = "";
+        }
       }
 
       function toggleSound() {
@@ -3652,7 +3382,7 @@
           "data-lucide",
           soundEnabled ? "volume-2" : "volume-x",
         );
-        btn.className = `p-2 rounded-xl border-2 border-black font-bold shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition ${soundEnabled ? "bg-pink-300 text-black" : "bg-stone-200 text-stone-600"}`;
+        btn.className = `p-2 rounded-xl border-2 border-black font-bold shadow-[2px_2px_0px_0px_#000] sm:shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition ${soundEnabled ? "bg-pink-300 text-black" : "bg-stone-200 text-stone-600"}`;
         if (typeof lucide !== "undefined" && lucide.createIcons) {
           lucide.createIcons();
         }
