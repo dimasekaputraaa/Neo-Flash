@@ -31,8 +31,7 @@
           size: 58mm auto;
           margin: 0;
         }
-        html,
-        body {
+        html, body {
           width: 58mm !important;
           max-width: 58mm !important;
           margin: 0 !important;
@@ -94,9 +93,7 @@
           >
             Neo Flash
           </h1>
-          <p
-            class="text-[9px] sm:text-xs text-black font-mono font-bold tracking-tight truncate mt-0.5"
-          >
+          <p class="text-[9px] sm:text-xs text-black font-mono font-bold tracking-tight truncate mt-0.5">
             SPLIT-FLAP ASCII & LIVE MOTION PHOTOBOOTH
           </p>
         </div>
@@ -118,11 +115,7 @@
           class="p-2 rounded-xl border-2 border-black font-bold shadow-[2px_2px_0px_0px_#000] sm:shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition bg-pink-300 text-black"
           title="Suara"
         >
-          <i
-            data-lucide="volume-2"
-            id="sound-icon"
-            class="w-4 h-4 sm:w-5 sm:h-5"
-          ></i>
+          <i data-lucide="volume-2" id="sound-icon" class="w-4 h-4 sm:w-5 sm:h-5"></i>
         </button>
 
         <button
@@ -160,12 +153,8 @@
             >
           </div>
 
-          <div
-            class="flex items-center space-x-1.5 sm:space-x-2 font-mono text-[10px] sm:text-xs font-bold"
-          >
-            <label class="text-black uppercase hidden sm:inline"
-              >JUMLAH SHOTS:</label
-            >
+          <div class="flex items-center space-x-1.5 sm:space-x-2 font-mono text-[10px] sm:text-xs font-bold">
+            <label class="text-black uppercase hidden sm:inline">JUMLAH SHOTS:</label>
             <label class="text-black uppercase sm:hidden">SHOTS:</label>
             <div
               id="shot-buttons-container"
@@ -217,13 +206,8 @@
             id="camera-loading"
             class="text-center font-mono text-yellow-300 p-4 sm:p-6 flex flex-col items-center space-y-2 sm:space-y-3"
           >
-            <i
-              data-lucide="refresh-cw"
-              class="w-8 h-8 sm:w-10 sm:h-10 animate-spin"
-            ></i>
-            <p
-              class="text-[11px] sm:text-xs font-bold uppercase tracking-wider"
-            >
+            <i data-lucide="refresh-cw" class="w-8 h-8 sm:w-10 sm:h-10 animate-spin"></i>
+            <p class="text-[11px] sm:text-xs font-bold uppercase tracking-wider">
               MENGHUBUNGKAN KAMERA...
             </p>
           </div>
@@ -248,8 +232,7 @@
                 id="camera-error-msg"
                 class="text-[11px] sm:text-xs text-zinc-800 mt-1 font-bold leading-relaxed"
               >
-                Browser memblokir akses kamera. Silakan berikan izin akses
-                kamera.
+                Browser memblokir akses kamera. Silakan berikan izin akses kamera.
               </p>
             </div>
             <div class="flex flex-wrap justify-center gap-2 pt-1">
@@ -316,9 +299,7 @@
         </div>
 
         <!-- Action Buttons -->
-        <div
-          class="mt-4 sm:mt-6 w-full flex flex-col sm:flex-row items-center gap-2.5 sm:gap-4"
-        >
+        <div class="mt-4 sm:mt-6 w-full flex flex-col sm:flex-row items-center gap-2.5 sm:gap-4">
           <button
             id="btn-start-booth"
             onclick="startPhotoboothSequence()"
@@ -357,10 +338,7 @@
             class="w-full max-w-sm mb-3 sm:mb-4 flex items-center justify-between bg-white border-3 border-black rounded-2xl p-2.5 sm:p-3 shadow-[3px_3px_0px_0px_#000] sm:shadow-[4px_4px_0px_0px_#000] font-mono text-[11px] sm:text-xs"
           >
             <span class="font-black text-black flex items-center space-x-1.5">
-              <i
-                data-lucide="film"
-                class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-pink-500"
-              ></i>
+              <i data-lucide="film" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-pink-500"></i>
               <span>MODE:</span>
             </span>
             <button
@@ -368,10 +346,7 @@
               onclick="toggleLiveMotionPlayback()"
               class="px-2.5 sm:px-3.5 py-1.5 rounded-xl border-2 border-black bg-white text-black font-black shadow-[2px_2px_0px_0px_#000] flex items-center space-x-1.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition text-[10px] sm:text-xs"
             >
-              <i
-                data-lucide="play"
-                class="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current"
-              ></i>
+              <i data-lucide="play" class="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current"></i>
               <span id="livemotion-toggle-text"
                 >LIVE MOTION: MATI (STATIS)</span
               >
@@ -387,9 +362,7 @@
               id="strip-header-bar"
               class="font-mono font-black tracking-wider text-[11px] sm:text-sm uppercase border-b-3 border-black w-full flex items-center justify-between px-1 z-10"
             >
-              <span
-                id="strip-title-text"
-                class="truncate max-w-[180px] sm:max-w-[200px]"
+              <span id="strip-title-text" class="truncate max-w-[180px] sm:max-w-[200px]"
                 >NEO FLASH STUDIO</span
               >
               <span
@@ -424,9 +397,7 @@
           </div>
 
           <!-- Dynamic Export & Thermal Print Buttons -->
-          <div
-            class="flex flex-wrap gap-2.5 mt-4 sm:mt-6 w-full justify-center"
-          >
+          <div class="flex flex-wrap gap-2.5 mt-4 sm:mt-6 w-full justify-center">
             <button
               id="btn-export-photo"
               onclick="handleExportPNG()"
@@ -460,9 +431,7 @@
           class="lg:col-span-6 bg-white border-3 border-black rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-[4px_4px_0px_0px_#000] sm:shadow-[8px_8px_0px_0px_#000] space-y-5 sm:space-y-6"
         >
           <!-- Horizontal Scrollable Tab Bar -->
-          <div
-            class="flex border-b-3 border-black pb-3 gap-1.5 overflow-x-auto no-scrollbar"
-          >
+          <div class="flex border-b-3 border-black pb-3 gap-1.5 overflow-x-auto no-scrollbar">
             <button
               onclick="switchTab('fit')"
               id="tab-btn-fit"
@@ -527,11 +496,30 @@
             </button>
           </div>
 
-          <!-- TAB CONTENT: FIT & SKALA -->
+          <!-- TAB CONTENT: FIT & SKALA (DENGAN PEMILIH FOTO TARGET) -->
           <div
             id="tab-content-fit"
             class="tab-content space-y-4 font-mono text-xs"
           >
+            <div>
+              <label class="text-black font-black block mb-2 uppercase"
+                >PILIH FOTO YANG INGIN DIATUR</label
+              >
+              <div
+                id="fit-target-buttons"
+                class="flex flex-wrap gap-1.5 mb-3"
+              ></div>
+            </div>
+
+            <label class="text-black font-black block uppercase">
+              PENGATURAN BINGKAI UNTUK:
+              <span
+                id="fit-target-label"
+                class="bg-black text-yellow-300 px-2 py-0.5 rounded"
+                >FOTO #1</span
+              >
+            </label>
+
             <div>
               <label class="text-black font-black block mb-1.5 uppercase"
                 >MODE FIT / BINGKAI FOTO</label
@@ -572,6 +560,7 @@
               </div>
               <input
                 type="range"
+                id="fit-zoom-slider"
                 min="0.5"
                 max="2.5"
                 step="0.05"
@@ -592,6 +581,7 @@
               </div>
               <input
                 type="range"
+                id="fit-offsetx-slider"
                 min="-100"
                 max="100"
                 value="0"
@@ -611,6 +601,7 @@
               </div>
               <input
                 type="range"
+                id="fit-offsety-slider"
                 min="-100"
                 max="100"
                 value="0"
@@ -670,8 +661,7 @@
                 <span>UPLOAD OVERLAY BINGKAI (PNG)</span>
               </span>
               <p class="text-[11px] text-zinc-800 font-bold leading-relaxed">
-                Upload desain bingkai kustom buatan Anda. Pastikan area foto
-                <strong class="underline">transparan</strong>.
+                Upload desain bingkai kustom buatan Anda. Pastikan area foto <strong class="underline">transparan</strong>.
               </p>
 
               <input
@@ -684,9 +674,7 @@
 
               <div class="flex gap-2 pt-1">
                 <button
-                  onclick="
-                    document.getElementById('frame-overlay-file-input').click()
-                  "
+                  onclick="document.getElementById('frame-overlay-file-input').click()"
                   class="flex-1 py-2.5 bg-yellow-300 hover:bg-yellow-200 text-black font-black rounded-xl border-2 border-black flex items-center justify-center space-x-1.5 shadow-[2px_2px_0px_0px_#000]"
                 >
                   <i data-lucide="upload" class="w-4 h-4"></i>
@@ -853,10 +841,7 @@
               <label class="text-black font-black block mb-2 uppercase"
                 >TEMA WARNA BINGKAI NEO</label
               >
-              <div
-                id="frame-themes-grid"
-                class="grid grid-cols-2 gap-2.5"
-              ></div>
+              <div id="frame-themes-grid" class="grid grid-cols-2 gap-2.5"></div>
             </div>
           </div>
 
@@ -921,9 +906,7 @@
                   type="text"
                   id="custom-sticker-input"
                   placeholder="Ketik emoji..."
-                  onkeydown="
-                    if (event.key === 'Enter') addCustomStickerFromInput();
-                  "
+                  onkeydown="if (event.key === 'Enter') addCustomStickerFromInput();"
                   class="flex-1 bg-white border-2 border-black rounded-xl px-2.5 py-1.5 text-black font-black uppercase focus:outline-none shadow-[1px_1px_0px_0px_#000]"
                 />
                 <button
@@ -935,9 +918,7 @@
               </div>
 
               <div class="flex items-center justify-between pt-0.5">
-                <span class="font-black text-black text-[11px]"
-                  >BACKGROUND:</span
-                >
+                <span class="font-black text-black text-[11px]">BACKGROUND:</span>
                 <button
                   id="btn-toggle-sticker-bg"
                   onclick="toggleStickerDefaultBg()"
@@ -949,8 +930,7 @@
             </div>
 
             <div>
-              <span
-                class="text-black font-black block mb-1.5 uppercase text-[11px]"
+              <span class="text-black font-black block mb-1.5 uppercase text-[11px]"
                 >KLIK UNTUK MENAMBAH STIKER</span
               >
               <div
@@ -964,9 +944,7 @@
               id="selected-sticker-controls"
               class="hidden p-2.5 bg-cyan-100 border-2 border-black rounded-2xl space-y-2.5 shadow-[2px_2px_0px_0px_#000]"
             >
-              <div
-                class="flex items-center justify-between font-black text-[11px]"
-              >
+              <div class="flex items-center justify-between font-black text-[11px]">
                 <span>PENGATURAN STIKER</span>
                 <button
                   onclick="deleteSelectedSticker()"
@@ -991,9 +969,7 @@
                   max="180"
                   value="0"
                   id="sticker-rot-slider"
-                  oninput="
-                    updateSelectedStickerParam('rotation', parseInt(this.value))
-                  "
+                  oninput="updateSelectedStickerParam('rotation', parseInt(this.value))"
                   class="w-full accent-black bg-cyan-200 border-2 border-black rounded-lg h-2.5"
                 />
               </div>
@@ -1014,9 +990,7 @@
                   step="0.1"
                   value="1.0"
                   id="sticker-scale-slider"
-                  oninput="
-                    updateSelectedStickerParam('scale', parseFloat(this.value))
-                  "
+                  oninput="updateSelectedStickerParam('scale', parseFloat(this.value))"
                   class="w-full accent-black bg-cyan-200 border-2 border-black rounded-lg h-2.5"
                 />
               </div>
@@ -1159,15 +1133,10 @@
               <i data-lucide="printer" class="w-5 h-5"></i>
               <div class="text-left">
                 <span class="block text-xs font-black">KERTAS 58 MM</span>
-                <span class="block text-[10px] text-zinc-800 font-bold"
-                  >Struk Kasir Standar / Mini Bluetooth</span
-                >
+                <span class="block text-[10px] text-zinc-800 font-bold">Struk Kasir Standar / Mini Bluetooth</span>
               </div>
             </div>
-            <span
-              class="bg-black text-orange-300 px-2 py-1 rounded-lg text-[10px] font-black"
-              >58MM</span
-            >
+            <span class="bg-black text-orange-300 px-2 py-1 rounded-lg text-[10px] font-black">58MM</span>
           </button>
 
           <button
@@ -1178,15 +1147,10 @@
               <i data-lucide="printer" class="w-5 h-5"></i>
               <div class="text-left">
                 <span class="block text-xs font-black">KERTAS 80 MM</span>
-                <span class="block text-[10px] text-zinc-800 font-bold"
-                  >Struk Kasir Lebar / Desktop POS</span
-                >
+                <span class="block text-[10px] text-zinc-800 font-bold">Struk Kasir Lebar / Desktop POS</span>
               </div>
             </div>
-            <span
-              class="bg-black text-yellow-300 px-2 py-1 rounded-lg text-[10px] font-black"
-              >80MM</span
-            >
+            <span class="bg-black text-yellow-300 px-2 py-1 rounded-lg text-[10px] font-black">80MM</span>
           </button>
         </div>
 
@@ -1230,8 +1194,7 @@
           <p class="leading-relaxed">
             Unduh gambar patokan di bawah ini. Buka di
             <strong class="underline">Canva / Photoshop / Figma</strong> untuk
-            membuat desain frame Anda sendiri, lalu upload kembali file PNG
-            transparan Anda!
+            membuat desain frame Anda sendiri, lalu upload kembali file PNG transparan Anda!
           </p>
 
           <div
@@ -1295,9 +1258,7 @@
               class="p-2.5 bg-black border-3 border-black rounded-2xl flex flex-col items-center justify-center space-y-1 text-center shadow-[2px_2px_0px_0px_#FACC15] transition"
             >
               <i data-lucide="file-down" class="w-5 h-5 text-yellow-300"></i>
-              <span class="font-black text-yellow-300 text-[11px]"
-                >SOLARI NOIR</span
-              >
+              <span class="font-black text-yellow-300 text-[11px]">SOLARI NOIR</span>
             </button>
           </div>
         </div>
@@ -1346,18 +1307,13 @@
             class="bg-amber-50 p-2.5 sm:p-3 rounded-xl border-2 border-black space-y-1"
           >
             <p class="font-black text-black">1. Chrome & Edge:</p>
-            <ul
-              class="list-disc pl-4 space-y-0.5 text-black font-medium text-[11px] sm:text-xs"
-            >
+            <ul class="list-disc pl-4 space-y-0.5 text-black font-medium text-[11px] sm:text-xs">
               <li>
-                Klik ikon <strong class="font-black">Gembok</strong> di URL
-                browser.
+                Klik ikon <strong class="font-black">Gembok</strong> di URL browser.
               </li>
               <li>
                 Ubah izin <strong class="font-black">Kamera</strong> menjadi
-                <strong class="font-black text-emerald-600"
-                  >Allow / Izinkan</strong
-                >.
+                <strong class="font-black text-emerald-600">Allow / Izinkan</strong>.
               </li>
               <li>Refresh halaman.</li>
             </ul>
@@ -1404,8 +1360,7 @@
         </div>
 
         <p class="text-xs text-black font-bold">
-          Anda mengunggah 1 foto. Bagaimana Anda ingin menampilkan foto ini di
-          photostrip?
+          Anda mengunggah 1 foto. Bagaimana Anda ingin menampilkan foto ini di photostrip?
         </p>
 
         <div class="space-y-2 pt-1">
@@ -1473,8 +1428,7 @@
 
         <div class="text-xs text-black font-bold">
           <p id="export-modal-desc" class="mb-2.5 text-[11px] sm:text-xs">
-            Klik tombol di bawah ini atau tekan lama pada media untuk menyimpan
-            / membagikan:
+            Klik tombol di bawah ini atau tekan lama pada media untuk menyimpan / membagikan:
           </p>
 
           <div
@@ -1666,12 +1620,11 @@
       let capturedPhotos = [];
       let asciiToggles = {};
       let photoFilters = {};
-      let fitSettings = {
-        fitMode: "cover",
-        zoomLevel: 1.0,
-        offsetX: 0,
-        offsetY: 0,
-      };
+
+      // Fit Settings State (Map slotIndex -> settings object)
+      let fitSettings = {};
+      let selectedFitTarget = 0;
+
       let asciiSettings = {
         gridCols: 42,
         gridRows: 28,
@@ -1702,6 +1655,22 @@
       let currentExportFileName = "";
       let currentExportUrl = "";
 
+      function getDefaultFit() {
+        return {
+          fitMode: "cover",
+          zoomLevel: 1.0,
+          offsetX: 0,
+          offsetY: 0,
+        };
+      }
+
+      function getFitSettings(idx) {
+        if (!fitSettings[idx]) {
+          fitSettings[idx] = getDefaultFit();
+        }
+        return fitSettings[idx];
+      }
+
       window.addEventListener("DOMContentLoaded", () => {
         if (typeof lucide !== "undefined" && lucide.createIcons) {
           lucide.createIcons();
@@ -1711,6 +1680,8 @@
         renderFrameThemesUI();
         renderStickersPaletteUI();
         renderPhotoFiltersUI();
+        renderFitTargetButtons();
+        syncFitControlsUI();
         document.getElementById("strip-date-text").innerText =
           new Date().toLocaleDateString("en-US", {
             year: "numeric",
@@ -1794,7 +1765,7 @@
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
           showCameraError(
             "KAMERA TIDAK DIDUKUNG",
-            "Browser Anda tidak mendukung Web Camera API.",
+            "Browser Anda tidak mendukung Web Camera API."
           );
           return;
         }
@@ -1840,7 +1811,7 @@
         } else {
           showCameraError(
             "IZIN KAMERA DITOLAK",
-            "Browser memblokir akses kamera.",
+            "Browser memblokir akses kamera."
           );
         }
       }
@@ -1966,6 +1937,7 @@
                   capturedPhotos.forEach((_, idx) => {
                     asciiToggles[idx] = true;
                     photoFilters[idx] = "none";
+                    fitSettings[idx] = getDefaultFit();
                   });
                   switchToCustomizeView();
                 }, 800);
@@ -2035,6 +2007,7 @@
         capturedPhotos.forEach((_, idx) => {
           asciiToggles[idx] = true;
           photoFilters[idx] = "none";
+          fitSettings[idx] = getDefaultFit();
         });
         closeSingleUploadModal();
         switchToCustomizeView();
@@ -2057,6 +2030,7 @@
               capturedPhotos.forEach((_, idx) => {
                 asciiToggles[idx] = true;
                 photoFilters[idx] = "none";
+                fitSettings[idx] = getDefaultFit();
               });
               switchToCustomizeView();
             }
@@ -2072,8 +2046,11 @@
         document.getElementById("btn-reset-booth").classList.remove("hidden");
         document.getElementById("btn-reset-booth").classList.add("flex");
 
+        selectedFitTarget = 0;
         updateExportButtonsVisibility();
         renderFilterTargetButtons();
+        renderFitTargetButtons();
+        syncFitControlsUI();
         renderCustomizeStripGrid();
         renderAppliedStickers();
         startMotionLoop();
@@ -2284,6 +2261,7 @@
                   currentFrameSrc,
                   asciiToggles[idx] ?? true,
                   photoFilters[idx] || "none",
+                  idx
                 );
               }
             });
@@ -2300,10 +2278,12 @@
         }
       }
 
-      function processSlotCanvas(canvas, imageSrc, isAscii, photoFilter) {
+      function processSlotCanvas(canvas, imageSrc, isAscii, photoFilter, slotIdx = 0) {
         const ctx = canvas.getContext("2d", { willReadFrequently: true });
         const img = new Image();
         img.crossOrigin = "anonymous";
+
+        const fit = getFitSettings(slotIdx);
 
         img.onload = () => {
           const cols = asciiSettings.gridCols;
@@ -2326,29 +2306,29 @@
           const imgAspect = img.width / img.height;
           const canvasAspect = targetW / targetH;
 
-          if (fitSettings.fitMode === "cover") {
+          if (fit.fitMode === "cover") {
             if (imgAspect > canvasAspect) {
-              drawH = targetH * fitSettings.zoomLevel;
+              drawH = targetH * fit.zoomLevel;
               drawW = drawH * imgAspect;
             } else {
-              drawW = targetW * fitSettings.zoomLevel;
+              drawW = targetW * fit.zoomLevel;
               drawH = drawW / imgAspect;
             }
-          } else if (fitSettings.fitMode === "contain") {
+          } else if (fit.fitMode === "contain") {
             if (imgAspect > canvasAspect) {
-              drawW = targetW * fitSettings.zoomLevel;
+              drawW = targetW * fit.zoomLevel;
               drawH = drawW / imgAspect;
             } else {
-              drawH = targetH * fitSettings.zoomLevel;
+              drawH = targetH * fit.zoomLevel;
               drawW = drawH * imgAspect;
             }
           } else {
-            drawW = targetW * fitSettings.zoomLevel;
-            drawH = targetH * fitSettings.zoomLevel;
+            drawW = targetW * fit.zoomLevel;
+            drawH = targetH * fit.zoomLevel;
           }
 
-          const drawX = (targetW - drawW) / 2 + fitSettings.offsetX;
-          const drawY = (targetH - drawH) / 2 + fitSettings.offsetY;
+          const drawX = (targetW - drawW) / 2 + fit.offsetX;
+          const drawY = (targetH - drawH) / 2 + fit.offsetY;
 
           renderCtx.fillStyle = "#000000";
           renderCtx.fillRect(0, 0, targetW, targetH);
@@ -2615,8 +2595,79 @@
         playFlapAudio();
       }
 
+      function renderFitTargetButtons() {
+        const container = document.getElementById("fit-target-buttons");
+        if (!container) return;
+        container.innerHTML = "";
+
+        const count = capturedPhotos.length || totalShots || 3;
+        for (let idx = 0; idx < count; idx++) {
+          const btn = document.createElement("button");
+          const isActive = selectedFitTarget === idx;
+          const currentMode = (fitSettings[idx] && fitSettings[idx].fitMode) ? fitSettings[idx].fitMode.toUpperCase() : "COVER";
+          btn.className = `px-2.5 py-1.5 rounded-xl border-2 border-black font-black text-xs shadow-[2px_2px_0px_0px_#000] flex items-center space-x-1 ${isActive ? "bg-yellow-300 text-black" : "bg-white text-black"}`;
+          btn.innerHTML = `<span>FOTO #${idx + 1}</span><span class="text-[9px] bg-black text-white px-1.5 py-0.5 rounded uppercase">${currentMode}</span>`;
+          btn.onclick = () => {
+            selectedFitTarget = idx;
+            document.getElementById("fit-target-label").innerText = `FOTO #${idx + 1}`;
+            renderFitTargetButtons();
+            syncFitControlsUI();
+            playFlapAudio();
+          };
+          container.appendChild(btn);
+        }
+
+        const allBtn = document.createElement("button");
+        const isAllActive = selectedFitTarget === "all";
+        allBtn.className = `px-2.5 py-1.5 rounded-xl border-2 border-black font-black text-xs shadow-[2px_2px_0px_0px_#000] ${isAllActive ? "bg-pink-300 text-black" : "bg-amber-50 text-black"}`;
+        allBtn.innerText = "⚡ SEMUA";
+        allBtn.onclick = () => {
+          selectedFitTarget = "all";
+          document.getElementById("fit-target-label").innerText = "SEMUA FOTO";
+          renderFitTargetButtons();
+          syncFitControlsUI();
+          playFlapAudio();
+        };
+        container.appendChild(allBtn);
+      }
+
+      function syncFitControlsUI() {
+        const currentFit = selectedFitTarget === "all" ? getFitSettings(0) : getFitSettings(selectedFitTarget);
+
+        document.querySelectorAll(".btn-fit-mode").forEach(
+          (b) => (b.className = "btn-fit-mode py-2.5 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-white text-black")
+        );
+        const activeBtn = document.getElementById(`btn-fit-${currentFit.fitMode}`);
+        if (activeBtn) {
+          activeBtn.className = "btn-fit-mode py-2.5 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-yellow-300 text-black";
+        }
+
+        const zoomSlider = document.getElementById("fit-zoom-slider");
+        if (zoomSlider) zoomSlider.value = currentFit.zoomLevel;
+        const zoomLabel = document.getElementById("zoom-val-label");
+        if (zoomLabel) zoomLabel.innerText = `${currentFit.zoomLevel.toFixed(2)}x`;
+
+        const offsetXSlider = document.getElementById("fit-offsetx-slider");
+        if (offsetXSlider) offsetXSlider.value = currentFit.offsetX;
+        const offsetXLabel = document.getElementById("offsetx-val-label");
+        if (offsetXLabel) offsetXLabel.innerText = `${currentFit.offsetX}px`;
+
+        const offsetYSlider = document.getElementById("fit-offsety-slider");
+        if (offsetYSlider) offsetYSlider.value = currentFit.offsetY;
+        const offsetYLabel = document.getElementById("offsety-val-label");
+        if (offsetYLabel) offsetYLabel.innerText = `${currentFit.offsetY}px`;
+      }
+
       function updateFitParam(key, value) {
-        fitSettings[key] = value;
+        const count = capturedPhotos.length || totalShots || 3;
+        if (selectedFitTarget === "all") {
+          for (let i = 0; i < count; i++) {
+            getFitSettings(i)[key] = value;
+          }
+        } else {
+          getFitSettings(selectedFitTarget)[key] = value;
+        }
+
         if (key === "zoomLevel")
           document.getElementById("zoom-val-label").innerText =
             `${value.toFixed(2)}x`;
@@ -2627,27 +2678,33 @@
       }
 
       function setFitMode(mode) {
-        fitSettings.fitMode = mode;
-        document
-          .querySelectorAll(".btn-fit-mode")
-          .forEach(
-            (b) =>
-              (b.className =
-                "btn-fit-mode py-2.5 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-white text-black"),
-          );
-        document.getElementById(`btn-fit-${mode}`).className =
-          "btn-fit-mode py-2.5 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-yellow-300 text-black";
+        const count = capturedPhotos.length || totalShots || 3;
+        if (selectedFitTarget === "all") {
+          for (let i = 0; i < count; i++) {
+            getFitSettings(i).fitMode = mode;
+          }
+        } else {
+          getFitSettings(selectedFitTarget).fitMode = mode;
+        }
+
+        renderFitTargetButtons();
+        syncFitControlsUI();
         playFlapAudio();
       }
 
       function resetFitSettings() {
-        fitSettings = {
-          fitMode: "cover",
-          zoomLevel: 1.0,
-          offsetX: 0,
-          offsetY: 0,
-        };
-        setFitMode("cover");
+        const count = capturedPhotos.length || totalShots || 3;
+        if (selectedFitTarget === "all") {
+          for (let i = 0; i < count; i++) {
+            fitSettings[i] = getDefaultFit();
+          }
+        } else {
+          fitSettings[selectedFitTarget] = getDefaultFit();
+        }
+
+        renderFitTargetButtons();
+        syncFitControlsUI();
+        playFlapAudio();
       }
 
       function updateAsciiParam(key, value) {
@@ -2723,7 +2780,7 @@
           const isCurrentActive =
             selectedFilterTarget === "all"
               ? capturedPhotos.every(
-                  (_, i) => (photoFilters[i] || "none") === f.id,
+                  (_, i) => (photoFilters[i] || "none") === f.id
                 )
               : (photoFilters[selectedFilterTarget] || "none") === f.id;
 
@@ -2954,11 +3011,9 @@
 
         controls.classList.remove("hidden");
         document.getElementById("sticker-rot-slider").value = stk.rotation;
-        document.getElementById("sticker-rot-label").innerText =
-          `${stk.rotation}°`;
+        document.getElementById("sticker-rot-label").innerText = `${stk.rotation}°`;
         document.getElementById("sticker-scale-slider").value = stk.scale;
-        document.getElementById("sticker-scale-label").innerText =
-          `${stk.scale.toFixed(1)}x`;
+        document.getElementById("sticker-scale-label").innerText = `${stk.scale.toFixed(1)}x`;
       }
 
       function renderAppliedStickers() {
@@ -2997,7 +3052,7 @@
                 <div class="absolute -top-2.5 -left-2.5 w-5 h-5 bg-rose-500 border-2 border-black text-white rounded-full flex items-center justify-center text-[10px] font-bold shadow-[1px_1px_0px_0px_#000] cursor-pointer hover:scale-110 transition z-10" onclick="deleteStickerById('${stk.id}', event)">×</div>
                 <div class="absolute -top-2.5 -right-2.5 w-5 h-5 bg-yellow-300 border-2 border-black text-black rounded-full flex items-center justify-center text-[9px] font-bold shadow-[1px_1px_0px_0px_#000] cursor-pointer hover:scale-110 transition z-10" onclick="updateSelectedStickerParam('rotation', (${stk.rotation} + 45) % 360)">↻</div>
                 <div class="absolute -bottom-2.5 -right-2.5 w-5 h-5 bg-cyan-300 border-2 border-black text-black rounded-full flex items-center justify-center text-[9px] font-bold shadow-[1px_1px_0px_0px_#000] cursor-pointer hover:scale-110 transition z-10" onclick="updateSelectedStickerParam('scale', Math.min(3.0, ${stk.scale} + 0.2))">⤢</div>
-                <div class="absolute -bottom-2.5 -left-2.5 px-1 py-0.2 bg-lime-300 border border-black text-black rounded text-[7px] font-mono font-bold shadow-[1px_1px_0px_0px_#000] cursor-pointer hover:scale-105 transition z-10" onclick="toggleSingleStickerBg('${stk.id}', event)">${stk.hasBg ? "NO-BG" : "BG"}</div>
+                <div class="absolute -bottom-2.5 -left-2.5 px-1 py-0.2 bg-lime-300 border border-black text-black rounded text-[7px] font-mono font-bold shadow-[1px_1px_0px_0px_#000] cursor-pointer hover:scale-105 transition z-10" onclick="toggleSingleStickerBg('${stk.id}', event)">${stk.hasBg ? 'NO-BG' : 'BG'}</div>
                 <div class="absolute inset-0 border-2 border-dashed border-black rounded-xl pointer-events-none"></div>
               `;
             }
@@ -3005,20 +3060,14 @@
             wrapper.innerHTML = contentHTML;
 
             wrapper.addEventListener("pointerdown", (e) => {
-              if (
-                e.target.closest("button") ||
-                e.target.getAttribute("onclick")
-              )
-                return;
+              if (e.target.closest("button") || e.target.getAttribute("onclick")) return;
               e.stopPropagation();
 
               if (selectedStickerId !== stk.id) {
                 selectSticker(stk.id);
               }
 
-              const targetEl =
-                document.querySelector(`[data-sticker-id="${stk.id}"]`) ||
-                wrapper;
+              const targetEl = document.querySelector(`[data-sticker-id="${stk.id}"]`) || wrapper;
               try {
                 targetEl.setPointerCapture(e.pointerId);
               } catch (err) {}
@@ -3109,7 +3158,7 @@
             playShutterSound();
 
             const photoData = takeSingleSnapshot(
-              document.getElementById("retake-webcam-video"),
+              document.getElementById("retake-webcam-video")
             );
             capturedPhotos[retakeTargetIndex] = photoData;
             capturedMotionClips[retakeTargetIndex] = [photoData];
@@ -3176,7 +3225,7 @@
         ctx.fillText(
           themeSettings.title.toUpperCase(),
           padding,
-          padding + headerH / 2,
+          padding + headerH / 2
         );
 
         ctx.fillStyle = "#000000";
@@ -3206,7 +3255,7 @@
           slotCanvas.height = slotH;
 
           await new Promise((resolve) => {
-            processSlotCanvas(slotCanvas, currentSrc, isAscii, photoFilter);
+            processSlotCanvas(slotCanvas, currentSrc, isAscii, photoFilter, i);
             setTimeout(resolve, 15);
           });
 
@@ -3298,7 +3347,7 @@
             day: "numeric",
           }),
           padding,
-          footerY,
+          footerY
         );
 
         ctx.fillStyle = "#000000";
@@ -3318,9 +3367,7 @@
       // CHOOSE PRINT PAPER SIZE MODAL HANDLERS
       function openPrintModal() {
         playFlapAudio();
-        document
-          .getElementById("modal-print-thermal")
-          .classList.remove("hidden");
+        document.getElementById("modal-print-thermal").classList.remove("hidden");
       }
 
       function closePrintModal() {
@@ -3345,16 +3392,10 @@
           thermalCanvas.height = Math.round(targetW * aspect);
 
           const tCtx = thermalCanvas.getContext("2d");
-
+          
           tCtx.fillStyle = "#ffffff";
           tCtx.fillRect(0, 0, thermalCanvas.width, thermalCanvas.height);
-          tCtx.drawImage(
-            originalCanvas,
-            0,
-            0,
-            thermalCanvas.width,
-            thermalCanvas.height,
-          );
+          tCtx.drawImage(originalCanvas, 0, 0, thermalCanvas.width, thermalCanvas.height);
 
           const w = thermalCanvas.width;
           const h = thermalCanvas.height;
@@ -3365,8 +3406,7 @@
           const grayBuf = new Float32Array(w * h);
           for (let i = 0; i < w * h; i++) {
             const p = i * 4;
-            let gray =
-              0.299 * data[p] + 0.587 * data[p + 1] + 0.114 * data[p + 2];
+            let gray = 0.299 * data[p] + 0.587 * data[p + 1] + 0.114 * data[p + 2];
             // Tingkatkan kontras foto sebesar +15% agar lebih tegas
             gray = (gray - 128) * 1.15 + 128;
             grayBuf[i] = Math.min(255, Math.max(0, gray));
@@ -3383,11 +3423,9 @@
 
               if (x + 1 < w) grayBuf[idx + 1] += quantError * (7 / 16);
               if (y + 1 < h) {
-                if (x > 0)
-                  grayBuf[(y + 1) * w + (x - 1)] += quantError * (3 / 16);
+                if (x > 0) grayBuf[(y + 1) * w + (x - 1)] += quantError * (3 / 16);
                 grayBuf[(y + 1) * w + x] += quantError * (5 / 16);
-                if (x + 1 < w)
-                  grayBuf[(y + 1) * w + (x + 1)] += quantError * (1 / 16);
+                if (x + 1 < w) grayBuf[(y + 1) * w + (x + 1)] += quantError * (1 / 16);
               }
             }
           }
@@ -3487,16 +3525,13 @@
             imgEl.src = dataUrl;
 
             titleEl.innerText = "HASIL FOTO STRIP";
-            descEl.innerText =
-              "Klik tombol di bawah ini atau tekan lama pada foto untuk menyimpan:";
+            descEl.innerText = "Klik tombol di bawah ini atau tekan lama pada foto untuk menyimpan:";
 
             anchor.href = dataUrl;
             anchor.download = fileName;
             anchor.innerText = "UNDUH FILE PNG";
 
-            document
-              .getElementById("modal-export-preview")
-              .classList.remove("hidden");
+            document.getElementById("modal-export-preview").classList.remove("hidden");
           }, "image/png");
         } catch (err) {}
       }
@@ -3519,14 +3554,10 @@
             rawMime = "video/webm;codecs=vp9";
           }
 
-          const cleanMime = rawMime.includes("mp4")
-            ? "video/mp4"
-            : "video/webm";
+          const cleanMime = rawMime.includes("mp4") ? "video/mp4" : "video/webm";
           const fileExt = cleanMime === "video/mp4" ? "mp4" : "webm";
 
-          const recorder = new MediaRecorder(recordingStream, {
-            mimeType: rawMime,
-          });
+          const recorder = new MediaRecorder(recordingStream, { mimeType: rawMime });
           const chunks = [];
 
           recorder.ondataavailable = (e) => chunks.push(e.data);
@@ -3554,16 +3585,13 @@
             videoEl.play();
 
             titleEl.innerText = "HASIL VIDEO ANIMASI";
-            descEl.innerText =
-              "Klik tombol di bawah ini untuk mengunduh video animasi Anda:";
+            descEl.innerText = "Klik tombol di bawah ini untuk mengunduh video animasi Anda:";
 
             anchor.href = url;
             anchor.download = fileName;
             anchor.innerText = `UNDUH FILE VIDEO (${fileExt.toUpperCase()})`;
 
-            document
-              .getElementById("modal-export-preview")
-              .classList.remove("hidden");
+            document.getElementById("modal-export-preview").classList.remove("hidden");
           };
 
           recorder.start();
@@ -3606,7 +3634,7 @@
         const btn = document.getElementById("sound-btn");
         icon.setAttribute(
           "data-lucide",
-          soundEnabled ? "volume-2" : "volume-x",
+          soundEnabled ? "volume-2" : "volume-x"
         );
         btn.className = `p-2 rounded-xl border-2 border-black font-bold shadow-[2px_2px_0px_0px_#000] sm:shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition ${soundEnabled ? "bg-pink-300 text-black" : "bg-stone-200 text-stone-600"}`;
         if (typeof lucide !== "undefined" && lucide.createIcons) {
@@ -3627,7 +3655,7 @@
           gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
           gain.gain.exponentialRampToValueAtTime(
             0.001,
-            audioCtx.currentTime + 0.1,
+            audioCtx.currentTime + 0.1
           );
           osc.connect(gain);
           gain.connect(audioCtx.destination);
@@ -3646,7 +3674,7 @@
           const buffer = audioCtx.createBuffer(
             1,
             bufferSize,
-            audioCtx.sampleRate,
+            audioCtx.sampleRate
           );
           const data = buffer.getChannelData(0);
           for (let i = 0; i < bufferSize; i++) {
@@ -3665,7 +3693,7 @@
           noiseGain.gain.setValueAtTime(0.8, audioCtx.currentTime);
           noiseGain.gain.exponentialRampToValueAtTime(
             0.01,
-            audioCtx.currentTime + 0.12,
+            audioCtx.currentTime + 0.12
           );
 
           noise.connect(filter);
@@ -3686,12 +3714,12 @@
           osc.type = "square";
           osc.frequency.setValueAtTime(
             140 + Math.random() * 90,
-            audioCtx.currentTime,
+            audioCtx.currentTime
           );
           gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
           gain.gain.exponentialRampToValueAtTime(
             0.0001,
-            audioCtx.currentTime + 0.05,
+            audioCtx.currentTime + 0.05
           );
           osc.connect(gain);
           gain.connect(audioCtx.destination);
