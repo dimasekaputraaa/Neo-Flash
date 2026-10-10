@@ -1,0 +1,3748 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neo Flash Studio - Split-Flap ASCII & Live Motion Photobooth</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #fffbeb;
+        border: 2px solid #000;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #000;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-[#FFFBEB] bg-[radial-gradient(#000000_1.5px,transparent_1.5px)] [background-size:20px_20px] text-black font-sans min-h-screen flex flex-col p-3 md:p-6 select-none selection:bg-yellow-300 selection:text-black"
+  >
+    <header
+      class="max-w-7xl w-full mx-auto bg-yellow-300 border-3 border-black rounded-2xl p-4 shadow-[5px_5px_0px_0px_#000] mb-6 flex flex-col sm:flex-row items-center justify-between gap-4"
+    >
+      <div class="flex items-center space-x-3">
+        <div
+          class="bg-black text-yellow-300 p-2.5 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_#000]"
+        >
+          <i data-lucide="zap" class="w-6 h-6 fill-current"></i>
+        </div>
+        <div>
+          <h1
+            class="text-xl sm:text-2xl font-black tracking-wider text-black font-mono flex items-center gap-2 uppercase"
+          >
+            Neo Flash
+          </h1>
+          <p class="text-xs text-black font-mono font-bold tracking-tight">
+            SPLIT-FLAP ASCII & LIVE MOTION PHOTOBOOTH
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center flex-wrap gap-2">
+        <button
+          onclick="openHelpModal()"
+          class="px-3 py-2 rounded-xl border-2 border-black bg-white hover:bg-amber-100 text-black font-mono font-bold text-xs shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center space-x-1"
+        >
+          <i data-lucide="help-circle" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">BANTUAN</span>
+        </button>
+
+        <button
+          onclick="toggleSound()"
+          id="sound-btn"
+          class="p-2 rounded-xl border-2 border-black font-bold shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition bg-pink-300 text-black"
+        >
+          <i data-lucide="volume-2" id="sound-icon" class="w-5 h-5"></i>
+        </button>
+
+        <button
+          id="btn-reset-booth"
+          onclick="resetToBoothView()"
+          class="hidden items-center space-x-1 px-3 py-2 bg-lime-300 hover:bg-lime-200 text-black font-extrabold rounded-xl text-xs font-mono border-2 border-black shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition"
+        >
+          <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+          <span>ULANG SHOT</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto flex flex-col justify-center">
+      <div
+        id="view-booth"
+        class="max-w-3xl mx-auto w-full bg-white border-3 border-black rounded-3xl p-5 md:p-8 shadow-[8px_8px_0px_0px_#000] flex flex-col items-center"
+      >
+        <div
+          class="w-full flex flex-wrap items-center justify-between gap-3 mb-5"
+        >
+          <div
+            class="flex items-center space-x-2 bg-yellow-300 border-2 border-black px-3 py-1.5 rounded-xl shadow-[2px_2px_0px_0px_#000]"
+          >
+            <span
+              id="camera-status-dot"
+              class="w-3 h-3 rounded-full border border-black bg-rose-500"
+            ></span>
+            <span
+              id="camera-status-text"
+              class="font-mono text-xs font-black text-black tracking-wider uppercase"
+              >STATUS KAMERA</span
+            >
+          </div>
+
+          <div class="flex items-center space-x-2 font-mono text-xs font-bold">
+            <label class="text-black uppercase">JUMLAH SHOTS:</label>
+            <div
+              id="shot-buttons-container"
+              class="flex border-2 border-black rounded-xl overflow-hidden bg-white shadow-[2px_2px_0px_0px_#000]"
+            >
+              <button
+                onclick="setTotalShots(2)"
+                id="btn-shot-2"
+                class="btn-shot-count px-3 py-1 font-extrabold transition"
+              >
+                2
+              </button>
+              <button
+                onclick="setTotalShots(3)"
+                id="btn-shot-3"
+                class="btn-shot-count px-3 py-1 font-extrabold transition bg-black text-yellow-300"
+              >
+                3
+              </button>
+              <button
+                onclick="setTotalShots(4)"
+                id="btn-shot-4"
+                class="btn-shot-count px-3 py-1 font-extrabold transition"
+              >
+                4
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Webcam Frame -->
+        <div
+          class="relative w-full aspect-[4/3] bg-black rounded-2xl border-3 border-black overflow-hidden shadow-[5px_5px_0px_0px_#000] flex items-center justify-center"
+        >
+          <video
+            id="webcam-video"
+            autoplay
+            playsinline
+            muted
+            class="w-full h-full object-cover scale-x-[-1]"
+          ></video>
+
+          <div
+            id="camera-flash"
+            class="absolute inset-0 bg-white opacity-0 pointer-events-none transition-opacity duration-75 z-40"
+          ></div>
+
+          <div
+            id="camera-loading"
+            class="text-center font-mono text-yellow-300 p-6 flex flex-col items-center space-y-3"
+          >
+            <i data-lucide="refresh-cw" class="w-10 h-10 animate-spin"></i>
+            <p class="text-xs font-bold uppercase tracking-wider">
+              MENGHUBUNGKAN KAMERA...
+            </p>
+          </div>
+
+          <div
+            id="camera-error"
+            class="hidden p-6 text-center max-w-md flex-col items-center space-y-4 font-mono bg-amber-50 border-3 border-black rounded-2xl m-4 text-black shadow-[4px_4px_0px_0px_#000] z-30"
+          >
+            <div
+              class="w-12 h-12 rounded-xl bg-rose-400 border-2 border-black text-black flex items-center justify-center shadow-[2px_2px_0px_0px_#000]"
+            >
+              <i data-lucide="shield-alert" class="w-7 h-7"></i>
+            </div>
+            <div>
+              <h3
+                id="camera-error-title"
+                class="text-sm font-black text-black uppercase tracking-wide"
+              >
+                KAMERA TIDAK AKTIF
+              </h3>
+              <p
+                id="camera-error-msg"
+                class="text-xs text-zinc-800 mt-1 font-bold leading-relaxed"
+              >
+                Browser memblokir akses kamera. Silakan berikan izin akses
+                kamera.
+              </p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-2 pt-2">
+              <button
+                onclick="initCamera()"
+                class="px-4 py-2 bg-yellow-300 border-2 border-black text-black font-black rounded-xl text-xs flex items-center space-x-1.5 shadow-[3px_3px_0px_0px_#000]"
+              >
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                <span>COBA LAGI</span>
+              </button>
+              <button
+                onclick="openHelpModal()"
+                class="px-4 py-2 bg-cyan-300 border-2 border-black text-black font-black rounded-xl text-xs flex items-center space-x-1.5 shadow-[3px_3px_0px_0px_#000]"
+              >
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                <span>PANDUAN IZIN</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            id="capture-overlay"
+            class="hidden absolute inset-0 bg-yellow-300/90 backdrop-blur-sm flex-col items-center justify-center z-20 border-3 border-black"
+          >
+            <div
+              id="countdown-number"
+              class="text-9xl font-black font-mono text-black animate-bounce drop-shadow-[4px_4px_0px_#fff]"
+            >
+              3
+            </div>
+            <p
+              id="capture-status-text"
+              class="font-mono text-base font-black text-black mt-4 tracking-widest uppercase bg-white border-2 border-black px-4 py-1 rounded-xl shadow-[3px_3px_0px_0px_#000]"
+            >
+              FOTO KE 1 DARI 3
+            </p>
+          </div>
+
+          <button
+            id="btn-mirror"
+            onclick="toggleMirror()"
+            class="absolute bottom-4 right-4 p-3 rounded-xl border-2 border-black font-extrabold transition shadow-[3px_3px_0px_0px_#000] bg-yellow-300 text-black"
+          >
+            <i data-lucide="flip-horizontal" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div
+          id="camera-select-container"
+          class="hidden w-full mt-4 items-center justify-between bg-amber-50 p-3 rounded-xl border-2 border-black text-xs font-mono font-bold shadow-[2px_2px_0px_0px_#000]"
+        >
+          <span class="text-black flex items-center space-x-1.5">
+            <i data-lucide="video" class="w-4 h-4"></i>
+            <span>PILIH KAMERA:</span>
+          </span>
+          <select
+            id="camera-select"
+            onchange="initCamera(this.value)"
+            class="bg-white text-black font-extrabold border-2 border-black rounded-lg px-3 py-1 focus:outline-none"
+          ></select>
+        </div>
+
+        <div class="mt-6 w-full flex flex-col sm:flex-row items-center gap-4">
+          <button
+            id="btn-start-booth"
+            onclick="startPhotoboothSequence()"
+            class="w-full flex-1 py-4 bg-yellow-300 hover:bg-yellow-200 border-3 border-black text-black font-mono font-black text-sm rounded-2xl shadow-[5px_5px_0px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition flex items-center justify-center space-x-2 uppercase"
+          >
+            <i data-lucide="camera" class="w-6 h-6"></i>
+            <span id="btn-start-text">MULAI PHOTOBOOTH (3 SHOTS)</span>
+          </button>
+
+          <input
+            type="file"
+            id="file-input-upload"
+            onchange="handleFileUpload(event)"
+            multiple
+            accept="image/*"
+            class="hidden"
+          />
+          <button
+            id="btn-upload-photos"
+            onclick="document.getElementById('file-input-upload').click()"
+            class="w-full sm:w-auto px-6 py-4 bg-cyan-300 hover:bg-cyan-200 text-black font-mono font-black text-xs rounded-2xl border-3 border-black shadow-[5px_5px_0px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition flex items-center justify-center space-x-2 whitespace-nowrap"
+          >
+            <i data-lucide="upload" class="w-5 h-5"></i>
+            <span>UPLOAD FOTO</span>
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="view-customize"
+        class="hidden grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+      >
+        <!-- Photo Strip Preview Panel -->
+        <div class="lg:col-span-6 flex flex-col items-center justify-center">
+          <div
+            class="w-full max-w-sm mb-4 flex items-center justify-between bg-white border-3 border-black rounded-2xl p-3 shadow-[4px_4px_0px_0px_#000] font-mono text-xs"
+          >
+            <span class="font-black text-black flex items-center space-x-1.5">
+              <i data-lucide="film" class="w-4 h-4 text-pink-500"></i>
+              <span>MODE TAMPILAN:</span>
+            </span>
+            <button
+              id="btn-toggle-livemotion"
+              onclick="toggleLiveMotionPlayback()"
+              class="px-3.5 py-1.5 rounded-xl border-2 border-black bg-white text-black font-black shadow-[2px_2px_0px_0px_#000] flex items-center space-x-1.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition"
+            >
+              <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+              <span id="livemotion-toggle-text"
+                >LIVE MOTION: MATI (STATIS)</span
+              >
+            </button>
+          </div>
+
+          <div
+            id="strip-container"
+            onclick="handleStripContainerClick(event)"
+            class="rounded-3xl border-4 border-black bg-yellow-300 text-black shadow-[8px_8px_0px_0px_#000] transition-all duration-300 w-full max-w-sm relative overflow-hidden"
+          >
+            <!-- Header Bar -->
+            <div
+              id="strip-header-bar"
+              class="font-mono font-black tracking-wider text-xs sm:text-sm uppercase border-b-3 border-black w-full flex items-center justify-between px-1 z-10"
+            >
+              <span id="strip-title-text" class="truncate max-w-[200px]"
+                >NEO FLASH STUDIO</span
+              >
+              <span
+                class="text-[10px] bg-black text-yellow-300 px-2 py-0.5 rounded-full border border-black font-bold"
+                >SOLARI LIVE</span
+              >
+            </div>
+
+            <!-- Slots Container -->
+            <div id="strip-slots-grid"></div>
+
+            <!-- Overlay Image Layer -->
+            <img
+              id="strip-custom-overlay"
+              class="hidden absolute inset-0 w-full h-full object-fill pointer-events-none z-20"
+              alt="Frame Overlay"
+            />
+
+            <!-- Applied Draggable Stickers Container (Full Inset for 1:1 ratio) -->
+            <div
+              id="strip-stickers-container"
+              class="hidden absolute inset-0 z-30 pointer-events-none overflow-hidden"
+            ></div>
+
+            <!-- Footer Bar -->
+            <div
+              id="strip-footer-bar"
+              class="w-full flex items-center justify-between border-t-3 border-black font-mono text-xs font-black z-10"
+            >
+              <span id="strip-date-text"></span>
+              <span
+                class="bg-black text-white px-2 py-0.5 rounded border border-black text-[10px]"
+                >NEO-FLASH.STUDIO</span
+              >
+            </div>
+          </div>
+
+          <!-- Export Buttons -->
+          <div class="flex flex-wrap gap-2.5 mt-6 w-full justify-center">
+            <button
+              onclick="handleExportPNG()"
+              class="px-5 py-3.5 bg-yellow-300 hover:bg-yellow-200 text-black font-mono font-black text-xs rounded-2xl border-3 border-black shadow-[4px_4px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center space-x-2 uppercase"
+            >
+              <i data-lucide="download" class="w-4 h-4"></i>
+              <span>Unduh Foto</span>
+            </button>
+
+            <button
+              onclick="handleExportMotionVideo()"
+              class="px-5 py-3.5 bg-lime-300 hover:bg-lime-200 text-black font-mono font-black text-xs rounded-2xl border-3 border-black shadow-[4px_4px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center space-x-2 uppercase"
+            >
+              <i data-lucide="video" class="w-4 h-4"></i>
+              <span>Unduh Video</span>
+            </button>
+
+            <button
+              onclick="handleExportStory1080()"
+              class="px-5 py-3.5 bg-pink-300 hover:bg-pink-200 text-black font-mono font-black text-xs rounded-2xl border-3 border-black shadow-[4px_4px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center space-x-2 uppercase"
+            >
+              <i data-lucide="smartphone" class="w-4 h-4"></i>
+              <span>Share Foto Kamu</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Customization Settings Control Tabs -->
+        <div
+          class="lg:col-span-6 bg-white border-3 border-black rounded-3xl p-5 md:p-6 shadow-[8px_8px_0px_0px_#000] space-y-6"
+        >
+          <div class="flex border-b-3 border-black pb-4 gap-2 overflow-x-auto">
+            <button
+              onclick="switchTab('fit')"
+              id="tab-btn-fit"
+              class="tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-yellow-300 text-black shadow-[2px_2px_0px_0px_#000]"
+            >
+              <i data-lucide="maximize-2" class="w-4 h-4"></i>
+              <span>Fit & Skala</span>
+            </button>
+
+            <button
+              onclick="switchTab('filter')"
+              id="tab-btn-filter"
+              class="tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000]"
+            >
+              <i data-lucide="wand-2" class="w-4 h-4"></i>
+              <span>Filter Foto</span>
+            </button>
+
+            <button
+              onclick="switchTab('frame')"
+              id="tab-btn-frame"
+              class="tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000]"
+            >
+              <i data-lucide="image" class="w-4 h-4"></i>
+              <span>Upload Frame</span>
+            </button>
+
+            <button
+              onclick="switchTab('ascii')"
+              id="tab-btn-ascii"
+              class="tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000]"
+            >
+              <i data-lucide="sliders" class="w-4 h-4"></i>
+              <span>ASCII Set</span>
+            </button>
+
+            <button
+              onclick="switchTab('layout')"
+              id="tab-btn-layout"
+              class="tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000]"
+            >
+              <i data-lucide="palette" class="w-4 h-4"></i>
+              <span>Warna Frame</span>
+            </button>
+
+            <button
+              onclick="switchTab('words')"
+              id="tab-btn-words"
+              class="tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000]"
+            >
+              <i data-lucide="type" class="w-4 h-4"></i>
+              <span>Kata Kota</span>
+            </button>
+
+            <button
+              onclick="switchTab('stickers')"
+              id="tab-btn-stickers"
+              class="tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000]"
+            >
+              <i data-lucide="smile" class="w-4 h-4"></i>
+              <span>Stiker</span>
+            </button>
+          </div>
+
+          <!-- TAB CONTENT: FIT & SKALA -->
+          <div
+            id="tab-content-fit"
+            class="tab-content space-y-5 font-mono text-xs"
+          >
+            <div>
+              <label class="text-black font-black block mb-2 uppercase"
+                >MODE FIT / BINGKAI FOTO</label
+              >
+              <div class="grid grid-cols-3 gap-2">
+                <button
+                  onclick="setFitMode('cover')"
+                  id="btn-fit-cover"
+                  class="btn-fit-mode p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-yellow-300 text-black"
+                >
+                  COVER
+                </button>
+                <button
+                  onclick="setFitMode('contain')"
+                  id="btn-fit-contain"
+                  class="btn-fit-mode p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-white text-black"
+                >
+                  CONTAIN
+                </button>
+                <button
+                  onclick="setFitMode('fill')"
+                  id="btn-fit-fill"
+                  class="btn-fit-mode p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-white text-black"
+                >
+                  STRETCH
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-black font-black mb-1">
+                <span>ZOOM / SKALA FOTO</span>
+                <span
+                  id="zoom-val-label"
+                  class="bg-yellow-300 px-2 py-0.5 rounded border border-black"
+                  >1.00x</span
+                >
+              </div>
+              <input
+                type="range"
+                min="0.5"
+                max="2.5"
+                step="0.05"
+                value="1.0"
+                oninput="updateFitParam('zoomLevel', parseFloat(this.value))"
+                class="w-full accent-black bg-yellow-200 border-2 border-black rounded-lg h-3"
+              />
+            </div>
+
+            <div>
+              <div class="flex justify-between text-black font-black mb-1">
+                <span>GESER HORIZONTAL (OFFSET X)</span>
+                <span
+                  id="offsetx-val-label"
+                  class="bg-yellow-300 px-2 py-0.5 rounded border border-black"
+                  >0px</span
+                >
+              </div>
+              <input
+                type="range"
+                min="-100"
+                max="100"
+                value="0"
+                oninput="updateFitParam('offsetX', parseInt(this.value))"
+                class="w-full accent-black bg-yellow-200 border-2 border-black rounded-lg h-3"
+              />
+            </div>
+
+            <div>
+              <div class="flex justify-between text-black font-black mb-1">
+                <span>GESER VERTIKAL (OFFSET Y)</span>
+                <span
+                  id="offsety-val-label"
+                  class="bg-yellow-300 px-2 py-0.5 rounded border border-black"
+                  >0px</span
+                >
+              </div>
+              <input
+                type="range"
+                min="-100"
+                max="100"
+                value="0"
+                oninput="updateFitParam('offsetY', parseInt(this.value))"
+                class="w-full accent-black bg-yellow-200 border-2 border-black rounded-lg h-3"
+              />
+            </div>
+
+            <button
+              onclick="resetFitSettings()"
+              class="w-full py-3 bg-amber-100 border-2 border-black text-black rounded-xl font-black shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition"
+            >
+              RESET POSISI FOTO
+            </button>
+          </div>
+
+          <!-- TAB CONTENT: FILTER FOTO -->
+          <div
+            id="tab-content-filter"
+            class="tab-content hidden space-y-4 font-mono text-xs"
+          >
+            <div>
+              <label class="text-black font-black block mb-2 uppercase"
+                >PILIH FOTO YANG INGIN DIFILTER</label
+              >
+              <div
+                id="filter-target-buttons"
+                class="flex flex-wrap gap-2 mb-4"
+              ></div>
+            </div>
+
+            <label class="text-black font-black block uppercase">
+              EFEK FILTER UNTUK:
+              <span
+                id="filter-target-label"
+                class="bg-black text-yellow-300 px-2 py-0.5 rounded"
+                >FOTO #1</span
+              >
+            </label>
+
+            <div
+              id="photo-filters-grid"
+              class="grid grid-cols-2 sm:grid-cols-3 gap-3"
+            ></div>
+          </div>
+
+          <!-- TAB CONTENT: UPLOAD FRAME -->
+          <div
+            id="tab-content-frame"
+            class="tab-content hidden space-y-4 font-mono text-xs"
+          >
+            <div
+              class="p-4 bg-amber-50 border-3 border-black rounded-2xl space-y-3 shadow-[3px_3px_0px_0px_#000]"
+            >
+              <span class="text-black font-black flex items-center space-x-2">
+                <i data-lucide="image" class="w-5 h-5 text-black"></i>
+                <span>UPLOAD DESAIN FRAME OVERLAY (PNG)</span>
+              </span>
+              <p class="text-xs text-zinc-800 font-bold leading-relaxed">
+                Upload desain frame kustom buatan Anda. Pastikan area tempat
+                foto dibuat <strong class="underline">transparan</strong>.
+              </p>
+
+              <input
+                type="file"
+                id="frame-overlay-file-input"
+                onchange="handleFrameOverlayUpload(event)"
+                accept="image/png"
+                class="hidden"
+              />
+
+              <div class="flex gap-2 pt-1">
+                <button
+                  onclick="
+                    document.getElementById('frame-overlay-file-input').click()
+                  "
+                  class="flex-1 py-3 bg-yellow-300 hover:bg-yellow-200 text-black font-black rounded-xl border-2 border-black flex items-center justify-center space-x-2 shadow-[3px_3px_0px_0px_#000]"
+                >
+                  <i data-lucide="upload" class="w-4 h-4"></i>
+                  <span>UPLOAD FRAME PNG</span>
+                </button>
+
+                <button
+                  id="btn-remove-overlay"
+                  onclick="removeFrameOverlay()"
+                  class="hidden px-4 py-3 bg-rose-400 border-2 border-black text-black font-black rounded-xl shadow-[3px_3px_0px_0px_#000]"
+                >
+                  HAPUS
+                </button>
+              </div>
+            </div>
+
+            <div
+              class="p-4 bg-cyan-300 border-3 border-black rounded-2xl flex items-center justify-between shadow-[3px_3px_0px_0px_#000]"
+            >
+              <div>
+                <span class="font-black text-black block text-sm"
+                  >BUTUH PATOKAN BINGKAI?</span
+                >
+                <p class="text-[11px] text-black font-bold">
+                  Unduh file template ukuran persis untuk Canva/Photoshop
+                </p>
+              </div>
+              <button
+                onclick="openTemplateModal()"
+                class="px-4 py-2.5 bg-white text-black border-2 border-black font-black rounded-xl text-xs flex items-center space-x-1.5 shadow-[2px_2px_0px_0px_#000]"
+              >
+                <i data-lucide="file-down" class="w-4 h-4"></i>
+                <span>UNDUH</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: ASCII SETTINGS -->
+          <div
+            id="tab-content-ascii"
+            class="tab-content hidden space-y-4 font-mono text-xs"
+          >
+            <div>
+              <label class="text-black font-black block mb-2 uppercase"
+                >MODE KARAKTER ASCII</label
+              >
+              <div class="grid grid-cols-2 gap-2">
+                <button
+                  onclick="setAsciiMode('words')"
+                  id="btn-ascii-mode-words"
+                  class="p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-yellow-300 text-black"
+                >
+                  🏙️ NAMA KOTA
+                </button>
+                <button
+                  onclick="setAsciiMode('random')"
+                  id="btn-ascii-mode-random"
+                  class="p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-white text-black"
+                >
+                  🔣 KARAKTER ACAK
+                </button>
+              </div>
+              <p
+                id="ascii-mode-desc"
+                class="text-[11px] text-zinc-700 font-bold mt-1.5"
+              >
+                Menggunakan teks urutan kata/kota yang dapat Anda sesuaikan di
+                tab "Kata Kota".
+              </p>
+            </div>
+
+            <div
+              class="p-3 bg-amber-50 rounded-2xl border-2 border-black flex items-center justify-between shadow-[2px_2px_0px_0px_#000]"
+            >
+              <span class="text-black font-black">UBAH SEMUA FOTO:</span>
+              <div class="flex space-x-2">
+                <button
+                  onclick="toggleAllAscii(true)"
+                  class="px-3 py-1.5 bg-yellow-300 border-2 border-black text-black font-black rounded-xl shadow-[2px_2px_0px_0px_#000]"
+                >
+                  SEMUA SPLIT-FLAP
+                </button>
+                <button
+                  onclick="toggleAllAscii(false)"
+                  class="px-3 py-1.5 bg-white border-2 border-black text-black font-black rounded-xl shadow-[2px_2px_0px_0px_#000]"
+                >
+                  SEMUA NORMAL
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-black font-black mb-1">
+                <span>BATAS AMBANG ASCII (THRESHOLD)</span>
+                <span
+                  id="ascii-thresh-label"
+                  class="bg-yellow-300 px-2 py-0.5 rounded border border-black"
+                  >100</span
+                >
+              </div>
+              <input
+                type="range"
+                min="40"
+                max="180"
+                value="100"
+                oninput="updateAsciiParam('threshold', parseInt(this.value))"
+                class="w-full accent-black bg-yellow-200 border-2 border-black rounded-lg h-3"
+              />
+            </div>
+
+            <div>
+              <div class="flex justify-between text-black font-black mb-1">
+                <span>KERAPATAN MATRIX (KOLOM)</span>
+                <span
+                  id="ascii-cols-label"
+                  class="bg-yellow-300 px-2 py-0.5 rounded border border-black"
+                  >42 COLS</span
+                >
+              </div>
+              <input
+                type="range"
+                min="24"
+                max="60"
+                step="2"
+                value="42"
+                oninput="updateAsciiParam('gridCols', parseInt(this.value))"
+                class="w-full accent-black bg-yellow-200 border-2 border-black rounded-lg h-3"
+              />
+            </div>
+
+            <div>
+              <div class="flex justify-between text-black font-black mb-1">
+                <span>KECERAHAN (BRIGHTNESS)</span>
+                <span
+                  id="ascii-bright-label"
+                  class="bg-yellow-300 px-2 py-0.5 rounded border border-black"
+                  >1.1</span
+                >
+              </div>
+              <input
+                type="range"
+                min="0.5"
+                max="2.0"
+                step="0.1"
+                value="1.1"
+                oninput="updateAsciiParam('brightness', parseFloat(this.value))"
+                class="w-full accent-black bg-yellow-200 border-2 border-black rounded-lg h-3"
+              />
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: WARNA FRAME -->
+          <div
+            id="tab-content-layout"
+            class="tab-content hidden space-y-4 font-mono text-xs"
+          >
+            <div>
+              <label class="text-black font-black block mb-2 uppercase"
+                >JUDUL BINGKAI FOTO</label
+              >
+              <input
+                type="text"
+                id="frame-title-input"
+                value="NEO FLASH STUDIO"
+                oninput="updateFrameTitle(this.value)"
+                class="w-full bg-white border-3 border-black rounded-xl px-3 py-2.5 text-black font-black uppercase focus:outline-none shadow-[3px_3px_0px_0px_#000]"
+              />
+            </div>
+
+            <div>
+              <label class="text-black font-black block mb-2 uppercase"
+                >TEMA WARNA BINGKAI NEO</label
+              >
+              <div id="frame-themes-grid" class="grid grid-cols-2 gap-3"></div>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: KATA KOTA -->
+          <div
+            id="tab-content-words"
+            class="tab-content hidden space-y-4 font-mono text-xs"
+          >
+            <div>
+              <label class="text-black font-black block mb-2 uppercase"
+                >TAMBAH KOTA / KATA SENDIRI</label
+              >
+              <div class="flex gap-2">
+                <input
+                  type="text"
+                  id="new-word-input"
+                  placeholder="CONTOH: SURABAYA"
+                  onkeydown="if (event.key === 'Enter') addNewWord();"
+                  class="flex-1 bg-white border-3 border-black rounded-xl px-3 py-2 text-black font-black uppercase focus:outline-none shadow-[2px_2px_0px_0px_#000]"
+                />
+                <button
+                  onclick="addNewWord()"
+                  class="px-4 py-2 bg-yellow-300 border-3 border-black text-black font-black rounded-xl shadow-[2px_2px_0px_0px_#000]"
+                >
+                  TAMBAH
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-2 font-black">
+                <span id="words-count-label" class="text-black"
+                  >KATA AKTIF (37)</span
+                >
+                <button
+                  onclick="resetWordsToDefault()"
+                  class="text-xs text-black underline font-black"
+                >
+                  RESET KATA
+                </button>
+              </div>
+              <div
+                id="words-tags-container"
+                class="max-h-48 overflow-y-auto bg-amber-50 p-3 rounded-2xl border-3 border-black flex flex-wrap gap-2 shadow-[3px_3px_0px_0px_#000]"
+              ></div>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: STIKER -->
+          <div
+            id="tab-content-stickers"
+            class="tab-content hidden space-y-4 font-mono text-xs"
+          >
+            <!-- Active Selected Sticker Controls Panel -->
+            <div
+              id="selected-sticker-controls"
+              class="p-4 bg-yellow-300 border-3 border-black rounded-2xl space-y-3 shadow-[4px_4px_0px_0px_#000]"
+            >
+              <div class="flex items-center justify-between font-black">
+                <span
+                  class="text-black uppercase flex items-center space-x-1.5"
+                >
+                  <i data-lucide="sliders" class="w-4 h-4"></i>
+                  <span>PENGATURAN STIKER TERPILIH</span>
+                </span>
+                <span
+                  id="selected-sticker-preview"
+                  class="text-xl bg-white px-2.5 py-0.5 rounded-lg border-2 border-black"
+                  >📸</span
+                >
+              </div>
+
+              <!-- Sticker Scale Slider -->
+              <div>
+                <div class="flex justify-between font-black mb-1">
+                  <span>UKURAN / SKALA STIKER</span>
+                  <span
+                    id="sticker-scale-val"
+                    class="bg-white px-2 py-0.5 rounded border border-black"
+                    >1.0x</span
+                  >
+                </div>
+                <input
+                  type="range"
+                  min="0.5"
+                  max="3.0"
+                  step="0.1"
+                  value="1.0"
+                  id="sticker-scale-slider"
+                  oninput="updateSelectedStickerScale(parseFloat(this.value))"
+                  class="w-full accent-black bg-white border-2 border-black rounded-lg h-3"
+                />
+              </div>
+
+              <!-- Sticker Rotation Slider & Quick Buttons -->
+              <div>
+                <div class="flex justify-between font-black mb-1">
+                  <span>ROTASI / KEMIRINGAN</span>
+                  <span
+                    id="sticker-rotation-val"
+                    class="bg-white px-2 py-0.5 rounded border border-black"
+                    >0°</span
+                  >
+                </div>
+                <input
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="5"
+                  value="0"
+                  id="sticker-rotation-slider"
+                  oninput="updateSelectedStickerRotation(parseInt(this.value))"
+                  class="w-full accent-black bg-white border-2 border-black rounded-lg h-3"
+                />
+
+                <div class="grid grid-cols-4 gap-1.5 mt-2">
+                  <button
+                    onclick="rotateSelectedStickerDelta(-15)"
+                    class="py-1 bg-white hover:bg-amber-100 border-2 border-black rounded-lg font-black text-[11px]"
+                  >
+                    -15°
+                  </button>
+                  <button
+                    onclick="updateSelectedStickerRotation(0)"
+                    class="py-1 bg-white hover:bg-amber-100 border-2 border-black rounded-lg font-black text-[11px]"
+                  >
+                    0° RESET
+                  </button>
+                  <button
+                    onclick="rotateSelectedStickerDelta(15)"
+                    class="py-1 bg-white hover:bg-amber-100 border-2 border-black rounded-lg font-black text-[11px]"
+                  >
+                    +15°
+                  </button>
+                  <button
+                    onclick="rotateSelectedStickerDelta(90)"
+                    class="py-1 bg-white hover:bg-amber-100 border-2 border-black rounded-lg font-black text-[11px]"
+                  >
+                    +90°
+                  </button>
+                </div>
+              </div>
+
+              <!-- Background Toggle & Remove Selected Button -->
+              <div class="flex gap-2 pt-1">
+                <button
+                  id="btn-selected-sticker-bg"
+                  onclick="toggleSelectedStickerBg()"
+                  class="flex-1 py-2 bg-white hover:bg-amber-100 border-2 border-black rounded-xl font-black text-xs shadow-[2px_2px_0px_0px_#000]"
+                >
+                  TOGGLE BACKGROUND
+                </button>
+                <button
+                  onclick="removeSelectedSticker()"
+                  class="px-4 py-2 bg-rose-400 hover:bg-rose-300 border-2 border-black rounded-xl font-black text-xs shadow-[2px_2px_0px_0px_#000]"
+                >
+                  HAPUS STIKER
+                </button>
+              </div>
+            </div>
+
+            <!-- Custom Sticker Input -->
+            <div
+              class="space-y-3 p-3.5 bg-amber-50 rounded-2xl border-3 border-black shadow-[3px_3px_0px_0px_#000]"
+            >
+              <label class="text-black font-black block uppercase"
+                >BUAT STIKER / EMOJI CUSTOM</label
+              >
+              <div class="flex gap-2">
+                <input
+                  type="text"
+                  id="custom-sticker-input"
+                  placeholder="Ketik emoji atau teks..."
+                  onkeydown="if (event.key === 'Enter') addCustomSticker();"
+                  class="flex-1 bg-white border-2 border-black rounded-xl px-3 py-2 text-black font-black focus:outline-none shadow-[2px_2px_0px_0px_#000]"
+                />
+                <button
+                  onclick="addCustomSticker()"
+                  class="px-4 py-2 bg-yellow-300 hover:bg-yellow-200 border-2 border-black text-black font-black rounded-xl shadow-[2px_2px_0px_0px_#000] transition"
+                >
+                  TAMBAH
+                </button>
+              </div>
+
+              <!-- Default Background Mode Toggle -->
+              <div class="flex items-center justify-between pt-1">
+                <span class="font-black text-black">BACKGROUND AWAL:</span>
+                <button
+                  id="btn-sticker-bg-toggle"
+                  onclick="toggleStickerDefaultBg()"
+                  class="px-3 py-1.5 rounded-xl border-2 border-black font-black text-xs shadow-[2px_2px_0px_0px_#000] bg-yellow-300 text-black flex items-center space-x-1"
+                >
+                  <span id="sticker-bg-toggle-text">DENGAN BACKGROUND</span>
+                </button>
+              </div>
+            </div>
+
+            <span class="text-black font-black block uppercase"
+              >PILIH PALET STIKER (BISA DIGESER!)</span
+            >
+            <div
+              id="stickers-palette-grid"
+              class="grid grid-cols-5 gap-3"
+            ></div>
+
+            <button
+              id="btn-clear-stickers"
+              onclick="clearAllStickers()"
+              class="hidden w-full py-3 bg-rose-400 border-3 border-black text-black rounded-xl font-black shadow-[3px_3px_0px_0px_#000] transition flex items-center justify-center space-x-2"
+            >
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+              <span>HAPUS SEMUA STIKER</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- MODAL: RETAKE SHOT -->
+    <div
+      id="modal-retake"
+      class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-mono"
+    >
+      <div
+        class="bg-white border-4 border-black rounded-3xl max-w-lg w-full p-6 shadow-[10px_10px_0px_0px_#000] space-y-4"
+      >
+        <div
+          class="flex items-center justify-between border-b-3 border-black pb-3"
+        >
+          <div
+            class="flex items-center space-x-2 text-black font-black text-lg"
+          >
+            <i data-lucide="camera" class="w-6 h-6"></i>
+            <span id="modal-retake-title">RETAKE FOTO KE-1</span>
+          </div>
+          <button
+            onclick="closeRetakeModal()"
+            class="text-black hover:bg-yellow-300 border-2 border-black rounded-lg p-1 font-black"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div
+          class="relative w-full aspect-[4/3] bg-black rounded-2xl border-3 border-black overflow-hidden shadow-[4px_4px_0px_0px_#000] flex items-center justify-center"
+        >
+          <video
+            id="retake-webcam-video"
+            autoplay
+            playsinline
+            muted
+            class="w-full h-full object-cover scale-x-[-1]"
+          ></video>
+
+          <div
+            id="retake-flash"
+            class="absolute inset-0 bg-white opacity-0 pointer-events-none transition-opacity duration-75 z-40"
+          ></div>
+
+          <div
+            id="retake-capture-overlay"
+            class="hidden absolute inset-0 bg-yellow-300/90 backdrop-blur-sm flex-col items-center justify-center z-20 border-3 border-black"
+          >
+            <div
+              id="retake-countdown-number"
+              class="text-9xl font-black font-mono text-black animate-bounce drop-shadow-[4px_4px_0px_#fff]"
+            >
+              3
+            </div>
+            <p
+              class="font-mono text-sm font-black text-black mt-2 tracking-widest uppercase bg-white border-2 border-black px-4 py-1 rounded-xl shadow-[3px_3px_0px_0px_#000]"
+            >
+              BERSIAP UNTUK RETAKE FOTO
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 pt-2">
+          <button
+            onclick="startRetakeCapture()"
+            class="flex-1 py-3.5 bg-yellow-300 hover:bg-yellow-200 border-3 border-black text-black font-black text-xs rounded-xl shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center justify-center space-x-2"
+          >
+            <i data-lucide="camera" class="w-5 h-5"></i>
+            <span>AMBIL FOTO RETAKE</span>
+          </button>
+
+          <input
+            type="file"
+            id="retake-file-input"
+            onchange="handleRetakeFileUpload(event)"
+            accept="image/*"
+            class="hidden"
+          />
+          <button
+            onclick="document.getElementById('retake-file-input').click()"
+            class="py-3.5 px-4 bg-cyan-300 hover:bg-cyan-200 border-3 border-black text-black font-black text-xs rounded-xl shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition flex items-center justify-center space-x-1.5"
+          >
+            <i data-lucide="upload" class="w-4 h-4"></i>
+            <span>GANTI FILE</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: TEMPLATE FRAME GUIDELINES -->
+    <div
+      id="modal-template"
+      class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-mono"
+    >
+      <div
+        class="bg-white border-4 border-black rounded-3xl max-w-xl w-full p-6 shadow-[10px_10px_0px_0px_#000] space-y-4"
+      >
+        <div
+          class="flex items-center justify-between border-b-3 border-black pb-3"
+        >
+          <div
+            class="flex items-center space-x-2 text-black font-black text-lg"
+          >
+            <i data-lucide="file-down" class="w-6 h-6"></i>
+            <span>PATOKAN TEMPLATE FRAME NEO</span>
+          </div>
+          <button
+            onclick="closeTemplateModal()"
+            class="text-black hover:bg-yellow-300 border-2 border-black rounded-lg p-1 font-black"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="space-y-3 text-xs text-black font-bold">
+          <p class="leading-relaxed">
+            Unduh gambar patokan di bawah ini. Buka di
+            <strong class="underline">Canva / Photoshop / Figma</strong> untuk
+            membuat desain frame Anda sendiri, lalu upload kembali file PNG
+            transparan Anda!
+          </p>
+
+          <div
+            class="flex items-center justify-between bg-amber-50 p-2.5 rounded-xl border-2 border-black"
+          >
+            <span class="text-black font-black">UKURAN TEMPLATE:</span>
+            <div
+              class="flex border-2 border-black rounded-lg overflow-hidden bg-white"
+            >
+              <button
+                onclick="setTemplateShotsCount(2)"
+                id="btn-tpl-shot-2"
+                class="px-3 py-1 font-black"
+              >
+                2 FOTO
+              </button>
+              <button
+                onclick="setTemplateShotsCount(3)"
+                id="btn-tpl-shot-3"
+                class="px-3 py-1 font-black bg-black text-yellow-300"
+              >
+                3 FOTO
+              </button>
+              <button
+                onclick="setTemplateShotsCount(4)"
+                id="btn-tpl-shot-4"
+                class="px-3 py-1 font-black"
+              >
+                4 FOTO
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+            <button
+              onclick="generateTemplatePNG('WHITE')"
+              class="p-3 bg-white border-3 border-black rounded-2xl flex flex-col items-center justify-center space-y-2 text-center shadow-[3px_3px_0px_0px_#000] hover:bg-zinc-100 transition"
+            >
+              <i data-lucide="file-down" class="w-6 h-6 text-black"></i>
+              <span class="font-black text-black">NEO WHITE</span>
+            </button>
+
+            <button
+              onclick="generateTemplatePNG('YELLOW')"
+              class="p-3 bg-yellow-300 border-3 border-black rounded-2xl flex flex-col items-center justify-center space-y-2 text-center shadow-[3px_3px_0px_0px_#000] hover:bg-yellow-200 transition"
+            >
+              <i data-lucide="file-down" class="w-6 h-6 text-black"></i>
+              <span class="font-black text-black">NEO YELLOW</span>
+            </button>
+
+            <button
+              onclick="generateTemplatePNG('PINK')"
+              class="p-3 bg-pink-300 border-3 border-black rounded-2xl flex flex-col items-center justify-center space-y-2 text-center shadow-[3px_3px_0px_0px_#000] hover:bg-pink-200 transition"
+            >
+              <i data-lucide="file-down" class="w-6 h-6 text-black"></i>
+              <span class="font-black text-black">CYBER PINK</span>
+            </button>
+
+            <button
+              onclick="generateTemplatePNG('DARK')"
+              class="p-3 bg-black border-3 border-black rounded-2xl flex flex-col items-center justify-center space-y-2 text-center shadow-[3px_3px_0px_0px_#FACC15] transition"
+            >
+              <i data-lucide="file-down" class="w-6 h-6 text-yellow-300"></i>
+              <span class="font-black text-yellow-300">SOLARI NOIR</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button
+            onclick="closeTemplateModal()"
+            class="px-6 py-2.5 bg-yellow-300 border-3 border-black text-black font-black rounded-xl text-xs shadow-[3px_3px_0px_0px_#000]"
+          >
+            TUTUP
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: HELP & PERMISSIONS -->
+    <div
+      id="modal-help"
+      class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-mono"
+    >
+      <div
+        class="bg-white border-4 border-black rounded-3xl max-w-lg w-full p-6 shadow-[10px_10px_0px_0px_#000] space-y-4"
+      >
+        <div
+          class="flex items-center justify-between border-b-3 border-black pb-3"
+        >
+          <div
+            class="flex items-center space-x-2 text-black font-black text-lg"
+          >
+            <i data-lucide="help-circle" class="w-6 h-6"></i>
+            <span>PANDUAN IZIN KAMERA</span>
+          </div>
+          <button
+            onclick="closeHelpModal()"
+            class="text-black hover:bg-yellow-300 border-2 border-black rounded-lg p-1 font-black"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="space-y-3 text-xs text-black font-bold">
+          <p class="leading-relaxed">
+            Jika kamera tidak terbuka, ikuti langkah-langkah di bawah ini:
+          </p>
+          <div
+            class="bg-amber-50 p-3 rounded-xl border-2 border-black space-y-1.5"
+          >
+            <p class="font-black text-black">1. Chrome & Edge:</p>
+            <ul class="list-disc pl-4 space-y-1 text-black font-medium">
+              <li>
+                Klik ikon <strong class="font-black">Gembok</strong> di URL
+                browser.
+              </li>
+              <li>
+                Ubah izin <strong class="font-black">Kamera</strong> menjadi
+                <strong class="font-black text-emerald-600"
+                  >Allow / Izinkan</strong
+                >.
+              </li>
+              <li>Refresh halaman.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button
+            onclick="
+              closeHelpModal();
+              initCamera();
+            "
+            class="px-6 py-2.5 bg-yellow-300 border-3 border-black text-black font-black rounded-xl text-xs shadow-[3px_3px_0px_0px_#000]"
+          >
+            COBA LAGI
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: SINGLE UPLOAD RESOLUTION CHOICE -->
+    <div
+      id="modal-single-upload"
+      class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-mono"
+    >
+      <div
+        class="bg-white border-4 border-black rounded-3xl max-w-md w-full p-6 shadow-[10px_10px_0px_0px_#000] space-y-4"
+      >
+        <div
+          class="flex items-center justify-between border-b-3 border-black pb-3"
+        >
+          <div
+            class="flex items-center space-x-2 text-black font-black text-base"
+          >
+            <i data-lucide="upload" class="w-5 h-5"></i>
+            <span>PILIH JUMLAH SLOT FOTO</span>
+          </div>
+          <button
+            onclick="closeSingleUploadModal()"
+            class="text-black hover:bg-yellow-300 border-2 border-black rounded-lg p-1 font-black"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <p class="text-xs text-black font-bold">
+          Anda mengunggah 1 foto. Bagaimana Anda ingin menampilkan foto ini di
+          photostrip?
+        </p>
+
+        <div class="space-y-2 pt-1">
+          <button
+            onclick="applySinglePhotoToAll(2)"
+            class="w-full p-3.5 bg-yellow-300 hover:bg-yellow-200 border-3 border-black rounded-xl text-xs font-black text-black shadow-[3px_3px_0px_0px_#000] transition flex items-center justify-between"
+          >
+            <span>DUPLIKASI KE 2 SLOT FOTO</span>
+            <span
+              class="bg-black text-yellow-300 px-2 py-0.5 rounded text-[10px]"
+              >2 FOTO</span
+            >
+          </button>
+
+          <button
+            onclick="applySinglePhotoToAll(3)"
+            class="w-full p-3.5 bg-cyan-300 hover:bg-cyan-200 border-3 border-black rounded-xl text-xs font-black text-black shadow-[3px_3px_0px_0px_#000] transition flex items-center justify-between"
+          >
+            <span>DUPLIKASI KE 3 SLOT FOTO</span>
+            <span class="bg-black text-cyan-300 px-2 py-0.5 rounded text-[10px]"
+              >3 FOTO</span
+            >
+          </button>
+
+          <button
+            onclick="applySinglePhotoToAll(4)"
+            class="w-full p-3.5 bg-pink-300 hover:bg-pink-200 border-3 border-black rounded-xl text-xs font-black text-black shadow-[3px_3px_0px_0px_#000] transition flex items-center justify-between"
+          >
+            <span>DUPLIKASI KE 4 SLOT FOTO</span>
+            <span class="bg-black text-pink-300 px-2 py-0.5 rounded text-[10px]"
+              >4 FOTO</span
+            >
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: EXPORT PHOTO STRIP PREVIEW -->
+    <div
+      id="modal-export-preview"
+      class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-mono"
+    >
+      <div
+        class="bg-white border-4 border-black rounded-3xl max-w-md w-full p-6 shadow-[10px_10px_0px_0px_#000] space-y-4 max-h-[90vh] overflow-y-auto"
+      >
+        <div
+          class="flex items-center justify-between border-b-3 border-black pb-3"
+        >
+          <div
+            class="flex items-center space-x-2 text-black font-black text-lg"
+          >
+            <i
+              data-lucide="check-circle-2"
+              class="w-6 h-6 text-emerald-600"
+            ></i>
+            <span>HASIL PHOTO STRIP</span>
+          </div>
+          <button
+            onclick="closeExportPreviewModal()"
+            class="text-black hover:bg-yellow-300 border-2 border-black rounded-lg p-1 font-black"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="text-xs text-black font-bold">
+          <p class="mb-3">
+            Klik tombol di bawah ini atau tekan lama pada gambar untuk
+            menyimpan:
+          </p>
+          <div
+            class="border-3 border-black rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_#000] bg-stone-900 flex justify-center"
+          >
+            <img
+              id="export-preview-img"
+              class="max-h-[350px] object-contain"
+              alt="Exported Photo Strip"
+            />
+          </div>
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <a
+            id="export-download-anchor"
+            download="neo-strip.png"
+            class="flex-1 py-3 bg-yellow-300 hover:bg-yellow-200 border-3 border-black text-black font-black text-center text-xs rounded-xl shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition block"
+          >
+            UNDUH FILE
+          </a>
+          <button
+            onclick="closeExportPreviewModal()"
+            class="px-4 py-3 bg-white border-3 border-black text-black font-black text-xs rounded-xl shadow-[3px_3px_0px_0px_#000]"
+          >
+            TUTUP
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: 1080x1920 STORY SHARE PREVIEW -->
+    <div
+      id="modal-story-preview"
+      class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-mono"
+    >
+      <div
+        class="bg-white border-4 border-black rounded-3xl max-w-md w-full p-6 shadow-[10px_10px_0px_0px_#000] space-y-4 max-h-[90vh] overflow-y-auto"
+      >
+        <div
+          class="flex items-center justify-between border-b-3 border-black pb-3"
+        >
+          <div
+            class="flex items-center space-x-2 text-black font-black text-lg"
+          >
+            <i data-lucide="share-2" class="w-6 h-6 text-pink-500"></i>
+            <span>STORY FORMAT (1080x1920)</span>
+          </div>
+          <button
+            onclick="closeStoryPreviewModal()"
+            class="text-black hover:bg-yellow-300 border-2 border-black rounded-lg p-1 font-black"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="text-xs text-black font-bold space-y-2">
+          <div
+            class="border-3 border-black rounded-2xl overflow-hidden shadow-[4px_4px_0px_0px_#000] bg-stone-900 flex justify-center p-2"
+          >
+            <img
+              id="story-preview-img"
+              class="max-h-[380px] object-contain rounded-lg"
+              alt="Story Preview 1080x1920"
+            />
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2 pt-2">
+          <a
+            id="story-download-anchor"
+            download="neo-story-1080x1920.png"
+            class="w-full py-3.5 bg-pink-300 hover:bg-pink-200 border-3 border-black text-black font-black text-center text-xs rounded-xl shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition block"
+          >
+            UNDUH GAMBAR STORY (1080x1920)
+          </a>
+          <button
+            onclick="closeStoryPreviewModal()"
+            class="w-full py-2.5 bg-white border-2 border-black text-black font-black text-xs rounded-xl shadow-[2px_2px_0px_0px_#000]"
+          >
+            TUTUP
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: VIDEO GENERATING SPINNER -->
+    <div
+      id="modal-video-recording"
+      class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 font-mono"
+    >
+      <div
+        class="bg-yellow-300 border-4 border-black rounded-3xl max-w-sm w-full p-8 shadow-[10px_10px_0px_0px_#000] text-center space-y-4"
+      >
+        <i
+          data-lucide="film"
+          class="w-12 h-12 text-black animate-bounce mx-auto"
+        ></i>
+        <h3 class="text-base font-black text-black uppercase">
+          MEMPROSES VIDEO MP4/WEBM...
+        </h3>
+        <p class="text-xs text-black font-bold">
+          Merekam animasi gerak Live Photo & Split-Flap ASCII...
+        </p>
+      </div>
+    </div>
+
+    <script>
+      const DEFAULT_CITIES = [
+        "SURABAYA",
+        "BANDUNG",
+        "VIETNAM",
+        "AUSTRIA",
+        "MYANMAR",
+        "MEDAN",
+        "SINGAPORE",
+        "NETHERLANDS",
+        "BHUTAN",
+        "VENEZUELA",
+        "INDONESIA",
+        "YOGYAKARTA",
+        "THAILAND",
+        "ZEALAND",
+        "BRAZIL",
+        "GERMANY",
+        "MOROCCO",
+        "FINLAND",
+        "DENPASAR",
+        "KENYA",
+        "LUXEMBOURG",
+        "QATAR",
+        "MAKASSAR",
+        "JAPAN",
+        "PORTUGAL",
+        "BELGIUM",
+        "MALAYSIA",
+        "MONGOLIA",
+        "CHILE",
+        "ICELAND",
+        "TURKEY",
+        "MALDIVES",
+        "PERU",
+        "NORWAY",
+        "JAKARTA",
+        "UNITED",
+        "LOMBOK",
+      ];
+
+      const FRAME_COLOR_THEMES = [
+        {
+          id: "yellow",
+          name: "Neo Yellow",
+          bg: "bg-yellow-300",
+          text: "text-black",
+          hexBg: "#facc15",
+          hexText: "#000000",
+        },
+        {
+          id: "cream",
+          name: "Retro Cream",
+          bg: "bg-amber-50",
+          text: "text-black",
+          hexBg: "#fffbeb",
+          hexText: "#000000",
+        },
+        {
+          id: "pink",
+          name: "Cyber Pink",
+          bg: "bg-pink-300",
+          text: "text-black",
+          hexBg: "#f472b6",
+          hexText: "#000000",
+        },
+        {
+          id: "lime",
+          name: "Pop Lime",
+          bg: "bg-lime-300",
+          text: "text-black",
+          hexBg: "#a3e635",
+          hexText: "#000000",
+        },
+        {
+          id: "cyan",
+          name: "Electric Cyan",
+          bg: "bg-cyan-300",
+          text: "text-black",
+          hexBg: "#67e8f9",
+          hexText: "#000000",
+        },
+        {
+          id: "noir",
+          name: "Dark Neo",
+          bg: "bg-black",
+          text: "text-yellow-300",
+          hexBg: "#000000",
+          hexText: "#facc15",
+        },
+      ];
+
+      const PHOTO_FILTERS = [
+        { id: "none", name: "ORIGINAL" },
+        { id: "cartoon", name: "CARTOON COMIC" },
+        { id: "scribble", name: "SCRIBBLE SKETCH" },
+        { id: "grayscale", name: "B&W VINTAGE" },
+        { id: "sepia", name: "RETRO SEPIA" },
+        { id: "vintage", name: "WARM RETRO" },
+        { id: "high-contrast", name: "HIGH CONTRAST" },
+        { id: "cyber", name: "CYBER NEON" },
+        { id: "cool", name: "COOL NOIR" },
+        { id: "blur", name: "SOFT BLUR" },
+      ];
+
+      const STICKERS = [
+        "⚡",
+        "⭐",
+        "🏷️",
+        "📸",
+        "✨",
+        "🖤",
+        "📍",
+        "🎟️",
+        "💥",
+        "DEPARTURE",
+      ];
+
+      // Global State Variables
+      let stream = null;
+      let isCapturing = false;
+      let isMirrored = true;
+      let totalShots = 3;
+      let templateShotsCount = 3;
+      let isLiveMotionActive = false;
+      let capturedMotionClips = [];
+      let capturedPhotos = [];
+      let asciiToggles = {};
+      let photoFilters = {};
+      let fitSettings = {
+        fitMode: "cover",
+        zoomLevel: 1.0,
+        offsetX: 0,
+        offsetY: 0,
+      };
+      let asciiSettings = {
+        gridCols: 42,
+        gridRows: 28,
+        threshold: 100,
+        contrast: 1.5,
+        brightness: 1.1,
+        isInverted: false,
+      };
+      let themeSettings = {
+        currentTheme: FRAME_COLOR_THEMES[0],
+        title: "NEO FLASH STUDIO",
+      };
+      let addedStickers = []; // Objects: { id, text, x, y, scale, rotation, hasBg }
+      let selectedStickerId = null;
+      let stickerDefaultHasBg = true;
+      let soundEnabled = true;
+      let selectedFilterTarget = 0;
+      let customFrameOverlayData = null;
+      let retakeTargetIndex = null;
+      let asciiMode = "words";
+      let activeWords = [...DEFAULT_CITIES];
+      let animationLoopId = null;
+      let motionFrameTick = 0;
+      let pendingSingleUploadData = null;
+
+      window.addEventListener("DOMContentLoaded", () => {
+        if (typeof lucide !== "undefined" && lucide.createIcons) {
+          lucide.createIcons();
+        }
+        initCamera();
+        renderWordsTags();
+        renderFrameThemesUI();
+        renderStickersPaletteUI();
+        renderPhotoFiltersUI();
+        updateSelectedStickerControlsUI();
+        document.getElementById("strip-date-text").innerText =
+          new Date().toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+
+        // Add auto resize sync listener for sticker proportions
+        window.addEventListener("resize", () => {
+          if (addedStickers.length > 0) {
+            renderAppliedStickers();
+          }
+        });
+      });
+
+      function toggleLiveMotionPlayback() {
+        isLiveMotionActive = !isLiveMotionActive;
+        const btn = document.getElementById("btn-toggle-livemotion");
+        const text = document.getElementById("livemotion-toggle-text");
+        if (btn && text) {
+          if (isLiveMotionActive) {
+            btn.className =
+              "px-3.5 py-1.5 rounded-xl border-2 border-black bg-pink-300 text-black font-black shadow-[2px_2px_0px_0px_#000] flex items-center space-x-1.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition";
+            text.innerText = "LIVE MOTION: AKTIF";
+          } else {
+            btn.className =
+              "px-3.5 py-1.5 rounded-xl border-2 border-black bg-white text-black font-black shadow-[2px_2px_0px_0px_#000] flex items-center space-x-1.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition";
+            text.innerText = "LIVE MOTION: MATI (STATIS)";
+          }
+        }
+        playFlapAudio();
+      }
+
+      async function initCamera(deviceId) {
+        const loadingEl = document.getElementById("camera-loading");
+        const errorEl = document.getElementById("camera-error");
+        const videoEl = document.getElementById("webcam-video");
+        const statusDot = document.getElementById("camera-status-dot");
+        const statusText = document.getElementById("camera-status-text");
+
+        loadingEl.classList.remove("hidden");
+        errorEl.classList.add("hidden");
+
+        if (stream) {
+          stream.getTracks().forEach((t) => t.stop());
+          stream = null;
+        }
+
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          showCameraError(
+            "KAMERA TIDAK DIDUKUNG",
+            "Browser Anda tidak mendukung Web Camera API.",
+          );
+          return;
+        }
+
+        const constraintsList = [];
+        if (deviceId) {
+          constraintsList.push({
+            video: {
+              deviceId: { exact: deviceId },
+              width: { ideal: 1280 },
+              height: { ideal: 720 },
+            },
+            audio: false,
+          });
+        }
+        constraintsList.push({
+          video: {
+            facingMode: "user",
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
+          audio: false,
+        });
+        constraintsList.push({ video: true, audio: false });
+
+        let mediaStream = null;
+
+        for (const constraint of constraintsList) {
+          try {
+            mediaStream = await navigator.mediaDevices.getUserMedia(constraint);
+            if (mediaStream) break;
+          } catch (err) {}
+        }
+
+        if (mediaStream) {
+          stream = mediaStream;
+          videoEl.srcObject = stream;
+          loadingEl.classList.add("hidden");
+          statusDot.className =
+            "w-3 h-3 rounded-full border border-black bg-emerald-400 animate-ping";
+          statusText.innerText = "KAMERA AKTIF";
+          enumerateVideoDevices();
+        } else {
+          showCameraError(
+            "IZIN KAMERA DITOLAK",
+            "Browser memblokir akses kamera.",
+          );
+        }
+      }
+
+      function showCameraError(title, msg) {
+        document.getElementById("camera-loading").classList.add("hidden");
+        document.getElementById("camera-error-title").innerText = title;
+        document.getElementById("camera-error-msg").innerText = msg;
+        document.getElementById("camera-error").classList.remove("hidden");
+      }
+
+      async function enumerateVideoDevices() {
+        try {
+          const devices = await navigator.mediaDevices.enumerateDevices();
+          const videoInputs = devices.filter((d) => d.kind === "videoinput");
+          const container = document.getElementById("camera-select-container");
+          const select = document.getElementById("camera-select");
+
+          if (videoInputs.length > 1) {
+            select.innerHTML = "";
+            videoInputs.forEach((dev, idx) => {
+              const opt = document.createElement("option");
+              opt.value = dev.deviceId;
+              opt.innerText = dev.label || `Kamera ${idx + 1}`;
+              select.appendChild(opt);
+            });
+            container.classList.remove("hidden");
+            container.classList.add("flex");
+          } else {
+            container.classList.add("hidden");
+          }
+        } catch (e) {}
+      }
+
+      function toggleMirror() {
+        isMirrored = !isMirrored;
+        document.getElementById("webcam-video").className =
+          `w-full h-full object-cover ${isMirrored ? "scale-x-[-1]" : ""}`;
+      }
+
+      function setTotalShots(count) {
+        if (isCapturing) return;
+        totalShots = count;
+        [2, 3, 4].forEach((num) => {
+          const btn = document.getElementById(`btn-shot-${num}`);
+          if (btn) {
+            btn.className = `btn-shot-count px-3 py-1 font-extrabold transition ${count === num ? "bg-black text-yellow-300" : "bg-white text-black hover:bg-yellow-100"}`;
+          }
+        });
+        document.getElementById("btn-start-text").innerText =
+          `MULAI PHOTOBOOTH (${count} SHOTS)`;
+      }
+
+      function setControlsDisabled(disabled) {
+        document
+          .querySelectorAll("#shot-buttons-container button")
+          .forEach((b) => (b.disabled = disabled));
+        document.getElementById("btn-start-booth").disabled = disabled;
+        document.getElementById("btn-upload-photos").disabled = disabled;
+        document.getElementById("btn-mirror").disabled = disabled;
+        const cameraSelect = document.getElementById("camera-select");
+        if (cameraSelect) cameraSelect.disabled = disabled;
+      }
+
+      async function startPhotoboothSequence() {
+        if (!stream || isCapturing) return;
+        isCapturing = true;
+        setControlsDisabled(true);
+        capturedPhotos = [];
+        capturedMotionClips = [];
+
+        const overlay = document.getElementById("capture-overlay");
+        const countdownEl = document.getElementById("countdown-number");
+        const statusEl = document.getElementById("capture-status-text");
+        overlay.classList.remove("hidden");
+        overlay.classList.add("flex");
+
+        let shotIndex = 0;
+
+        async function runNextShot() {
+          let count = 3;
+          countdownEl.innerText = count;
+          statusEl.innerText = `FOTO KE ${shotIndex + 1} DARI ${totalShots}`;
+          playBeepSound();
+
+          const timer = setInterval(async () => {
+            count--;
+            if (count > 0) {
+              countdownEl.innerText = count;
+              playBeepSound();
+            } else {
+              clearInterval(timer);
+              triggerFlashEffect("camera-flash");
+              playShutterSound();
+
+              const videoEl = document.getElementById("webcam-video");
+              const staticSnapshot = takeSingleSnapshot(videoEl);
+              capturedPhotos.push(staticSnapshot);
+
+              const frames = [];
+              for (let f = 0; f < 12; f++) {
+                frames.push(takeSingleSnapshot(videoEl));
+                await new Promise((r) => setTimeout(r, 90));
+              }
+              capturedMotionClips.push(frames);
+
+              shotIndex++;
+              if (shotIndex < totalShots) {
+                countdownEl.innerText = count;
+                statusEl.innerText = `BERSIAP UNTUK FOTO KE-${shotIndex + 1}...`;
+                setTimeout(() => {
+                  runNextShot();
+                }, 1000);
+              } else {
+                countdownEl.innerText = count;
+                statusEl.innerText = "SELESAI! MENYUSUN BINGKAI...";
+                setTimeout(() => {
+                  overlay.classList.add("hidden");
+                  overlay.classList.remove("flex");
+                  isCapturing = false;
+                  setControlsDisabled(false);
+
+                  capturedPhotos.forEach((_, idx) => {
+                    asciiToggles[idx] = true;
+                    photoFilters[idx] = "none";
+                  });
+                  switchToCustomizeView();
+                }, 800);
+              }
+            }
+          }, 1000);
+        }
+
+        runNextShot();
+      }
+
+      function takeSingleSnapshot(videoEl) {
+        const canvas = document.createElement("canvas");
+        const w = videoEl.videoWidth || 640;
+        const h = videoEl.videoHeight || 480;
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+
+        if (isMirrored) {
+          ctx.translate(w, 0);
+          ctx.scale(-1, 1);
+        }
+        ctx.drawImage(videoEl, 0, 0, w, h);
+        return canvas.toDataURL("image/jpeg", 0.85);
+      }
+
+      function triggerFlashEffect(flashId) {
+        const flashEl = document.getElementById(flashId);
+        if (!flashEl) return;
+        flashEl.style.opacity = "1";
+        setTimeout(() => {
+          flashEl.style.opacity = "0";
+        }, 200);
+      }
+
+      function handleFileUpload(event) {
+        const files = Array.from(event.target.files || []);
+        if (files.length === 0) return;
+
+        if (files.length === 1) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            pendingSingleUploadData = e.target.result;
+            document
+              .getElementById("modal-single-upload")
+              .classList.remove("hidden");
+          };
+          reader.readAsDataURL(files[0]);
+          return;
+        }
+
+        processMultipleFiles(files);
+      }
+
+      function closeSingleUploadModal() {
+        document.getElementById("modal-single-upload").classList.add("hidden");
+        pendingSingleUploadData = null;
+      }
+
+      function applySinglePhotoToAll(count) {
+        if (!pendingSingleUploadData) return;
+        const loaded = Array(count).fill(pendingSingleUploadData);
+        capturedPhotos = loaded;
+        capturedMotionClips = loaded.map((img) => [img]);
+        setTotalShots(count);
+        capturedPhotos.forEach((_, idx) => {
+          asciiToggles[idx] = true;
+          photoFilters[idx] = "none";
+        });
+        closeSingleUploadModal();
+        switchToCustomizeView();
+      }
+
+      function processMultipleFiles(files) {
+        const loaded = [];
+        let done = 0;
+        const targetCount = Math.min(files.length, 4);
+
+        files.slice(0, 4).forEach((f) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            loaded.push(e.target.result);
+            done++;
+            if (done === targetCount) {
+              capturedPhotos = loaded;
+              capturedMotionClips = loaded.map((img) => [img]);
+              setTotalShots(loaded.length);
+              capturedPhotos.forEach((_, idx) => {
+                asciiToggles[idx] = true;
+                photoFilters[idx] = "none";
+              });
+              switchToCustomizeView();
+            }
+          };
+          reader.readAsDataURL(f);
+        });
+      }
+
+      function switchToCustomizeView() {
+        document.getElementById("view-booth").classList.add("hidden");
+        document.getElementById("view-customize").classList.remove("hidden");
+        document.getElementById("view-customize").classList.add("grid");
+        document.getElementById("btn-reset-booth").classList.remove("hidden");
+        document.getElementById("btn-reset-booth").classList.add("flex");
+
+        renderFilterTargetButtons();
+        renderCustomizeStripGrid();
+        startMotionLoop();
+        playFlapAudio();
+      }
+
+      function resetToBoothView() {
+        stopMotionLoop();
+        document.getElementById("view-customize").classList.add("hidden");
+        document.getElementById("view-customize").classList.remove("grid");
+        document.getElementById("view-booth").classList.remove("hidden");
+        document.getElementById("btn-reset-booth").classList.add("hidden");
+
+        if (!stream) initCamera();
+      }
+
+      function renderCustomizeStripGrid() {
+        const container = document.getElementById("strip-container");
+        const grid = document.getElementById("strip-slots-grid");
+        grid.innerHTML = "";
+
+        const count = capturedPhotos.length || totalShots || 3;
+        const canvasW = 800;
+        const slotW = 720;
+        const slotH = 540;
+        const padding = 40;
+        const headerH = 80;
+        const gap = 30;
+        const footerH = 80;
+
+        const canvasH =
+          padding +
+          headerH +
+          count * slotH +
+          (count - 1) * gap +
+          footerH +
+          padding;
+
+        container.style.aspectRatio = `${canvasW} / ${canvasH}`;
+
+        const headerEl = document.getElementById("strip-header-bar");
+        if (headerEl) {
+          headerEl.style.position = "absolute";
+          headerEl.style.left = "5%";
+          headerEl.style.width = "90%";
+          headerEl.style.top = `${(padding / canvasH) * 100}%`;
+          headerEl.style.height = `${(headerH / canvasH) * 100}%`;
+        }
+
+        const footerEl = document.getElementById("strip-footer-bar");
+        if (footerEl) {
+          footerEl.style.position = "absolute";
+          footerEl.style.left = "5%";
+          footerEl.style.width = "90%";
+          footerEl.style.top = `${((canvasH - padding - footerH + 10) / canvasH) * 100}%`;
+          footerEl.style.height = `${(footerH / canvasH) * 100}%`;
+        }
+
+        updateStripThemeStyle();
+
+        capturedPhotos.forEach((_, idx) => {
+          const slotBox = document.createElement("div");
+          const slotY = padding + headerH + 10 + idx * (slotH + gap);
+
+          slotBox.className =
+            "absolute rounded-xl overflow-hidden border-3 border-black shadow-[3px_3px_0px_0px_#000] bg-black";
+          slotBox.style.left = "5%";
+          slotBox.style.width = "90%";
+          slotBox.style.top = `${(slotY / canvasH) * 100}%`;
+          slotBox.style.height = `${(slotH / canvasH) * 100}%`;
+
+          const canvas = document.createElement("canvas");
+          canvas.className = "w-full h-full object-cover";
+          canvas.id = `slot-canvas-${idx}`;
+          slotBox.appendChild(canvas);
+
+          const retakeBtn = document.createElement("button");
+          retakeBtn.className =
+            "absolute top-2 left-2 px-2.5 py-1 bg-cyan-300 hover:bg-cyan-200 border-2 border-black rounded-lg text-[10px] font-mono font-black text-black shadow-[2px_2px_0px_0px_#000] transition flex items-center space-x-1 z-20";
+          retakeBtn.innerHTML = `<i data-lucide="camera" class="w-3.5 h-3.5"></i><span>RETAKE</span>`;
+          retakeBtn.onclick = (e) => {
+            e.stopPropagation();
+            openRetakeModal(idx);
+          };
+          slotBox.appendChild(retakeBtn);
+
+          const asciiToggleBtn = document.createElement("button");
+          const isAscii = asciiToggles[idx] ?? true;
+          asciiToggleBtn.className =
+            "absolute top-2 right-2 px-2.5 py-1 bg-yellow-300 border-2 border-black rounded-lg text-[10px] font-mono font-black text-black shadow-[2px_2px_0px_0px_#000] hover:bg-yellow-200 transition flex items-center space-x-1 z-20";
+          asciiToggleBtn.innerHTML = `<i data-lucide="zap" class="w-3.5 h-3.5"></i><span>${isAscii ? "SPLIT-FLAP" : "NORMAL"}</span>`;
+          asciiToggleBtn.onclick = (e) => {
+            e.stopPropagation();
+            asciiToggles[idx] = !asciiToggles[idx];
+            renderCustomizeStripGrid();
+            playFlapAudio();
+          };
+          slotBox.appendChild(asciiToggleBtn);
+
+          grid.appendChild(slotBox);
+        });
+
+        renderAppliedStickers();
+
+        if (typeof lucide !== "undefined" && lucide.createIcons) {
+          lucide.createIcons();
+        }
+      }
+
+      function updateStripThemeStyle() {
+        const container = document.getElementById("strip-container");
+        const t = themeSettings.currentTheme;
+        container.className = `rounded-3xl border-4 border-black ${t.bg} ${t.text} shadow-[8px_8px_0px_0px_#000] transition-all duration-300 w-full max-w-sm relative overflow-hidden`;
+      }
+
+      function openTemplateModal() {
+        document.getElementById("modal-template").classList.remove("hidden");
+        setTemplateShotsCount(capturedPhotos.length || totalShots || 3);
+      }
+
+      function closeTemplateModal() {
+        document.getElementById("modal-template").classList.add("hidden");
+      }
+
+      function setTemplateShotsCount(count) {
+        templateShotsCount = count;
+        [2, 3, 4].forEach((n) => {
+          const btn = document.getElementById(`btn-tpl-shot-${n}`);
+          if (btn)
+            btn.className = `px-3 py-1 font-black ${n === count ? "bg-black text-yellow-300" : "bg-white text-black"}`;
+        });
+      }
+
+      function generateTemplatePNG(styleName) {
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = 800;
+          const slotW = 720;
+          const slotH = 540;
+          const padding = 40;
+          const headerH = 80;
+          const footerH = 80;
+          const gap = 30;
+
+          const count = templateShotsCount;
+          const canvasH =
+            padding +
+            headerH +
+            count * slotH +
+            (count - 1) * gap +
+            footerH +
+            padding;
+
+          canvas.height = canvasH;
+          const ctx = canvas.getContext("2d");
+
+          if (styleName === "DARK") ctx.fillStyle = "#000000";
+          else if (styleName === "YELLOW") ctx.fillStyle = "#facc15";
+          else if (styleName === "PINK") ctx.fillStyle = "#f472b6";
+          else if (styleName === "WHITE") ctx.fillStyle = "#ffffff";
+          else ctx.fillStyle = "#ffffff";
+
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          let currentY = padding + headerH + 10;
+          for (let i = 0; i < count; i++) {
+            ctx.clearRect(padding, currentY, slotW, slotH);
+            ctx.strokeStyle = "#000000";
+            ctx.lineWidth = 6;
+            ctx.strokeRect(padding, currentY, slotW, slotH);
+
+            currentY += slotH + gap;
+          }
+
+          const dataUrl = canvas.toDataURL("image/png");
+          const link = document.createElement("a");
+          link.download = `neo-template-${count}shots-${styleName.toLowerCase()}.png`;
+          link.href = dataUrl;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } catch (e) {
+          console.error("Failed to generate template PNG:", e);
+        }
+      }
+
+      function startMotionLoop() {
+        stopMotionLoop();
+        let lastTime = 0;
+
+        function loop(time) {
+          if (time - lastTime > 120) {
+            lastTime = time;
+
+            if (isLiveMotionActive) {
+              motionFrameTick++;
+            } else {
+              motionFrameTick = 0;
+            }
+
+            capturedPhotos.forEach((_, idx) => {
+              const canvas = document.getElementById(`slot-canvas-${idx}`);
+              if (canvas) {
+                const frames = capturedMotionClips[idx] || [
+                  capturedPhotos[idx],
+                ];
+                const currentFrameSrc = frames[motionFrameTick % frames.length];
+                processSlotCanvas(
+                  canvas,
+                  currentFrameSrc,
+                  asciiToggles[idx] ?? true,
+                  photoFilters[idx] || "none",
+                );
+              }
+            });
+          }
+          animationLoopId = requestAnimationFrame(loop);
+        }
+        animationLoopId = requestAnimationFrame(loop);
+      }
+
+      function stopMotionLoop() {
+        if (animationLoopId) {
+          cancelAnimationFrame(animationLoopId);
+          animationLoopId = null;
+        }
+      }
+
+      function processSlotCanvas(canvas, imageSrc, isAscii, photoFilter) {
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+
+        img.onload = () => {
+          const cols = asciiSettings.gridCols;
+          const rows = asciiSettings.gridRows;
+          const targetW = 400;
+          const targetH = 300;
+          canvas.width = targetW;
+          canvas.height = targetH;
+
+          ctx.fillStyle = "#09090b";
+          ctx.fillRect(0, 0, targetW, targetH);
+
+          const renderCanvas = document.createElement("canvas");
+          renderCanvas.width = targetW;
+          renderCanvas.height = targetH;
+          const renderCtx = renderCanvas.getContext("2d");
+
+          let drawW = targetW;
+          let drawH = targetH;
+          const imgAspect = img.width / img.height;
+          const canvasAspect = targetW / targetH;
+
+          if (fitSettings.fitMode === "cover") {
+            if (imgAspect > canvasAspect) {
+              drawH = targetH * fitSettings.zoomLevel;
+              drawW = drawH * imgAspect;
+            } else {
+              drawW = targetW * fitSettings.zoomLevel;
+              drawH = drawW / imgAspect;
+            }
+          } else if (fitSettings.fitMode === "contain") {
+            if (imgAspect > canvasAspect) {
+              drawW = targetW * fitSettings.zoomLevel;
+              drawH = drawW / imgAspect;
+            } else {
+              drawH = targetH * fitSettings.zoomLevel;
+              drawW = drawH * imgAspect;
+            }
+          } else {
+            drawW = targetW * fitSettings.zoomLevel;
+            drawH = targetH * fitSettings.zoomLevel;
+          }
+
+          const drawX = (targetW - drawW) / 2 + fitSettings.offsetX;
+          const drawY = (targetH - drawH) / 2 + fitSettings.offsetY;
+
+          renderCtx.fillStyle = "#000000";
+          renderCtx.fillRect(0, 0, targetW, targetH);
+
+          if (photoFilter === "cartoon" || photoFilter === "scribble") {
+            renderCtx.filter = "none";
+            renderCtx.drawImage(img, drawX, drawY, drawW, drawH);
+            applyCanvasFilter(renderCtx, photoFilter);
+          } else {
+            applyCanvasFilter(renderCtx, photoFilter);
+            renderCtx.drawImage(img, drawX, drawY, drawW, drawH);
+            renderCtx.filter = "none";
+          }
+
+          if (!isAscii) {
+            ctx.drawImage(renderCanvas, 0, 0, targetW, targetH);
+            return;
+          }
+
+          const sampleCanvas = document.createElement("canvas");
+          sampleCanvas.width = cols;
+          sampleCanvas.height = rows;
+          const sampleCtx = sampleCanvas.getContext("2d", {
+            willReadFrequently: true,
+          });
+          sampleCtx.drawImage(renderCanvas, 0, 0, cols, rows);
+
+          const imgData = sampleCtx.getImageData(0, 0, cols, rows);
+          const pixels = imgData.data;
+
+          let textBuffer = "";
+          if (asciiMode === "words") {
+            let wordIdx = 0;
+            const wordList =
+              activeWords.length > 0 ? activeWords : DEFAULT_CITIES;
+            while (textBuffer.length < cols * rows) {
+              textBuffer += wordList[wordIdx % wordList.length] + "#";
+              wordIdx++;
+            }
+          }
+
+          const tileW = targetW / cols;
+          const tileH = targetH / rows;
+
+          for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+              const pIdx = (r * cols + c) * 4;
+              let red = pixels[pIdx];
+              let green = pixels[pIdx + 1];
+              let blue = pixels[pIdx + 2];
+
+              let lum = 0.299 * red + 0.587 * green + 0.114 * blue;
+              lum = (lum - 128) * asciiSettings.contrast + 128;
+              lum = lum * asciiSettings.brightness;
+              lum = Math.min(255, Math.max(0, lum));
+
+              if (asciiSettings.isInverted) lum = 255 - lum;
+
+              const thresh = asciiSettings.threshold;
+              const charIndex = r * cols + c;
+
+              let charToShow = " ";
+              let charColor = "#27272a";
+
+              if (asciiMode === "words") {
+                const baseChar = textBuffer[charIndex] || "#";
+                if (lum > thresh * 1.25) {
+                  charToShow = baseChar;
+                  charColor = "#facc15";
+                } else if (lum > thresh) {
+                  charToShow = baseChar;
+                  charColor = "#eab308";
+                } else if (lum > thresh * 0.7) {
+                  charToShow = ["@", "#", "8", "&"][charIndex % 4];
+                  charColor = "#a1a1aa";
+                } else if (lum > thresh * 0.4) {
+                  charToShow = ["+", "=", ":", "-"][charIndex % 4];
+                  charColor = "#52525b";
+                } else {
+                  charToShow = [".", ",", " "][charIndex % 3];
+                  charColor = "#27272a";
+                }
+              } else {
+                if (lum > thresh * 1.25) {
+                  charToShow = ["@", "W", "M", "#", "$"][charIndex % 5];
+                  charColor = "#facc15";
+                } else if (lum > thresh) {
+                  charToShow = ["%", "&", "*", "Z"][charIndex % 4];
+                  charColor = "#eab308";
+                } else if (lum > thresh * 0.7) {
+                  charToShow = ["o", "a", "c", "+"][charIndex % 4];
+                  charColor = "#a1a1aa";
+                } else if (lum > thresh * 0.4) {
+                  charToShow = [":", "-", "~"][charIndex % 3];
+                  charColor = "#52525b";
+                } else {
+                  charToShow = [".", " "][charIndex % 2];
+                  charColor = "#27272a";
+                }
+              }
+
+              const x = c * tileW;
+              const y = r * tileH;
+
+              ctx.fillStyle = "#111111";
+              ctx.fillRect(x + 0.5, y + 0.5, tileW - 1, tileH - 1);
+
+              ctx.fillStyle = charColor;
+              ctx.font = `bold ${Math.floor(tileH * 0.75)}px monospace`;
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+              ctx.fillText(charToShow, x + tileW / 2, y + tileH / 2);
+
+              ctx.fillStyle = "rgba(0,0,0,0.85)";
+              ctx.fillRect(x, y + tileH / 2, tileW, 1);
+            }
+          }
+        };
+
+        img.src = imageSrc;
+      }
+
+      function applyCanvasFilter(ctx, filterId) {
+        if (!filterId || filterId === "none") {
+          ctx.filter = "none";
+          return;
+        }
+        if (filterId === "grayscale") {
+          ctx.filter = "grayscale(100%) contrast(120%)";
+          return;
+        }
+        if (filterId === "sepia") {
+          ctx.filter = "sepia(80%) contrast(110%)";
+          return;
+        }
+        if (filterId === "vintage") {
+          ctx.filter =
+            "sepia(40%) contrast(130%) brightness(110%) hue-rotate(-10deg)";
+          return;
+        }
+        if (filterId === "cyber") {
+          ctx.filter = "invert(100%) hue-rotate(180deg) contrast(150%)";
+          return;
+        }
+        if (filterId === "cool") {
+          ctx.filter = "contrast(120%) brightness(95%) hue-rotate(180deg)";
+          return;
+        }
+        if (filterId === "high-contrast") {
+          ctx.filter = "contrast(180%) brightness(100%)";
+          return;
+        }
+        if (filterId === "blur") {
+          ctx.filter = "blur(4px)";
+          return;
+        }
+
+        if (filterId === "cartoon" || filterId === "scribble") {
+          ctx.filter = "none";
+          const w = ctx.canvas.width;
+          const h = ctx.canvas.height;
+          const imgData = ctx.getImageData(0, 0, w, h);
+          const data = imgData.data;
+          const origData = new Uint8ClampedArray(data);
+
+          if (filterId === "cartoon") {
+            for (let y = 1; y < h - 1; y++) {
+              for (let x = 1; x < w - 1; x++) {
+                const idx = (y * w + x) * 4;
+
+                const pLeft = (y * w + (x - 1)) * 4;
+                const pRight = (y * w + (x + 1)) * 4;
+                const pUp = ((y - 1) * w + x) * 4;
+                const pDown = ((y + 1) * w + x) * 4;
+
+                const lumCenter =
+                  0.299 * origData[idx] +
+                  0.587 * origData[idx + 1] +
+                  0.114 * origData[idx + 2];
+                const lumL =
+                  0.299 * origData[pLeft] +
+                  0.587 * origData[pLeft + 1] +
+                  0.114 * origData[pLeft + 2];
+                const lumR =
+                  0.299 * origData[pRight] +
+                  0.587 * origData[pRight + 1] +
+                  0.114 * origData[pRight + 2];
+                const lumU =
+                  0.299 * origData[pUp] +
+                  0.587 * origData[pUp + 1] +
+                  0.114 * origData[pUp + 2];
+                const lumD =
+                  0.299 * origData[pDown] +
+                  0.587 * origData[pDown + 1] +
+                  0.114 * origData[pDown + 2];
+
+                const edgeDiff = Math.abs(lumL - lumR) + Math.abs(lumU - lumD);
+
+                if (edgeDiff > 36) {
+                  data[idx] = 12;
+                  data[idx + 1] = 12;
+                  data[idx + 2] = 18;
+                } else {
+                  const r = origData[idx];
+                  const g = origData[idx + 1];
+                  const b = origData[idx + 2];
+
+                  data[idx] = Math.min(255, Math.floor(r / 48) * 52 + 12);
+                  data[idx + 1] = Math.min(255, Math.floor(g / 48) * 52 + 12);
+                  data[idx + 2] = Math.min(255, Math.floor(b / 48) * 52 + 12);
+                }
+              }
+            }
+          } else if (filterId === "scribble") {
+            for (let y = 1; y < h - 1; y++) {
+              for (let x = 1; x < w - 1; x++) {
+                const idx = (y * w + x) * 4;
+
+                const pRight = (y * w + (x + 1)) * 4;
+                const pDown = ((y + 1) * w + x) * 4;
+
+                const lumC =
+                  0.299 * origData[idx] +
+                  0.587 * origData[idx + 1] +
+                  0.114 * origData[idx + 2];
+                const lumR =
+                  0.299 * origData[pRight] +
+                  0.587 * origData[pRight + 1] +
+                  0.114 * origData[pRight + 2];
+                const lumD =
+                  0.299 * origData[pDown] +
+                  0.587 * origData[pDown + 1] +
+                  0.114 * origData[pDown + 2];
+
+                const edge = Math.abs(lumC - lumR) + Math.abs(lumC - lumD);
+
+                let sketchVal = 248 - edge * 3.8;
+                if (sketchVal < 0) sketchVal = 0;
+
+                if (lumC < 110 && (x + y) % 3 === 0) {
+                  sketchVal = Math.min(sketchVal, 50);
+                }
+
+                data[idx] = sketchVal;
+                data[idx + 1] = sketchVal;
+                data[idx + 2] = sketchVal;
+              }
+            }
+          }
+          ctx.putImageData(imgData, 0, 0);
+        }
+      }
+
+      function switchTab(tabId) {
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((c) => c.classList.add("hidden"));
+        document.querySelectorAll(".tab-btn").forEach((b) => {
+          b.className =
+            "tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-amber-50 text-black hover:bg-yellow-100 shadow-[2px_2px_0px_0px_#000]";
+        });
+
+        document
+          .getElementById(`tab-content-${tabId}`)
+          .classList.remove("hidden");
+        document.getElementById(`tab-btn-${tabId}`).className =
+          "tab-btn flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-black font-mono border-2 border-black bg-yellow-300 text-black shadow-[2px_2px_0px_0px_#000]";
+        playFlapAudio();
+      }
+
+      function updateFitParam(key, value) {
+        fitSettings[key] = value;
+        if (key === "zoomLevel")
+          document.getElementById("zoom-val-label").innerText =
+            `${value.toFixed(2)}x`;
+        if (key === "offsetX")
+          document.getElementById("offsetx-val-label").innerText = `${value}px`;
+        if (key === "offsetY")
+          document.getElementById("offsety-val-label").innerText = `${value}px`;
+      }
+
+      function setFitMode(mode) {
+        fitSettings.fitMode = mode;
+        document
+          .querySelectorAll(".btn-fit-mode")
+          .forEach(
+            (b) =>
+              (b.className =
+                "btn-fit-mode p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-white text-black"),
+          );
+        document.getElementById(`btn-fit-${mode}`).className =
+          "btn-fit-mode p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] bg-yellow-300 text-black";
+        playFlapAudio();
+      }
+
+      function resetFitSettings() {
+        fitSettings = {
+          fitMode: "cover",
+          zoomLevel: 1.0,
+          offsetX: 0,
+          offsetY: 0,
+        };
+        setFitMode("cover");
+      }
+
+      function updateAsciiParam(key, value) {
+        asciiSettings[key] = value;
+        if (key === "threshold")
+          document.getElementById("ascii-thresh-label").innerText = value;
+        if (key === "gridCols") {
+          document.getElementById("ascii-cols-label").innerText =
+            `${value} COLS`;
+          asciiSettings.gridRows = Math.floor(value * 0.7);
+        }
+        if (key === "brightness")
+          document.getElementById("ascii-bright-label").innerText =
+            value.toFixed(1);
+      }
+
+      function setAsciiMode(mode) {
+        asciiMode = mode;
+        document.getElementById("btn-ascii-mode-words").className =
+          `p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] ${mode === "words" ? "bg-yellow-300 text-black" : "bg-white text-black"}`;
+        document.getElementById("btn-ascii-mode-random").className =
+          `p-3 rounded-xl border-2 border-black font-black transition shadow-[2px_2px_0px_0px_#000] ${mode === "random" ? "bg-yellow-300 text-black" : "bg-white text-black"}`;
+        playFlapAudio();
+      }
+
+      function toggleAllAscii(enable) {
+        capturedPhotos.forEach((_, idx) => (asciiToggles[idx] = enable));
+        renderCustomizeStripGrid();
+        playFlapAudio();
+      }
+
+      function renderFilterTargetButtons() {
+        const container = document.getElementById("filter-target-buttons");
+        container.innerHTML = "";
+
+        capturedPhotos.forEach((_, idx) => {
+          const btn = document.createElement("button");
+          const isActive = selectedFilterTarget === idx;
+          const currentF = photoFilters[idx] || "none";
+          btn.className = `px-3 py-2 rounded-xl border-2 border-black font-black shadow-[2px_2px_0px_0px_#000] flex items-center space-x-1.5 ${isActive ? "bg-yellow-300 text-black" : "bg-white text-black"}`;
+          btn.innerHTML = `<span>FOTO #${idx + 1}</span><span class="text-[10px] bg-black text-white px-1.5 py-0.5 rounded uppercase">${currentF}</span>`;
+          btn.onclick = () => {
+            selectedFilterTarget = idx;
+            document.getElementById("filter-target-label").innerText =
+              `FOTO #${idx + 1}`;
+            renderFilterTargetButtons();
+            renderPhotoFiltersUI();
+            playFlapAudio();
+          };
+          container.appendChild(btn);
+        });
+
+        const allBtn = document.createElement("button");
+        const isAllActive = selectedFilterTarget === "all";
+        allBtn.className = `px-3 py-2 rounded-xl border-2 border-black font-black shadow-[2px_2px_0px_0px_#000] ${isAllActive ? "bg-pink-300 text-black" : "bg-amber-50 text-black"}`;
+        allBtn.innerText = "⚡ SEMUA FOTO";
+        allBtn.onclick = () => {
+          selectedFilterTarget = "all";
+          document.getElementById("filter-target-label").innerText =
+            "SEMUA FOTO";
+          renderFilterTargetButtons();
+          renderPhotoFiltersUI();
+          playFlapAudio();
+        };
+        container.appendChild(allBtn);
+      }
+
+      function renderPhotoFiltersUI() {
+        const grid = document.getElementById("photo-filters-grid");
+        grid.innerHTML = "";
+
+        PHOTO_FILTERS.forEach((f) => {
+          const isCurrentActive =
+            selectedFilterTarget === "all"
+              ? capturedPhotos.every(
+                  (_, i) => (photoFilters[i] || "none") === f.id,
+                )
+              : (photoFilters[selectedFilterTarget] || "none") === f.id;
+
+          const btn = document.createElement("button");
+          btn.className = `p-3.5 rounded-2xl border-3 border-black font-black flex flex-col items-center justify-center space-y-1 shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition ${isCurrentActive ? "bg-yellow-300 text-black font-extrabold" : "bg-amber-50 hover:bg-yellow-100 text-black"}`;
+          btn.innerHTML = `<span class="text-xs tracking-wider text-center">${f.name}</span>`;
+          btn.onclick = () => applyFilter(f.id);
+          grid.appendChild(btn);
+        });
+      }
+
+      function applyFilter(filterId) {
+        if (selectedFilterTarget === "all") {
+          capturedPhotos.forEach((_, idx) => (photoFilters[idx] = filterId));
+        } else {
+          photoFilters[selectedFilterTarget] = filterId;
+        }
+        renderFilterTargetButtons();
+        renderPhotoFiltersUI();
+        playFlapAudio();
+      }
+
+      function handleFrameOverlayUpload(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          customFrameOverlayData = e.target.result;
+          const imgEl = document.getElementById("strip-custom-overlay");
+          imgEl.src = customFrameOverlayData;
+          imgEl.classList.remove("hidden");
+          document
+            .getElementById("btn-remove-overlay")
+            .classList.remove("hidden");
+          playFlapAudio();
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function removeFrameOverlay() {
+        customFrameOverlayData = null;
+        document.getElementById("strip-custom-overlay").classList.add("hidden");
+        document.getElementById("btn-remove-overlay").classList.add("hidden");
+      }
+
+      function renderFrameThemesUI() {
+        const grid = document.getElementById("frame-themes-grid");
+        grid.innerHTML = "";
+
+        FRAME_COLOR_THEMES.forEach((t) => {
+          const btn = document.createElement("button");
+          const isActive = themeSettings.currentTheme.id === t.id;
+          btn.className = `p-3 rounded-xl border-3 border-black text-left flex items-center justify-between font-black shadow-[3px_3px_0px_0px_#000] transition ${isActive ? "bg-yellow-300" : "bg-white"}`;
+          btn.innerHTML = `<span>${t.name}</span><span class="w-5 h-5 rounded-full border-2 border-black ${t.bg}"></span>`;
+          btn.onclick = () => {
+            themeSettings.currentTheme = t;
+            renderFrameThemesUI();
+            updateStripThemeStyle();
+            playFlapAudio();
+          };
+          grid.appendChild(btn);
+        });
+      }
+
+      function updateFrameTitle(val) {
+        themeSettings.title = val || "NEO FLASH STUDIO";
+        document.getElementById("strip-title-text").innerText =
+          themeSettings.title;
+      }
+
+      function renderWordsTags() {
+        const container = document.getElementById("words-tags-container");
+        container.innerHTML = "";
+        document.getElementById("words-count-label").innerText =
+          `KATA AKTIF (${activeWords.length})`;
+
+        activeWords.forEach((word, idx) => {
+          const tag = document.createElement("span");
+          tag.className =
+            "bg-white border-2 border-black text-black font-black px-2.5 py-1 rounded-lg text-[11px] flex items-center space-x-1 shadow-[2px_2px_0px_0px_#000]";
+          tag.innerHTML = `<span>${word}</span><button onclick="removeWord(${idx})" class="text-black hover:text-rose-600 font-black ml-1">×</button>`;
+          container.appendChild(tag);
+        });
+      }
+
+      function addNewWord() {
+        const input = document.getElementById("new-word-input");
+        const val = input.value.trim().toUpperCase();
+        if (!val) return;
+        activeWords.push(val);
+        input.value = "";
+        renderWordsTags();
+        playFlapAudio();
+      }
+
+      function removeWord(idx) {
+        activeWords.splice(idx, 1);
+        renderWordsTags();
+        playFlapAudio();
+      }
+
+      function resetWordsToDefault() {
+        activeWords = [...DEFAULT_CITIES];
+        renderWordsTags();
+        playFlapAudio();
+      }
+
+      function renderStickersPaletteUI() {
+        const grid = document.getElementById("stickers-palette-grid");
+        grid.innerHTML = "";
+
+        STICKERS.forEach((s) => {
+          const btn = document.createElement("button");
+          btn.className =
+            "p-3 bg-white hover:bg-yellow-200 border-3 border-black rounded-xl text-xl flex items-center justify-center shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition";
+          btn.innerText = s;
+          btn.onclick = () => {
+            addSticker(s);
+          };
+          grid.appendChild(btn);
+        });
+      }
+
+      function toggleStickerDefaultBg() {
+        stickerDefaultHasBg = !stickerDefaultHasBg;
+        const btn = document.getElementById("btn-sticker-bg-toggle");
+        const txt = document.getElementById("sticker-bg-toggle-text");
+        if (stickerDefaultHasBg) {
+          btn.className =
+            "px-3 py-1.5 rounded-xl border-2 border-black font-black text-xs shadow-[2px_2px_0px_0px_#000] bg-yellow-300 text-black flex items-center space-x-1";
+          txt.innerText = "DENGAN BACKGROUND";
+        } else {
+          btn.className =
+            "px-3 py-1.5 rounded-xl border-2 border-black font-black text-xs shadow-[2px_2px_0px_0px_#000] bg-zinc-200 text-zinc-700 flex items-center space-x-1";
+          txt.innerText = "TANPA BACKGROUND";
+        }
+        playFlapAudio();
+      }
+
+      function addCustomSticker() {
+        const input = document.getElementById("custom-sticker-input");
+        const val = input.value.trim();
+        if (!val) return;
+        addSticker(val, stickerDefaultHasBg);
+        input.value = "";
+      }
+
+      function addSticker(symbol, hasBg = stickerDefaultHasBg) {
+        const newSticker = {
+          id: "stk_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+          text: symbol,
+          x: 35 + Math.random() * 30,
+          y: 60 + Math.random() * 15,
+          scale: 1.0,
+          rotation: 0,
+          hasBg: hasBg,
+        };
+        addedStickers.push(newSticker);
+        selectedStickerId = newSticker.id;
+        renderAppliedStickers();
+        updateSelectedStickerControlsUI();
+        playFlapAudio();
+      }
+
+      function selectSticker(id) {
+        if (selectedStickerId === id) {
+          updateSelectedStickerControlsUI();
+          return;
+        }
+        selectedStickerId = id;
+        renderAppliedStickers();
+        updateSelectedStickerControlsUI();
+        playFlapAudio();
+      }
+
+      function deselectAllStickers() {
+        if (selectedStickerId !== null) {
+          selectedStickerId = null;
+          renderAppliedStickers();
+          updateSelectedStickerControlsUI();
+        }
+      }
+
+      function handleStripContainerClick(e) {
+        if (e.target.closest(".sticker-item") || e.target.closest("button")) {
+          return;
+        }
+        deselectAllStickers();
+      }
+
+      function updateSelectedStickerControlsUI() {
+        const controlsPanel = document.getElementById(
+          "selected-sticker-controls",
+        );
+        const stk = addedStickers.find((s) => s.id === selectedStickerId);
+
+        if (!stk || !controlsPanel) {
+          if (controlsPanel) controlsPanel.classList.add("hidden");
+          return;
+        }
+
+        controlsPanel.classList.remove("hidden");
+        document.getElementById("selected-sticker-preview").innerText =
+          stk.text;
+
+        const scaleSlider = document.getElementById("sticker-scale-slider");
+        const scaleVal = document.getElementById("sticker-scale-val");
+        if (scaleSlider && scaleVal) {
+          scaleSlider.value = stk.scale || 1.0;
+          scaleVal.innerText = `${(stk.scale || 1.0).toFixed(1)}x`;
+        }
+
+        const rotSlider = document.getElementById("sticker-rotation-slider");
+        const rotVal = document.getElementById("sticker-rotation-val");
+        if (rotSlider && rotVal) {
+          rotSlider.value = stk.rotation || 0;
+          rotVal.innerText = `${stk.rotation || 0}°`;
+        }
+      }
+
+      function updateSelectedStickerScale(val) {
+        const stk = addedStickers.find((s) => s.id === selectedStickerId);
+        if (stk) {
+          stk.scale = Math.max(0.5, Math.min(3.0, val));
+          document.getElementById("sticker-scale-val").innerText =
+            `${stk.scale.toFixed(1)}x`;
+          const activeEl = document.querySelector(
+            `[data-sticker-id="${stk.id}"]`,
+          );
+          if (activeEl) {
+            activeEl.style.transform = `translate(-50%, -50%) rotate(${stk.rotation || 0}deg) scale(${stk.scale})`;
+          } else {
+            renderAppliedStickers();
+          }
+        }
+      }
+
+      function updateSelectedStickerRotation(deg) {
+        const stk = addedStickers.find((s) => s.id === selectedStickerId);
+        if (stk) {
+          stk.rotation = parseInt(deg) || 0;
+          document.getElementById("sticker-rotation-val").innerText =
+            `${stk.rotation}°`;
+          const activeEl = document.querySelector(
+            `[data-sticker-id="${stk.id}"]`,
+          );
+          if (activeEl) {
+            activeEl.style.transform = `translate(-50%, -50%) rotate(${stk.rotation}deg) scale(${stk.scale || 1.0})`;
+          } else {
+            renderAppliedStickers();
+          }
+        }
+      }
+
+      function rotateSelectedStickerDelta(delta) {
+        const stk = addedStickers.find((s) => s.id === selectedStickerId);
+        if (stk) {
+          let newRot = (stk.rotation || 0) + delta;
+          if (newRot > 180) newRot -= 360;
+          if (newRot < -180) newRot += 360;
+          stk.rotation = newRot;
+          updateSelectedStickerControlsUI();
+          const activeEl = document.querySelector(
+            `[data-sticker-id="${stk.id}"]`,
+          );
+          if (activeEl) {
+            activeEl.style.transform = `translate(-50%, -50%) rotate(${stk.rotation}deg) scale(${stk.scale || 1.0})`;
+          } else {
+            renderAppliedStickers();
+          }
+          playFlapAudio();
+        }
+      }
+
+      function toggleSelectedStickerBg() {
+        const stk = addedStickers.find((s) => s.id === selectedStickerId);
+        if (stk) {
+          stk.hasBg = !stk.hasBg;
+          renderAppliedStickers();
+          playFlapAudio();
+        }
+      }
+
+      function removeSelectedSticker() {
+        if (selectedStickerId) {
+          addedStickers = addedStickers.filter(
+            (s) => s.id !== selectedStickerId,
+          );
+          selectedStickerId = null;
+          renderAppliedStickers();
+          updateSelectedStickerControlsUI();
+          playFlapAudio();
+        }
+      }
+
+      function removeStickerById(id) {
+        addedStickers = addedStickers.filter((s) => s.id !== id);
+        if (selectedStickerId === id) selectedStickerId = null;
+        renderAppliedStickers();
+        updateSelectedStickerControlsUI();
+        playFlapAudio();
+      }
+
+      /* Synchronized Sticker Rendering with Base Canvas Dimensions (800px base) */
+      function renderAppliedStickers() {
+        const container = document.getElementById("strip-stickers-container");
+        const clearBtn = document.getElementById("btn-clear-stickers");
+        container.innerHTML = "";
+
+        if (addedStickers.length > 0) {
+          container.classList.remove("hidden");
+          if (clearBtn) clearBtn.classList.remove("hidden");
+
+          const stripEl = document.getElementById("strip-container");
+          const stripRect = stripEl
+            ? stripEl.getBoundingClientRect()
+            : { width: 360 };
+          const scaleRatio = (stripRect.width || 360) / 800; // Ratio based on 800px base canvas
+
+          addedStickers.forEach((stk) => {
+            const isSelected = stk.id === selectedStickerId;
+            const el = document.createElement("div");
+            el.setAttribute("data-sticker-id", stk.id);
+            const hasBg = stk.hasBg !== false;
+            const scale = stk.scale || 1.0;
+            const rotation = stk.rotation || 0;
+
+            el.className =
+              "sticker-item absolute cursor-grab active:cursor-grabbing select-none z-30 pointer-events-auto touch-none";
+
+            el.style.left = stk.x + "%";
+            el.style.top = stk.y + "%";
+            el.style.transform = `translate(-50%, -50%) rotate(${rotation}deg) scale(${scale})`;
+
+            if (hasBg) {
+              const box = document.createElement("div");
+              box.className =
+                "font-mono font-black bg-white border-black text-black flex items-center justify-center whitespace-nowrap shadow-none";
+
+              const fontSize = Math.max(10, 32 * scaleRatio);
+              const padX = Math.max(6, 24 * scaleRatio);
+              const padY = Math.max(3, 12 * scaleRatio);
+              const borderWidth = Math.max(1.5, 4 * scaleRatio);
+              const shadowDist = Math.max(2, 5 * scaleRatio);
+              const borderRadius = Math.max(4, 12 * scaleRatio);
+
+              box.style.fontSize = `${fontSize}px`;
+              box.style.padding = `${padY}px ${padX}px`;
+              box.style.borderWidth = `${borderWidth}px`;
+              box.style.borderRadius = `${borderRadius}px`;
+              box.style.boxShadow = `${shadowDist}px ${shadowDist}px 0px 0px #000`;
+
+              if (isSelected) {
+                box.style.outline = `${Math.max(2, 3 * scaleRatio)}px solid #ec4899`;
+                box.style.outlineOffset = `${Math.max(2, 3 * scaleRatio)}px`;
+              }
+
+              box.innerText = stk.text;
+              el.appendChild(box);
+            } else {
+              const em = document.createElement("div");
+              em.className =
+                "font-extrabold flex items-center justify-center select-none";
+
+              const fontSize = Math.max(18, 72 * scaleRatio);
+              em.style.fontSize = `${fontSize}px`;
+              em.style.lineHeight = "1";
+              em.style.filter = "drop-shadow(0px 3px 6px rgba(0,0,0,0.5))";
+
+              if (isSelected) {
+                em.style.outline = `${Math.max(2, 3 * scaleRatio)}px dashed #facc15`;
+                em.style.outlineOffset = `${Math.max(2, 3 * scaleRatio)}px`;
+                em.style.borderRadius = `${Math.max(4, 8 * scaleRatio)}px`;
+              }
+
+              em.innerText = stk.text;
+              el.appendChild(em);
+            }
+
+            if (isSelected) {
+              const btnScale = Math.max(0.65, scaleRatio * 1.8);
+
+              const delBtn = document.createElement("button");
+              delBtn.className =
+                "absolute -top-3 -left-3 w-6 h-6 bg-rose-500 hover:bg-rose-600 text-white border-2 border-black rounded-full font-black text-xs flex items-center justify-center shadow-[1px_1px_0px_0px_#000] z-40 focus:outline-none";
+              delBtn.style.transform = `scale(${btnScale})`;
+              delBtn.innerHTML = "×";
+              delBtn.title = "Hapus Stiker";
+              delBtn.onclick = (e) => {
+                e.stopPropagation();
+                removeStickerById(stk.id);
+              };
+              el.appendChild(delBtn);
+
+              const rotBtn = document.createElement("button");
+              rotBtn.className =
+                "absolute -top-3 -right-3 w-6 h-6 bg-yellow-300 hover:bg-yellow-200 text-black border-2 border-black rounded-full font-black text-[10px] flex items-center justify-center shadow-[1px_1px_0px_0px_#000] z-40 focus:outline-none";
+              rotBtn.style.transform = `scale(${btnScale})`;
+              rotBtn.innerHTML = "↻";
+              rotBtn.title = "Putar Stiker +45°";
+              rotBtn.onclick = (e) => {
+                e.stopPropagation();
+                rotateSelectedStickerDelta(45);
+              };
+              el.appendChild(rotBtn);
+
+              const bgBtn = document.createElement("button");
+              bgBtn.className =
+                "absolute -bottom-3 -left-3 px-1.5 py-0.5 bg-amber-100 hover:bg-yellow-300 text-black border-2 border-black rounded-md font-mono font-black text-[9px] flex items-center justify-center shadow-[1px_1px_0px_0px_#000] z-40 focus:outline-none";
+              bgBtn.style.transform = `scale(${btnScale})`;
+              bgBtn.innerText = hasBg ? "BG" : "NO-BG";
+              bgBtn.title = "Ubah Background";
+              bgBtn.onclick = (e) => {
+                e.stopPropagation();
+                toggleSelectedStickerBg();
+              };
+              el.appendChild(bgBtn);
+            }
+
+            el.onclick = (e) => {
+              e.stopPropagation();
+              selectSticker(stk.id);
+            };
+
+            makeStickerDraggable(el, stk);
+            container.appendChild(el);
+          });
+        } else {
+          container.classList.add("hidden");
+          if (clearBtn) clearBtn.classList.add("hidden");
+        }
+      }
+
+      function makeStickerDraggable(el, stk) {
+        let isDragging = false;
+        let startX = 0,
+          startY = 0;
+        let startStkX = 0,
+          startStkY = 0;
+
+        const container = document.getElementById("strip-container");
+
+        const onPointerMove = (e) => {
+          if (!isDragging) return;
+          const rect = container.getBoundingClientRect();
+          if (rect.width === 0 || rect.height === 0) return;
+
+          const deltaX = ((e.clientX - startX) / rect.width) * 100;
+          const deltaY = ((e.clientY - startY) / rect.height) * 100;
+
+          stk.x = Math.max(0, Math.min(100, startStkX + deltaX));
+          stk.y = Math.max(0, Math.min(100, startStkY + deltaY));
+
+          const currentEl =
+            document.querySelector(`[data-sticker-id="${stk.id}"]`) || el;
+          if (currentEl) {
+            currentEl.style.left = stk.x + "%";
+            currentEl.style.top = stk.y + "%";
+          }
+        };
+
+        const onPointerUp = (e) => {
+          if (isDragging) {
+            isDragging = false;
+            try {
+              if (
+                e.pointerId !== undefined &&
+                el.hasPointerCapture &&
+                el.hasPointerCapture(e.pointerId)
+              ) {
+                el.releasePointerCapture(e.pointerId);
+              }
+            } catch (err) {}
+            window.removeEventListener("pointermove", onPointerMove);
+            window.removeEventListener("pointerup", onPointerUp);
+            window.removeEventListener("pointercancel", onPointerUp);
+          }
+        };
+
+        const onPointerDown = (e) => {
+          if (e.target.tagName === "BUTTON") return;
+          isDragging = true;
+          selectSticker(stk.id);
+
+          const currentEl =
+            document.querySelector(`[data-sticker-id="${stk.id}"]`) || el;
+
+          try {
+            if (currentEl && currentEl.isConnected) {
+              currentEl.setPointerCapture(e.pointerId);
+            }
+          } catch (err) {}
+
+          startX = e.clientX;
+          startY = e.clientY;
+          startStkX = stk.x;
+          startStkY = stk.y;
+
+          window.addEventListener("pointermove", onPointerMove);
+          window.addEventListener("pointerup", onPointerUp);
+          window.addEventListener("pointercancel", onPointerUp);
+        };
+
+        el.addEventListener("pointerdown", onPointerDown);
+      }
+
+      function clearAllStickers() {
+        addedStickers = [];
+        selectedStickerId = null;
+        renderAppliedStickers();
+        updateSelectedStickerControlsUI();
+        playFlapAudio();
+      }
+
+      function openRetakeModal(idx) {
+        retakeTargetIndex = idx;
+        document.getElementById("modal-retake-title").innerText =
+          `RETAKE FOTO KE-${idx + 1}`;
+        document.getElementById("modal-retake").classList.remove("hidden");
+
+        const retakeVideo = document.getElementById("retake-webcam-video");
+        if (stream) {
+          retakeVideo.srcObject = stream;
+        }
+      }
+
+      function closeRetakeModal() {
+        document.getElementById("modal-retake").classList.add("hidden");
+        retakeTargetIndex = null;
+      }
+
+      function startRetakeCapture() {
+        if (retakeTargetIndex === null || !stream) return;
+
+        const overlay = document.getElementById("retake-capture-overlay");
+        const countdownEl = document.getElementById("retake-countdown-number");
+        overlay.classList.remove("hidden");
+        overlay.classList.add("flex");
+
+        let count = 3;
+        countdownEl.innerText = count;
+        playBeepSound();
+
+        const timer = setInterval(() => {
+          count--;
+          if (count > 0) {
+            countdownEl.innerText = count;
+            playBeepSound();
+          } else {
+            clearInterval(timer);
+            triggerFlashEffect("retake-flash");
+            playShutterSound();
+
+            const photoData = takeSingleSnapshot(
+              document.getElementById("retake-webcam-video"),
+            );
+            capturedPhotos[retakeTargetIndex] = photoData;
+            capturedMotionClips[retakeTargetIndex] = [photoData];
+
+            setTimeout(() => {
+              overlay.classList.add("hidden");
+              closeRetakeModal();
+              renderCustomizeStripGrid();
+            }, 500);
+          }
+        }, 1000);
+      }
+
+      function handleRetakeFileUpload(event) {
+        const file = event.target.files?.[0];
+        if (!file || retakeTargetIndex === null) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          capturedPhotos[retakeTargetIndex] = e.target.result;
+          capturedMotionClips[retakeTargetIndex] = [e.target.result];
+          closeRetakeModal();
+          renderCustomizeStripGrid();
+          playFlapAudio();
+        };
+        reader.readAsDataURL(file);
+      }
+
+      /* 1:1 Synchronized Canvas Generation function */
+      async function generateStripCanvas(frameTick = 0) {
+        const exportCanvas = document.createElement("canvas");
+        const canvasW = 800;
+        const slotW = 720;
+        const slotH = 540;
+        const padding = 40;
+        const headerH = 80;
+        const footerH = 80;
+        const gap = 30;
+
+        const total = capturedPhotos.length;
+        const canvasH =
+          padding +
+          headerH +
+          total * slotH +
+          (total - 1) * gap +
+          footerH +
+          padding;
+
+        exportCanvas.width = canvasW;
+        exportCanvas.height = canvasH;
+        const ctx = exportCanvas.getContext("2d");
+
+        const theme = themeSettings.currentTheme;
+        ctx.fillStyle = theme.hexBg;
+        ctx.fillRect(0, 0, canvasW, canvasH);
+
+        ctx.strokeStyle = "#000000";
+        ctx.lineWidth = 12;
+        ctx.strokeRect(6, 6, canvasW - 12, canvasH - 12);
+
+        ctx.fillStyle = theme.hexText;
+        ctx.font = "bold 36px monospace";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        ctx.fillText(
+          themeSettings.title.toUpperCase(),
+          padding,
+          padding + headerH / 2,
+        );
+
+        ctx.fillStyle = "#000000";
+        const badgeW = 120;
+        const badgeH = 36;
+        const badgeX = canvasW - padding - badgeW;
+        const badgeY = padding + (headerH - badgeH) / 2;
+        ctx.fillRect(badgeX, badgeY, badgeW, badgeH);
+        ctx.fillStyle = "#facc15";
+        ctx.font = "bold 20px monospace";
+        ctx.textAlign = "center";
+        ctx.fillText("SOLARI", badgeX + badgeW / 2, badgeY + badgeH / 2);
+
+        let currentY = padding + headerH + 10;
+
+        for (let i = 0; i < total; i++) {
+          const frames =
+            isLiveMotionActive && capturedMotionClips[i]
+              ? capturedMotionClips[i]
+              : [capturedPhotos[i]];
+          const currentSrc = frames[frameTick % frames.length];
+          const isAscii = asciiToggles[i] ?? true;
+          const photoFilter = photoFilters[i] || "none";
+
+          const slotCanvas = document.createElement("canvas");
+          slotCanvas.width = slotW;
+          slotCanvas.height = slotH;
+
+          await new Promise((resolve) => {
+            processSlotCanvas(slotCanvas, currentSrc, isAscii, photoFilter);
+            setTimeout(resolve, 15);
+          });
+
+          ctx.fillStyle = "#000000";
+          ctx.fillRect(padding + 10, currentY + 10, slotW, slotH);
+
+          ctx.drawImage(slotCanvas, padding, currentY, slotW, slotH);
+
+          ctx.strokeStyle = "#000000";
+          ctx.lineWidth = 8;
+          ctx.strokeRect(padding, currentY, slotW, slotH);
+
+          currentY += slotH + gap;
+        }
+
+        if (customFrameOverlayData) {
+          await new Promise((resolve) => {
+            const overlayImg = new Image();
+            overlayImg.crossOrigin = "anonymous";
+            overlayImg.onload = () => {
+              ctx.drawImage(overlayImg, 0, 0, canvasW, canvasH);
+              resolve();
+            };
+            overlayImg.onerror = () => resolve();
+            overlayImg.src = customFrameOverlayData;
+          });
+        }
+
+        // Render Draggable, Scaled & Rotated Stickers onto Export Canvas
+        if (addedStickers && addedStickers.length > 0) {
+          addedStickers.forEach((stk) => {
+            const posX = (stk.x / 100) * canvasW;
+            const posY = (stk.y / 100) * canvasH;
+            const hasBg = stk.hasBg !== false;
+            const scale = stk.scale || 1.0;
+            const rotationRad = ((stk.rotation || 0) * Math.PI) / 180;
+
+            ctx.save();
+            ctx.translate(posX, posY);
+            ctx.rotate(rotationRad);
+            ctx.scale(scale, scale);
+
+            if (hasBg) {
+              ctx.font = "bold 32px monospace";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+
+              const metrics = ctx.measureText(stk.text);
+              const boxW = metrics.width + 48; // 24px padding on each side
+              const boxH = 56;
+
+              ctx.fillStyle = "#000000";
+              ctx.fillRect(-boxW / 2 + 5, -boxH / 2 + 5, boxW, boxH);
+
+              ctx.fillStyle = "#ffffff";
+              ctx.fillRect(-boxW / 2, -boxH / 2, boxW, boxH);
+
+              ctx.strokeStyle = "#000000";
+              ctx.lineWidth = 4;
+              ctx.strokeRect(-boxW / 2, -boxH / 2, boxW, boxH);
+
+              ctx.fillStyle = "#000000";
+              ctx.fillText(stk.text, 0, 0);
+            } else {
+              // Pure Emoticon Export Rendering
+              ctx.font =
+                "bold 72px sans-serif, 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', monospace";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+
+              ctx.shadowColor = "rgba(0,0,0,0.5)";
+              ctx.shadowBlur = 8;
+              ctx.shadowOffsetX = 0;
+              ctx.shadowOffsetY = 4;
+
+              ctx.fillStyle = "#ffffff";
+              ctx.fillText(stk.text, 0, 0);
+            }
+
+            ctx.restore();
+          });
+        }
+
+        const footerY = canvasH - padding - 30;
+        ctx.fillStyle = theme.hexText;
+        ctx.font = "bold 24px monospace";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        ctx.fillText(
+          new Date().toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          }),
+          padding,
+          footerY,
+        );
+
+        ctx.fillStyle = "#000000";
+        const stampW = 180;
+        const stampH = 40;
+        const stampX = canvasW - padding - stampW;
+        const stampY = footerY - stampH / 2;
+        ctx.fillRect(stampX, stampY, stampW, stampH);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 18px monospace";
+        ctx.textAlign = "center";
+        ctx.fillText("NEO-FLASH.STUDIO", stampX + stampW / 2, footerY);
+
+        return exportCanvas;
+      }
+
+      async function triggerNativeWebShareOrDownload(
+        blob,
+        fileName,
+        fallbackDataUrl,
+        modalPreviewId,
+        previewImgId,
+        downloadAnchorId,
+      ) {
+        if (navigator.canShare && navigator.share && blob) {
+          const file = new File([blob], fileName, { type: blob.type });
+          if (navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({
+                files: [file],
+                title: "Neo Photo Strip",
+                text: "Dibuat dengan Neo Flash Studio!",
+              });
+              return true;
+            } catch (e) {
+              if (e.name === "AbortError") return true;
+            }
+          }
+        }
+
+        document.getElementById(previewImgId).src = fallbackDataUrl;
+        const anchor = document.getElementById(downloadAnchorId);
+        anchor.href = fallbackDataUrl;
+        anchor.download = fileName;
+        anchor.innerText = "UNDUH FILE PNG";
+        document.getElementById(modalPreviewId).classList.remove("hidden");
+
+        return false;
+      }
+
+      async function handleExportPNG() {
+        playFlapAudio();
+        deselectAllStickers();
+        try {
+          const canvas = await generateStripCanvas(0);
+          const dataUrl = canvas.toDataURL("image/png");
+
+          canvas.toBlob(async (blob) => {
+            const fileName = `Neo-strip-${Date.now()}.png`;
+            await triggerNativeWebShareOrDownload(
+              blob,
+              fileName,
+              dataUrl,
+              "modal-export-preview",
+              "export-preview-img",
+              "export-download-anchor",
+            );
+          }, "image/png");
+        } catch (err) {}
+      }
+
+      async function handleExportMotionVideo() {
+        playFlapAudio();
+        deselectAllStickers();
+        const modal = document.getElementById("modal-video-recording");
+        modal.classList.remove("hidden");
+
+        try {
+          const recordingCanvas = await generateStripCanvas(0);
+          const stream = recordingCanvas.captureStream(12);
+
+          let mimeType = "video/webm";
+          if (MediaRecorder.isTypeSupported("video/mp4;codecs=avc1")) {
+            mimeType = "video/mp4;codecs=avc1";
+          } else if (MediaRecorder.isTypeSupported("video/mp4")) {
+            mimeType = "video/mp4";
+          } else if (MediaRecorder.isTypeSupported("video/webm;codecs=vp9")) {
+            mimeType = "video/webm;codecs=vp9";
+          }
+
+          const recorder = new MediaRecorder(stream, { mimeType });
+          const chunks = [];
+
+          recorder.ondataavailable = (e) => chunks.push(e.data);
+          recorder.onstop = async () => {
+            const blob = new Blob(chunks, { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const fileName = `Neo-motion-${Date.now()}.${mimeType.includes("mp4") ? "mp4" : "webm"}`;
+
+            modal.classList.add("hidden");
+
+            if (navigator.canShare && navigator.share) {
+              const file = new File([blob], fileName, { type: mimeType });
+              if (navigator.canShare({ files: [file] })) {
+                try {
+                  await navigator.share({
+                    files: [file],
+                    title: "Neo Live Motion Video",
+                    text: "Dibuat dengan Neo Live Motion Photobooth!",
+                  });
+                  return;
+                } catch (e) {
+                  if (e.name === "AbortError") {
+                    return;
+                  }
+                }
+              }
+            }
+
+            document.getElementById("export-preview-img").src =
+              recordingCanvas.toDataURL("image/png");
+            const anchor = document.getElementById("export-download-anchor");
+            anchor.href = url;
+            anchor.download = fileName;
+            anchor.innerText =
+              "UNDUH FILE VIDEO (" +
+              (mimeType.includes("mp4") ? "MP4" : "WEBM") +
+              ")";
+            document
+              .getElementById("modal-export-preview")
+              .classList.remove("hidden");
+          };
+
+          recorder.start();
+
+          let tick = 0;
+          const recordInterval = setInterval(async () => {
+            tick++;
+            const nextCanvas = await generateStripCanvas(tick);
+            const ctx = recordingCanvas.getContext("2d");
+            ctx.drawImage(nextCanvas, 0, 0);
+
+            if (tick >= 36) {
+              clearInterval(recordInterval);
+              recorder.stop();
+            }
+          }, 100);
+        } catch (e) {
+          modal.classList.add("hidden");
+        }
+      }
+
+      async function handleExportStory1080() {
+        playFlapAudio();
+        deselectAllStickers();
+        try {
+          const storyW = 1080;
+          const storyH = 1920;
+          const storyCanvas = document.createElement("canvas");
+          storyCanvas.width = storyW;
+          storyCanvas.height = storyH;
+          const ctx = storyCanvas.getContext("2d");
+
+          ctx.fillStyle = "#facc15";
+          ctx.fillRect(0, 0, storyW, storyH);
+
+          ctx.fillStyle = "#000000";
+          for (let x = 20; x < storyW; x += 40) {
+            for (let y = 20; y < storyH; y += 40) {
+              ctx.beginPath();
+              ctx.arc(x, y, 3, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+
+          const headerX = 80;
+          const headerY = 70;
+          const headerW = storyW - headerX * 2;
+          const headerH = 180;
+
+          ctx.fillStyle = "#000000";
+          ctx.fillRect(headerX + 16, headerY + 16, headerW, headerH);
+
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(headerX, headerY, headerW, headerH);
+          ctx.strokeStyle = "#000000";
+          ctx.lineWidth = 10;
+          ctx.strokeRect(headerX, headerY, headerW, headerH);
+
+          ctx.fillStyle = "#000000";
+          ctx.font = "black 46px monospace";
+          ctx.textAlign = "left";
+          ctx.fillText("✈ NEO STORY PASS", headerX + 40, headerY + 70);
+
+          ctx.font = "bold 24px monospace";
+          ctx.fillText(
+            "FLIGHT: FB-2026  |  GATE: ASCII-09  |  MODE: SOLARI",
+            headerX + 40,
+            headerY + 130,
+          );
+
+          const stripCanvas = await generateStripCanvas(0);
+          const stripTargetW = 600;
+          const stripTargetH =
+            (stripCanvas.height / stripCanvas.width) * stripTargetW;
+
+          const maxStripH = 1200;
+          let finalW = stripTargetW;
+          let finalH = stripTargetH;
+
+          if (finalH > maxStripH) {
+            finalH = maxStripH;
+            finalW = (stripCanvas.width / stripCanvas.height) * finalH;
+          }
+
+          const stripX = (storyW - finalW) / 2;
+          const stripY = headerY + headerH + 50;
+
+          ctx.fillStyle = "#000000";
+          ctx.fillRect(stripX + 20, stripY + 20, finalW, finalH);
+
+          ctx.drawImage(stripCanvas, stripX, stripY, finalW, finalH);
+
+          ctx.strokeStyle = "#000000";
+          ctx.lineWidth = 10;
+          ctx.strokeRect(stripX, stripY, finalW, finalH);
+
+          const footerW = 920;
+          const footerH = 160;
+          const footerX = (storyW - footerW) / 2;
+          const footerY = storyH - 70 - footerH;
+
+          ctx.fillStyle = "#000000";
+          ctx.fillRect(footerX + 16, footerY + 16, footerW, footerH);
+
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(footerX, footerY, footerW, footerH);
+          ctx.strokeStyle = "#000000";
+          ctx.lineWidth = 10;
+          ctx.strokeRect(footerX, footerY, footerW, footerH);
+
+          ctx.fillStyle = "#000000";
+          const startBarX = footerX + 40;
+          for (let bx = 0; bx < 280; bx += 8) {
+            const w = bx % 16 === 0 ? 5 : 2;
+            ctx.fillRect(startBarX + bx, footerY + 30, w, 80);
+          }
+
+          ctx.font = "bold 22px monospace";
+          ctx.textAlign = "left";
+          ctx.fillText("NEO-STORY-PASS", startBarX, footerY + 135);
+
+          ctx.textAlign = "right";
+          ctx.font = "bold 24px monospace";
+          ctx.fillText(
+            "WWW.NEO-FLASH.STUDIO",
+            footerX + footerW - 40,
+            footerY + 70,
+          );
+
+          const dataUrl = storyCanvas.toDataURL("image/png");
+
+          storyCanvas.toBlob(async (blob) => {
+            const fileName = `Neo-story-1080x1920-${Date.now()}.png`;
+            await triggerNativeWebShareOrDownload(
+              blob,
+              fileName,
+              dataUrl,
+              "modal-story-preview",
+              "story-preview-img",
+              "story-download-anchor",
+            );
+          }, "image/png");
+        } catch (err) {}
+      }
+
+      function openHelpModal() {
+        document.getElementById("modal-help").classList.remove("hidden");
+      }
+      function closeHelpModal() {
+        document.getElementById("modal-help").classList.add("hidden");
+      }
+      function closeExportPreviewModal() {
+        document.getElementById("modal-export-preview").classList.add("hidden");
+      }
+      function closeStoryPreviewModal() {
+        document.getElementById("modal-story-preview").classList.add("hidden");
+      }
+
+      function toggleSound() {
+        soundEnabled = !soundEnabled;
+        const icon = document.getElementById("sound-icon");
+        const btn = document.getElementById("sound-btn");
+        icon.setAttribute(
+          "data-lucide",
+          soundEnabled ? "volume-2" : "volume-x",
+        );
+        btn.className = `p-2 rounded-xl border-2 border-black font-bold shadow-[3px_3px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition ${soundEnabled ? "bg-pink-300 text-black" : "bg-stone-200 text-stone-600"}`;
+        if (typeof lucide !== "undefined" && lucide.createIcons) {
+          lucide.createIcons();
+        }
+      }
+
+      function playBeepSound() {
+        if (!soundEnabled) return;
+        try {
+          const audioCtx = new (
+            window.AudioContext || window.webkitAudioContext
+          )();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(
+            0.001,
+            audioCtx.currentTime + 0.1,
+          );
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.1);
+        } catch (e) {}
+      }
+
+      function playShutterSound() {
+        if (!soundEnabled) return;
+        try {
+          const audioCtx = new (
+            window.AudioContext || window.webkitAudioContext
+          )();
+          const bufferSize = audioCtx.sampleRate * 0.12;
+          const buffer = audioCtx.createBuffer(
+            1,
+            bufferSize,
+            audioCtx.sampleRate,
+          );
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] =
+              (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.3));
+          }
+
+          const noise = audioCtx.createBufferSource();
+          noise.buffer = buffer;
+
+          const filter = audioCtx.createBiquadFilter();
+          filter.type = "highpass";
+          filter.frequency.setValueAtTime(1200, audioCtx.currentTime);
+
+          const noiseGain = audioCtx.createGain();
+          noiseGain.gain.setValueAtTime(0.8, audioCtx.currentTime);
+          noiseGain.gain.exponentialRampToValueAtTime(
+            0.01,
+            audioCtx.currentTime + 0.12,
+          );
+
+          noise.connect(filter);
+          filter.connect(noiseGain);
+          noiseGain.connect(audioCtx.destination);
+          noise.start();
+        } catch (e) {}
+      }
+
+      function playFlapAudio() {
+        if (!soundEnabled) return;
+        try {
+          const audioCtx = new (
+            window.AudioContext || window.webkitAudioContext
+          )();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = "square";
+          osc.frequency.setValueAtTime(
+            140 + Math.random() * 90,
+            audioCtx.currentTime,
+          );
+          gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            audioCtx.currentTime + 0.05,
+          );
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.05);
+        } catch (e) {}
+      }
+    </script>
+  </body>
+</html>
